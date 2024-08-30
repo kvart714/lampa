@@ -9,15 +9,32 @@
       return keys[randomIndex];
     }
 
+    function calculateProgress(total, current) {
+      if (total == current) {
+        Lampa.Noty.show('Обновление списка фильмов Кинопоиска завершено');
+
+        if (Lampa.Storage.get('kinopoisk_launched_before', false) == false) {
+          Lampa.Storage.set('kinopoisk_launched_before', true);
+          Lampa.Activity.push({
+            url: '',
+            title: 'Кинопоиск',
+            component: 'kinopoisk',
+            page: 1
+          });
+        }
+      }
+    }
+
     function processKinopoiskData(data) {
       // use cache
       if (data && data.data.userProfile && data.data.userProfile.userData && data.data.userProfile.userData.plannedToWatch) {
 
         var kinopoiskMovies = Lampa.Storage.get('kinopoisk_movies', []);
         var receivedMovies = data.data.userProfile.userData.plannedToWatch.movies.items;
+        var receivedMoviesCount = receivedMovies.length;
         var moviesCount = data.data.userProfile.userData.plannedToWatch.movies.total;
         console.log('Kinopoisk', "Total planned to watch movies found: " + String(moviesCount));
-        console.log('Kinopoisk', "Movies received count: " + String(receivedMovies.length));
+        console.log('Kinopoisk', "Movies received count: " + String(receivedMoviesCount));
 
         const receivedMovieIds = new Set(receivedMovies.map(m => String(m.movie.id)));
 
@@ -25,6 +42,7 @@
         kinopoiskMovies = kinopoiskMovies.filter(movie => receivedMovieIds.has(String(movie.kinopoisk_id)));
         Lampa.Storage.set('kinopoisk_movies', JSON.stringify(kinopoiskMovies));
 
+        let processedItems = 1;
         receivedMovies.forEach(m => {
 
             const existsInLocalStorage = kinopoiskMovies.some(km => km.kinopoisk_id === String(m.movie.id));
@@ -51,13 +69,13 @@
                     // getting movie details
                     network.silent(url,
                       function (data) {
-                        if (data && (data.movie_results || data.tv_results || data.results)) {
+                        if (data) {
 
-                          if (data.movie_results) {
+                          if (data.movie_results && data.movie_results[0]) {
                             var movieItem = data.movie_results[0];
-                          } else if (data.tv_results) {
+                          } else if (data.tv_results && data.tv_results[0]) {
                             var movieItem = data.tv_results[0];
-                          } else if (data.results) {
+                          } else if (data.results && data.results[0]) {
                             var movieItem = data.results[0];
                           }
 
@@ -74,18 +92,23 @@
                         } else {
                           console.log('Kinopoisk', 'No movie found by IMDB id: '+String(movieIMDBid));
                         }
+                        calculateProgress(receivedMoviesCount, processedItems++);
                       },
                       function (data) {
                         console.log('Kinopoisk', 'apitmdb.cub.red error, data: ' + String(data));
+                        calculateProgress(receivedMoviesCount, processedItems++);
                       }
                     );
 
                   } else {
                     console.log('Kinopoisk', 'No movie found for kinopoisk id: '+String(m.movie.id)+', movie: '+title);
+                    calculateProgress(receivedMoviesCount, processedItems++);
                   }
+
                 },
                 function (data) {
                   console.log('Kinopoisk', 'kinopoiskapiunofficial error, data: ' + String(data));
+                  calculateProgress(receivedMoviesCount, processedItems++);
                 },
                 false,
                 {type: 'get', headers: {'X-API-KEY': getRandomKinopoiskTechKey()}}
@@ -94,6 +117,7 @@
 
             } else {
               console.log('Kinopoisk', 'Reading data from local storage for movie: '+String(m.movie.id))
+              calculateProgress(receivedMoviesCount, processedItems++);
             }
 
           }
@@ -116,7 +140,7 @@
           processKinopoiskData(data);
         },
         function (data) { // on error
-          console.log('Kinopoisk', 'Error, google script data: ', data);
+          console.log('Kinopoisk', 'Error, google script', data);
         }
       );
     }
@@ -124,6 +148,7 @@
 
     function full(params, oncomplete, onerror) {
       // https://github.com/yumata/lampa-source/blob/main/src/utils/reguest.js
+      // https://github.com/yumata/lampa-source/blob/main/plugins/collections/api.js
 
       var oauth = Lampa.Storage.get('kinopoisk_access_token');
       if (oauth) { getKinopoiskData(); }
@@ -244,12 +269,12 @@
 
           } else {
             Lampa.Noty.show('Не удалось получить user_code');
-            console.log('Kinopoisk', 'Failed to get user_code, data: ' + data.error);
+            console.log('Kinopoisk', 'Failed to get user_code', data.error);
           }
         },
         function (data) {  // on device code error
           Lampa.Noty.show(data.responseJSON.error_description);
-          console.log('Kinopoisk', 'Failed to get device code, data: ' + data);
+          console.log('Kinopoisk', 'Failed to get device code', data);
         },
         device_code_data);
     }
@@ -257,13 +282,18 @@
     function startPlugin() {
       var manifest = {
         type: 'video',
-        version: '0.2.0',
+        version: '0.2.1',
         name: 'Кинопоиск',
         description: '',
         component: 'kinopoisk'
       };
       Lampa.Manifest.plugins = manifest;
       Lampa.Component.add('kinopoisk', component);
+
+      if (Lampa.Storage.get('kinopoisk_access_token','') !== '' && Lampa.Storage.get('kinopoisk_token_expires', 0) < Date.now()) { // refresh token needed
+        console.log('Kinopoisk', 'Token should be refreshed')
+        getToken(Lampa.Storage.get('kinopoisk_refresh_token',''), true);
+      }
 
       function add() {
 
@@ -273,8 +303,6 @@
         button.on('hover:enter', function () {
           if (Lampa.Storage.get('kinopoisk_access_token','') == '') { // initial authorization needed
             getDeviceCode();
-          } else if (Lampa.Storage.get('kinopoisk_token_expires', 0) < Date.now()) { // refresh token needed
-            getToken(Lampa.Storage.get('kinopoisk_refresh_token',''), true);
           }
 
           Lampa.Activity.push({
