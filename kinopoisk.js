@@ -284,8 +284,8 @@
             page: 1
           });
         });
-        //$('.menu .menu__list').eq(0).append(button);
-         $('.head__actions').eq(0).append(button);
+        $('.menu .menu__list').eq(0).append(button);
+        // $('.head__actions').eq(0).append(button);
 
       }
 
