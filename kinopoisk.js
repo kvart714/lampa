@@ -36,6 +36,11 @@
         console.log('Kinopoisk', "Total planned to watch movies found: " + String(moviesCount));
         console.log('Kinopoisk', "Movies received count: " + String(receivedMoviesCount));
 
+
+        if (receivedMoviesCount == 0) {
+          Lampa.Noty.show('В списке "Буду смотреть" Кинопоиска нет фильмов');
+        }
+
         const receivedMovieIds = new Set(receivedMovies.map(m => String(m.movie.id)));
 
         // filter out movies that are no longer present in receivedMovies
@@ -64,7 +69,7 @@
                       var url = 'https://apitmdb.cub.red/3/find/' + movieIMDBid + '?external_source=imdb_id&language=ru&api_key=4ef0d7355d9ffb5151e987764708ce96';
                     } else {
                       console.log('Kinopoisk', 'No IMDB movie id found for kinopoisk id: '+String(m.movie.id)+', will search by movie title: '+movieRuTitle);
-                      var url = 'https://apitmdb.cub.red/3/search/movie?query='+encodeURIComponent(movieRuTitle)+'&api_key=4ef0d7355d9ffb5151e987764708ce96&year=' + String(movieYear) + '&language=ru';
+                      var url = 'https://apitmdb.cub.red/3/search/multi?query='+encodeURIComponent(movieRuTitle)+'&api_key=4ef0d7355d9ffb5151e987764708ce96&year=' + String(movieYear) + '&language=ru';
                     }
                     // getting movie details
                     network.silent(url,
@@ -282,7 +287,7 @@
     function startPlugin() {
       var manifest = {
         type: 'video',
-        version: '0.2.1',
+        version: '0.2.3',
         name: 'Кинопоиск',
         description: '',
         component: 'kinopoisk'
