@@ -11,7 +11,7 @@
         // google script is used to act as CORS proxy
         // one request returns 20 records only
         console.log('Kinopoisk Ratings', 'Getting the rating of the next 20 movies starting from ' + String(offset) + '...');
-        network.silent('https://script.google.com/macros/s/AKfycbwgV3EVxJM8SOsritPz1JE5lwQdbLh7AZhgGpb7hGLrj1kGVaETVU1mFM2aBgur7JEu/exec?method=getRated&oauth=' + oauth + '&offset=' + String(offset),
+        network.silent('https://script.google.com/macros/s/AKfycbxCnQNiTTapsXuXABm_l4hvxcm6Nt-pUkYhJkOPiQBsyYQYyxN4FC_cRJUx2UWeST9j/exec?method=getRated&oauth=' + oauth + '&offset=' + String(offset),
             function (data) { // on success
                 if (data && data.data.userProfile && data.data.userProfile.userData && data.data.userProfile.userData.ratedOrWatchedMovies) {
                     var ratingsCount = data.data.userProfile.userData.ratedOrWatchedMovies.total;
@@ -77,7 +77,7 @@
 
         var manifest = {
             type: 'video',
-            version: '0.1.0',
+            version: '0.1.1',
             name: 'Кинопоиск Оценки',
             description: 'Отображает в Лампе оценки фильмов на Кинопоиске, позволяет оценивать фильмы на Кинопоиске через Лампу',
             component: 'kinopoisk_rating'
@@ -195,7 +195,7 @@
 
 
 
-                                            network.silent('https://script.google.com/macros/s/AKfycbwgV3EVxJM8SOsritPz1JE5lwQdbLh7AZhgGpb7hGLrj1kGVaETVU1mFM2aBgur7JEu/exec?method=setVote&oauth=' + oauth + '&movie=' + String(kinopoiskId) + '&rate=' + a.title,
+                                            network.silent('https://script.google.com/macros/s/AKfycbxCnQNiTTapsXuXABm_l4hvxcm6Nt-pUkYhJkOPiQBsyYQYyxN4FC_cRJUx2UWeST9j/exec?method=setVote&oauth=' + oauth + '&movie=' + String(kinopoiskId) + '&rate=' + a.title,
                                                 function (data) { // on success
                                                     if (data && data.data && data.data.movie && data.data.movie.vote && data.data.movie.vote.set && data.data.movie.vote.set.status == 'SUCCESS') {
                                                         kinopoiskRatings[kinopoiskId] = a.title;
@@ -213,7 +213,7 @@
 
                                                             console.log('Kinopoisk Ratings', 'Removing the movie ' + String(kinopoiskId) + ' (TMDB id: ' + String(tmdbId) + ') from the list of movies to be watched on Kinopoisk');
 
-                                                            network.silent('https://script.google.com/macros/s/AKfycbwgV3EVxJM8SOsritPz1JE5lwQdbLh7AZhgGpb7hGLrj1kGVaETVU1mFM2aBgur7JEu/exec?method=setWatchLater&oauth=' + oauth + '&movie=' + String(kinopoiskId),
+                                                            network.silent('https://script.google.com/macros/s/AKfycbxCnQNiTTapsXuXABm_l4hvxcm6Nt-pUkYhJkOPiQBsyYQYyxN4FC_cRJUx2UWeST9j/exec?method=setWatchLater&oauth=' + oauth + '&movie=' + String(kinopoiskId),
                                                                 function (data) { // on success
                                                                     if (data && data.data && data.data.movie && data.data.movie.plannedToWatch && data.data.movie.plannedToWatch.remove && data.data.movie.plannedToWatch.remove.status == 'SUCCESS') {
                                                                         console.log('Kinopoisk Ratings', 'Movie ' + String(kinopoiskId) + ' removed from the list of movies to be watched on Kinopoisk');
@@ -234,11 +234,16 @@
 
                                                             var rate = Number(a.title);
                                                             var type = '';
-                                                            if (rate >= 1 && rate <= 4) {
+                                                            
+                                                            if (rate >= 1 && rate <= 2) {
                                                                 type = 'shit';
-                                                            } else if (rate >= 5 && rate <= 7) {
+                                                            } else if (rate >= 3 && rate <= 4) {
+                                                                type = 'bore'
+                                                            } else if (rate >= 5 && rate <= 6) {
+                                                                type = 'think'
+                                                            } else if (rate >= 7 && rate <= 8) {
                                                                 type = 'nice';
-                                                            } else if (rate > 7) {
+                                                            } else if (rate > 8) {
                                                                 type = 'fire';
                                                             }
 
@@ -286,7 +291,7 @@
                                     } else {
                                         // delete the rating
                                         console.log('Kinopoisk Ratings', 'Deleting the rating of the movie ' + String(kinopoiskId) + ' (TMDB id: ' + String(tmdbId) + ')')
-                                        network.silent('https://script.google.com/macros/s/AKfycbwgV3EVxJM8SOsritPz1JE5lwQdbLh7AZhgGpb7hGLrj1kGVaETVU1mFM2aBgur7JEu/exec?method=removeVote&oauth=' + oauth + '&movie=' + String(kinopoiskId),
+                                        network.silent('https://script.google.com/macros/s/AKfycbxCnQNiTTapsXuXABm_l4hvxcm6Nt-pUkYhJkOPiQBsyYQYyxN4FC_cRJUx2UWeST9j/exec?method=removeVote&oauth=' + oauth + '&movie=' + String(kinopoiskId),
                                             function (data) { // on success
                                                 if (data && data.data && data.data.movie && data.data.movie.vote && data.data.movie.vote.remove && data.data.movie.vote.remove.status == 'SUCCESS') {
                                                     delete kinopoiskRatings[kinopoiskId];
