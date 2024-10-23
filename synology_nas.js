@@ -133,7 +133,7 @@
           for (var _ID in pl_links.movie) {
             var _file_episod = pl_links.movie[_ID];
             ++_transl_id;
-            var file_url = _file_episod.link.replace(/\[(.+[\d]),?\]/i, '480');
+            var file_url = _file_episod.link; //.replace(/\[(.+[\d]),?\]/i, '480');
             extract[_transl_id] = {
               file: file_url,
               translation: _file_episod.translation,
