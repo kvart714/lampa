@@ -33,20 +33,20 @@
 			    "player_links": {
 			        "movie": [
 			            {
-			                "link": "https:\/\/chache09.werkecdn.me\/s\/FHkwpzK6OebvU7qCPOAgPj1UFBQUFBQUFBQUFBUjBXVUF3d0JV.6D9xmfQgPmiEidiacwEYVRVn_bCHL4IcQiJyXQ\/UHD_1212\/The.Wild.Robot.2024.Dt.ru.4K.SDR.WEBDL.BR.6t.2160p_[2160,,1080,720,480,].mp4",
-			                "translation": "\u0414\u0443\u0431\u043b\u044f\u0436 [4K, SDR, ru, \u0437\u0432\u0443\u043a \u0441 TS]"
+			                "link": "http://192.168.1.5:50002/v/NDLNA/6449.mkv",
+			                "translation": "DLNA \u0414\u0443\u0431\u043b\u044f\u0436 [4K, SDR, ru, \u0437\u0432\u0443\u043a \u0441 TS]"
 			            },
 			            {
-			                "link": "https:\/\/chache09.werkecdn.me\/s\/FHkwpzK6OebvU7qCPOAgPj1UFBQUFBQUFBQUFBUjBXVUF3d0JV.6D9xmfQgPmiEidiacwEYVRVn_bCHL4IcQiJyXQ\/HD_45\/The.Wild.Robot.1080p.rus.LostFilm.TV_[2160,,1080,720,480,].mp4",
-			                "translation": "MVO [4K, SDR, ru, LostFilm]"
+			                "link": "http://gofile.me/1PX2a/crTjmBgp",
+			                "translation": "NAS MVO [4K, SDR, ru, LostFilm]"
 			            },
 			            {
-			                "link": "https:\/\/chache09.werkecdn.me\/s\/FHkwpzK6OebvU7qCPOAgPj1UFBQUFBQUFBQUFBUjBXVUF3d0JV.6D9xmfQgPmiEidiacwEYVRVn_bCHL4IcQiJyXQ\/HD_45\/The.Wild.Robot.2024.2160p.SDR_[2160,1440,1080,720,480,].mp4",
-			                "translation": "MVO [4K, SDR, ru, RGB]"
+			                "link": "http://gofile.me/1PX2a/TxGA8Jvx",
+			                "translation": "NAS2 MVO [4K, SDR, ru, RGB]"
 			            },
 			            {
-			                "link": "https:\/\/chache09.werkecdn.me\/s\/FHkwpzK6OebvU7qCPOAgPj1UFBQUFBQUFBQUFBUjBXVUF3d0JV.6D9xmfQgPmiEidiacwEYVRVn_bCHL4IcQiJyXQ\/UHD_1212\/The.Wild.Robot.2024.D.Ukr.Line.4K.SDR.WEBDL.3t.2160p_[2160,,1080,720,480,].mp4",
-			                "translation": "\u0414\u0443\u0431\u043b\u044f\u0436 [4K, SDR, Ukr, Line]"
+			                "link": "http://and7ey.synology.me:5000/fbdownload/Wish.2023.1080p.WEB-RGB.mkv?dlink=2f766964656f2fd0a4d0b8d0bbd18cd0bcd18b2f576973682e323032332e31303830702e5745422d5247422e6d6b76",
+			                "translation": "Synology ME \u0414\u0443\u0431\u043b\u044f\u0436 [4K, SDR, Ukr, Line]"
 			            },
 			            {
 			                "link": "https:\/\/chache09.werkecdn.me\/s\/FHkwpzK6OebvU7qCPOAgPj1UFBQUFBQUFBQUFBUjBXVUF3d0JV.6D9xmfQgPmiEidiacwEYVRVn_bCHL4IcQiJyXQ\/UHD_1212\/The.Wild.Robot.2024.DVO.Ukr.KolodiyTreyleriv.WEBDL.4K.SDR.2160pp_[2160,1440,1080,720,480,].mp4",
