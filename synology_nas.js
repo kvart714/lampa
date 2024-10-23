@@ -33,19 +33,19 @@
 			    "player_links": {
 			        "movie": [
 			            {
-			                "link": "http://192.168.1.5:50002/v/NDLNA/6449.mkv",
+			                "link": "http:\/\/192.168.1.5:50002\/v\/NDLNA\/6449.mkv",
 			                "translation": "DLNA \u0414\u0443\u0431\u043b\u044f\u0436 [4K, SDR, ru, \u0437\u0432\u0443\u043a \u0441 TS]"
 			            },
 			            {
-			                "link": "http://gofile.me/1PX2a/crTjmBgp",
+			                "link": "http:\/\/gofile.me\/1PX2a\/crTjmBgp",
 			                "translation": "NAS MVO [4K, SDR, ru, LostFilm]"
 			            },
 			            {
-			                "link": "http://gofile.me/1PX2a/TxGA8Jvx",
+			                "link": "http:\/\/gofile.me\/1PX2a\/TxGA8Jvx",
 			                "translation": "NAS2 MVO [4K, SDR, ru, RGB]"
 			            },
 			            {
-			                "link": "http://and7ey.synology.me:5000/fbdownload/Wish.2023.1080p.WEB-RGB.mkv?dlink=2f766964656f2fd0a4d0b8d0bbd18cd0bcd18b2f576973682e323032332e31303830702e5745422d5247422e6d6b76",
+			                "link": "http:\/\/and7ey.synology.me:5000\/fbdownload\/Wish.2023.1080p.WEB-RGB.mkv?dlink=2f766964656f2fd0a4d0b8d0bbd18cd0bcd18b2f576973682e323032332e31303830702e5745422d5247422e6d6b76",
 			                "translation": "Synology ME \u0414\u0443\u0431\u043b\u044f\u0436 [4K, SDR, Ukr, Line]"
 			            },
 			            {
