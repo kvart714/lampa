@@ -7,168 +7,21 @@
       var extract = {};
       var results = [];
       var object = _object;
-      var embed = 'http://filmixapp.cyou/api/v2/';
-      var select_title = '';
       var filter_items = {};
       var choice = {
         season: 0,
         voice: 0,
         voice_name: ''
       };
-      var dev_token = 'user_dev_apk=2.0.1&user_dev_id=&user_dev_name=Xiaomi&user_dev_os=11&user_dev_token=' + '' + '&user_dev_vendor=Xiaomi';
 
       /**
        * Начать поиск
        * @param {Object} _object 
        */
-      this.search = function (_object, data) {
+      this.search = function (_object) {
         console.log("synology search");
-        var _this = this;
-        if (this.wait_similars) return this.find(data[0].id);
-        object = _object;
-        select_title = object.movie.title;
-        var item = data[0];
-        var year = parseInt((object.movie.release_date || object.movie.first_air_date || '0000').slice(0, 4));
-        var orig = object.movie.original_title || object.movie.original_name;
-        var url = embed + 'search';
-        url = Lampa.Utils.addUrlComponent(url, 'story=' + encodeURIComponent(item.title));
-        url = Lampa.Utils.addUrlComponent(url, dev_token);
-        console.log(url);
-        network.clear();
-        network.silent(url, function (json) {
-			// [
-			//     {
-			//         "id": 172878,
-			//         "section": 14,
-			//         "alt_name": "dikiy-robot-milli-2024",
-			//         "title": "Дикий робот",
-			//         "original_title": "The Wild Robot",
-			//         "year": 2024,
-			//         "date": "Сегодня, 12:37",
-			//         "date_atom": "2024-10-22T12:37:14+03:00",
-			//         "serial_stats": null,
-			//         "favorited": false,
-			//         "watch_later": false,
-			//         "last_episode": {},
-			//         "actors": [
-			//             "Лупита Нионго",
-			//             "Педро Паскаль",
-			//             "Кит Коннор",
-			//             "Билл Найи",
-			//             "Стефани Сюй",
-			//             "Мэтт Берри",
-			//             "Винг Реймз",
-			//             "Марк Хэмилл",
-			//             "Кэтрин О’Хара",
-			//             "Boone Storm"
-			//         ],
-			//         "poster": "http:\/\/thumbs.fxapp.club\/posters\/1221\/thumbs\/w220\/dikiy-robot-milli-2024_173787_0.jpg",
-			//         "countries": [
-			//             "США"
-			//         ],
-			//         "categories": [
-			//             "Драмы",
-			//             "Семейный",
-			//             "Фантастика",
-			//             "Приключения",
-			//             "Мультфильмы",
-			//             "Комедия",
-			//             "На украинском"
-			//         ],
-			//         "quality": "WEB-DLRip 2160",
-			//         "rating": 610,
-			//         "user_id": 0,
-			//         "additional": null
-			//     }
-			// ]        	
-          var cards = json.filter(function (c) {
-            c.year = parseInt(c.alt_name.split('-').pop());
-            return c.year > year - 2 && c.year < year + 2;
-          });
-          var card = cards.find(function (c) {
-            return c.year == year;
-          });
-          if (!card) {
-            card = cards.find(function (c) {
-              return c.original_title == orig;
-            });
-          }
-          if (!card && cards.length == 1) card = cards[0];
-          if (card) _this.find(card.id);else if (json.length) {
-            _this.wait_similars = true;
-            component.similars(json);
-            component.loading(false);
-          } else component.emptyForQuery(select_title);
-        }, function (a, c) {
-          component.empty(network.errorDecode(a, c));
-        });
-      };
-      this.find = function (filmix_id) {
-      	console.log('synology find');
-        var url = embed;
-        end_search(filmix_id);
-        function end_search(filmix_id) {
-          console.log('synology end_search');
-          network.clear();
-          network.timeout(10000);
-          console.log(url + 'post/' + filmix_id);
-          network.silent(url + 'post/' + filmix_id + '?' + dev_token, function (found) {
-            if (found && Object.keys(found).length) {
-              success(found);
-              component.loading(false);
-            } else component.emptyForQuery(select_title);
-          }, function (a, c) {
-            component.empty(network.errorDecode(a, c));
-          });
-        }
-      };
-      
-      this.extendChoice = function (saved) {
-        Lampa.Arrays.extend(choice, saved, true);
-      };
-
-      /**
-       * Сброс фильтра
-       */
-      this.reset = function () {
-        component.reset();
-        choice = {
-          season: 0,
-          voice: 0,
-          voice_name: ''
-        };
-        extractData(results);
-        component.saveChoice(choice);
-      };
-
-      /**
-       * Применить фильтр
-       * @param {*} type 
-       * @param {*} a 
-       * @param {*} b 
-       */
-      this.filter = function (type, a, b) {
-        choice[a.stype] = b.index;
-        if (a.stype == 'voice') choice.voice_name = filter_items.voice[b.index];
-        component.reset();
-        extractData(results);
-        component.saveChoice(choice);
-      };
-
-      /**
-       * Уничтожить
-       */
-      this.destroy = function () {
-        network.clear();
-        results = null;
-      };
-
-      /**
-       * Успешно, есть данные
-       * @param {Object} json
-       */
-      function success(json) {
-      	console.log('success');
+        // this.find(172878);
+      	
       	results = 
 			{
 			    "id": 173787,
@@ -353,11 +206,52 @@
 			    "rate_p": 637,
 			    "rate_n": 26
 			};
-        // results = json;
+        var json = results;
         extractData(json);
-        // filter();
         append(filtred());
-      }
+
+
+      	component.loading(false);        
+      };
+
+
+      /**
+       * Сброс фильтра
+       */
+      this.reset = function () {
+        component.reset();
+        choice = {
+          season: 0,
+          voice: 0,
+          voice_name: ''
+        };
+        extractData(results);
+        component.saveChoice(choice);
+      };
+
+      /**
+       * Применить фильтр
+       * @param {*} type 
+       * @param {*} a 
+       * @param {*} b 
+       */
+      this.filter = function (type, a, b) {
+        choice[a.stype] = b.index;
+        if (a.stype == 'voice') choice.voice_name = filter_items.voice[b.index];
+        component.reset();
+        extractData(results);
+        component.saveChoice(choice);
+      };
+
+      /**
+       * Уничтожить
+       */
+      this.destroy = function () {
+        network.clear();
+        results = null;
+      };
+
+
 
       /**
        * Получить информацию о фильме
@@ -691,7 +585,7 @@
           }
           var hash = Lampa.Utils.hash(element.season ? [element.season, element.episode, object.movie.original_title].join('') : object.movie.original_title);
           var view = Lampa.Timeline.view(hash);
-          var item = Lampa.Template.get('online', element);
+          var item = Lampa.Template.get('synology_nas', element);
           var hash_file = Lampa.Utils.hash(element.season ? [element.season, element.episode, object.movie.original_title, filter_items.voice[choice.voice]].join('') : object.movie.original_title + element.title);
           item.addClass('video--stream');
           element.timeline = view;
@@ -735,16 +629,6 @@
             } else Lampa.Noty.show(Lampa.Lang.translate('online_nolink'));
           });
           component.append(item);
-          // component.contextmenu({
-          //   item: item,
-          //   view: view,
-          //   viewed: viewed,
-          //   hash_file: hash_file,
-          //   element: element,
-          //   file: function file(call) {
-          //     call(getFile(element, element.quality));
-          //   }
-          // });
         });
         component.start(true);
       }
@@ -758,7 +642,7 @@
       });
       var files = new Lampa.Files(object);
       var filter = new Lampa.Filter(object);
-      var balanser = Lampa.Storage.get('online_balanser', 'synology');
+      var balanser = Lampa.Storage.get('synology_nas_balanser', 'synology');
       var last_bls = Lampa.Storage.cache('online_last_balanser', 200, {});
       if (last_bls[object.movie.id]) {
         balanser = last_bls[object.movie.id];
@@ -780,7 +664,7 @@
 
       if (filter_sources.indexOf(balanser) == -1) {
         balanser = 'synology';
-        Lampa.Storage.set('online_balanser', 'synology');
+        Lampa.Storage.set('synology_nas_balanser', 'synology');
       }
       scroll.body().addClass('torrent-list');
       function minus() {
@@ -816,45 +700,12 @@
         this.find();
       };
       this.find = function () {
-        var _this2 = this;
-        var url = 'https://jsonplaceholder.typicode.com/todos/1'; // this.proxy('videocdn') + 'https://videocdn.tv/api/short';
-        var query = object.search;
-        url = Lampa.Utils.addUrlComponent(url, 'api_token=3i40G5TSECmLF77oAqnEgbx61ZWaOYaE');
-        console.log('find');
-        console.log(url);
-        var display = function display(json) {
-          json = JSON.parse('{"result":true,"php":0.02154994010925293,"data":[{"id":77036,"content_type":"movie","kp_id":5457899,"title":"Дикий робот","orig_title":"The Wild Robot","add":"2024-09-25 04:22:15","year":"1969-12-31","translations":["Муз обоз","@MUZOBOZ@","RGB","LostFilm"],"imdb_id":"tt29623480","iframe_src":"//93155.svetacdn.in/owHyLRHCTf46/movie/77036","iframe":"<iframe src=\'//93155.svetacdn.in/owHyLRHCTf46/movie/77036\' width=\'640\' height=\'480\' frameborder=\'0\' allowfullscreen></iframe>"}]}');
-          if (object.movie.imdb_id) {
-            var imdb = json.data.filter(function (elem) {
-              return elem.imdb_id == object.movie.imdb_id;
-            });
-            if (imdb.length) json.data = imdb;
-          }
-          if (json.data && json.data.length) {
-            if (json.data.length == 1 || object.clarification) {
-              _this2.extendChoice();
-              sources['synology'].search(object, json.data); // else sources[balanser].search(object, json.data[0].kp_id || json.data[0].filmId, json.data);
-            } else {
-              // _this2.similars(json.data);
-              _this2.loading(false);
-            }
-          } else _this2.emptyForQuery(query);
-        };
-
-        display({});
-
-        
-      };
-      this.extendChoice = function () {
-        var data = Lampa.Storage.cache('online_choice_' + balanser, 500, {});
-        var save = data[selected_id || object.movie.id] || {};
-        extended = true;
-        sources[balanser].extendChoice(save);
+      	sources['synology'].search(object);
       };
       this.saveChoice = function (choice) {
-        var data = Lampa.Storage.cache('online_choice_' + balanser, 500, {});
+        var data = Lampa.Storage.cache('synology_nas_choice_' + balanser, 500, {});
         data[selected_id || object.movie.id] = choice;
-        Lampa.Storage.set('online_choice_' + balanser, data);
+        Lampa.Storage.set('synology_nas_choice_' + balanser, data);
       };
 
       /**
@@ -904,7 +755,7 @@
        * Показать пустой результат по ключевому слову
        */
       this.emptyForQuery = function (query) {
-        this.empty(Lampa.Lang.translate('online_query_start') + ' (' + query + ') ' + Lampa.Lang.translate('online_query_end'));
+        this.empty(Lampa.Lang.translate('online_query_start') + ' (' + query + ') ' + Lampa.Lang.translate('synology_nas_query_end'));
       };
       this.getLastEpisode = function (items) {
         var last_episode = 0;
@@ -987,7 +838,7 @@
         zh: '获取链接失败',
         bg: 'Не може да се извлече връзката'
       },
-      online_balanser: {
+      synology_nas_balanser: {
         ru: 'Балансер',
         uk: 'Балансер',
         en: 'Balancer',
@@ -1001,14 +852,14 @@
         zh: '根据要求',
         bg: 'По запитване'
       },
-      online_query_end: {
+      synology_nas_query_end: {
         ru: 'нет результатов',
         uk: 'немає результатів',
         en: 'no results',
         zh: '没有结果',
         bg: 'няма резултати'
       },
-      title_online: {
+      synology_nas_title: {
         ru: 'Synology NAS',
         uk: 'Synology NAS',
         en: 'Synology NAS',
@@ -1017,13 +868,13 @@
       }
     });
     function resetTemplates() {
-      Lampa.Template.add('online', "<div class=\"online selector\">\n        <div class=\"online__body\">\n            <div style=\"position: absolute;left: 0;top: -0.3em;width: 2.4em;height: 2.4em\">\n                <svg style=\"height: 2.4em; width:  2.4em;\" viewBox=\"0 0 128 128\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <circle cx=\"64\" cy=\"64\" r=\"56\" stroke=\"white\" stroke-width=\"16\"/>\n                    <path d=\"M90.5 64.3827L50 87.7654L50 41L90.5 64.3827Z\" fill=\"white\"/>\n                </svg>\n            </div>\n            <div class=\"online__title\" style=\"padding-left: 2.1em;\">{title}</div>\n            <div class=\"online__quality\" style=\"padding-left: 3.4em;\">{quality}{info}</div>\n        </div>\n    </div>");
-      Lampa.Template.add('online_folder', "<div class=\"online selector\">\n        <div class=\"online__body\">\n            <div style=\"position: absolute;left: 0;top: -0.3em;width: 2.4em;height: 2.4em\">\n                <svg style=\"height: 2.4em; width:  2.4em;\" viewBox=\"0 0 128 112\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect y=\"20\" width=\"128\" height=\"92\" rx=\"13\" fill=\"white\"/>\n                    <path d=\"M29.9963 8H98.0037C96.0446 3.3021 91.4079 0 86 0H42C36.5921 0 31.9555 3.3021 29.9963 8Z\" fill=\"white\" fill-opacity=\"0.23\"/>\n                    <rect x=\"11\" y=\"8\" width=\"106\" height=\"76\" rx=\"13\" fill=\"white\" fill-opacity=\"0.51\"/>\n                </svg>\n            </div>\n            <div class=\"online__title\" style=\"padding-left: 2.1em;\">{title}</div>\n            <div class=\"online__quality\" style=\"padding-left: 3.4em;\">{quality}{info}</div>\n        </div>\n    </div>");
+      Lampa.Template.add('synology_nas', "<div class=\"online selector\">\n        <div class=\"online__body\">\n            <div style=\"position: absolute;left: 0;top: -0.3em;width: 2.4em;height: 2.4em\">\n                <svg style=\"height: 2.4em; width:  2.4em;\" viewBox=\"0 0 128 128\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <circle cx=\"64\" cy=\"64\" r=\"56\" stroke=\"white\" stroke-width=\"16\"/>\n                    <path d=\"M90.5 64.3827L50 87.7654L50 41L90.5 64.3827Z\" fill=\"white\"/>\n                </svg>\n            </div>\n            <div class=\"online__title\" style=\"padding-left: 2.1em;\">{title}</div>\n            <div class=\"online__quality\" style=\"padding-left: 3.4em;\">{quality}{info}</div>\n        </div>\n    </div>");
+      Lampa.Template.add('synology_nas_folder', "<div class=\"online selector\">\n        <div class=\"online__body\">\n            <div style=\"position: absolute;left: 0;top: -0.3em;width: 2.4em;height: 2.4em\">\n                <svg style=\"height: 2.4em; width:  2.4em;\" viewBox=\"0 0 128 112\" fill=\"none\" xmlns=\"http://www.w3.org/2000/svg\">\n                    <rect y=\"20\" width=\"128\" height=\"92\" rx=\"13\" fill=\"white\"/>\n                    <path d=\"M29.9963 8H98.0037C96.0446 3.3021 91.4079 0 86 0H42C36.5921 0 31.9555 3.3021 29.9963 8Z\" fill=\"white\" fill-opacity=\"0.23\"/>\n                    <rect x=\"11\" y=\"8\" width=\"106\" height=\"76\" rx=\"13\" fill=\"white\" fill-opacity=\"0.51\"/>\n                </svg>\n            </div>\n            <div class=\"online__title\" style=\"padding-left: 2.1em;\">{title}</div>\n            <div class=\"online__quality\" style=\"padding-left: 3.4em;\">{quality}{info}</div>\n        </div>\n    </div>");
     }
-    var button = "<div class=\"full-start__button selector view--online\" data-subtitle=\"v0.01\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:svgjs=\"http://svgjs.com/svgjs\" version=\"1.1\" width=\"512\" height=\"512\" x=\"0\" y=\"0\" viewBox=\"0 0 30.051 30.051\" style=\"enable-background:new 0 0 512 512\" xml:space=\"preserve\" class=\"\">\n    <g xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M19.982,14.438l-6.24-4.536c-0.229-0.166-0.533-0.191-0.784-0.062c-0.253,0.128-0.411,0.388-0.411,0.669v9.069   c0,0.284,0.158,0.543,0.411,0.671c0.107,0.054,0.224,0.081,0.342,0.081c0.154,0,0.31-0.049,0.442-0.146l6.24-4.532   c0.197-0.145,0.312-0.369,0.312-0.607C20.295,14.803,20.177,14.58,19.982,14.438z\" fill=\"currentColor\"/>\n        <path d=\"M15.026,0.002C6.726,0.002,0,6.728,0,15.028c0,8.297,6.726,15.021,15.026,15.021c8.298,0,15.025-6.725,15.025-15.021   C30.052,6.728,23.324,0.002,15.026,0.002z M15.026,27.542c-6.912,0-12.516-5.601-12.516-12.514c0-6.91,5.604-12.518,12.516-12.518   c6.911,0,12.514,5.607,12.514,12.518C27.541,21.941,21.937,27.542,15.026,27.542z\" fill=\"currentColor\"/>\n    </g></svg>\n\n    <span>#{title_online}</span>\n    </div>";
+    var button = "<div class=\"full-start__button selector view--online\" data-subtitle=\"v0.01\">\n    <svg xmlns=\"http://www.w3.org/2000/svg\" xmlns:xlink=\"http://www.w3.org/1999/xlink\" xmlns:svgjs=\"http://svgjs.com/svgjs\" version=\"1.1\" width=\"512\" height=\"512\" x=\"0\" y=\"0\" viewBox=\"0 0 30.051 30.051\" style=\"enable-background:new 0 0 512 512\" xml:space=\"preserve\" class=\"\">\n    <g xmlns=\"http://www.w3.org/2000/svg\">\n        <path d=\"M19.982,14.438l-6.24-4.536c-0.229-0.166-0.533-0.191-0.784-0.062c-0.253,0.128-0.411,0.388-0.411,0.669v9.069   c0,0.284,0.158,0.543,0.411,0.671c0.107,0.054,0.224,0.081,0.342,0.081c0.154,0,0.31-0.049,0.442-0.146l6.24-4.532   c0.197-0.145,0.312-0.369,0.312-0.607C20.295,14.803,20.177,14.58,19.982,14.438z\" fill=\"currentColor\"/>\n        <path d=\"M15.026,0.002C6.726,0.002,0,6.728,0,15.028c0,8.297,6.726,15.021,15.026,15.021c8.298,0,15.025-6.725,15.025-15.021   C30.052,6.728,23.324,0.002,15.026,0.002z M15.026,27.542c-6.912,0-12.516-5.601-12.516-12.514c0-6.91,5.604-12.518,12.516-12.518   c6.911,0,12.514,5.607,12.514,12.518C27.541,21.941,21.937,27.542,15.026,27.542z\" fill=\"currentColor\"/>\n    </g></svg>\n\n    <span>#{synology_nas_title}</span>\n    </div>";
 
     // нужна заглушка, а то при страте лампы говорит пусто
-    Lampa.Component.add('online', component);
+    Lampa.Component.add('synology_nas', component);
 
     //то же самое
     resetTemplates();
@@ -1032,11 +883,11 @@
         var btn = $(Lampa.Lang.translate(button));
         btn.on('hover:enter', function () {
           resetTemplates();
-          Lampa.Component.add('online', component);
+          Lampa.Component.add('synology_nas', component);
           Lampa.Activity.push({
             url: '',
-            title: Lampa.Lang.translate('title_online'),
-            component: 'online',
+            title: Lampa.Lang.translate('synology_nas_title'),
+            component: 'synology_nas',
             search: e.data.movie.title,
             search_one: e.data.movie.title,
             search_two: e.data.movie.original_title,
@@ -1048,31 +899,4 @@
       }
     });
 
-
-    Lampa.Settings.listener.follow('open', function (e) {
-      if (e.name == 'synology') {
-        e.body.find('[data-name="synology_add"]').unbind('hover:enter').on('hover:enter', function () {
-          var user_code = '';
-          var user_token = '';
-          var modal = $('<div><div class="broadcast__text">' + Lampa.Lang.translate('synology_modal_text') + '</div><div class="broadcast__device selector" style="text-align: center">' + Lampa.Lang.translate('synology_modal_wait') + '...</div><br><div class="broadcast__scan"><div></div></div></div></div>');
-          Lampa.Modal.open({
-            title: '',
-            html: modal,
-            onBack: function onBack() {
-              Lampa.Modal.close();
-              Lampa.Controller.toggle('settings_component');
-              clearInterval(ping_auth);
-            },
-            onSelect: function onSelect() {
-              Lampa.Utils.copyTextToClipboard(user_code, function () {
-                Lampa.Noty.show(Lampa.Lang.translate('synology_copy_secuses'));
-              }, function () {
-                Lampa.Noty.show(Lampa.Lang.translate('synology_copy_fail'));
-              });
-            }
-          });
-
-        });
-      }
-    });
 })();
