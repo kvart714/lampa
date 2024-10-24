@@ -33,7 +33,7 @@
 			    "player_links": {
 			        "movie": [
 			            {
-			                "link": "http:\/\/192.168.1.5:50002\/v\/NDLNA\/6449.mkv",
+			                "link": "http:\/\/192.168.1.125:9118\/proxy\/http:\/\/192.168.1.5:50002\/v\/NDLNA\/6449.mkv",
 			                "translation": "DLNA \u0414\u0443\u0431\u043b\u044f\u0436 [4K, SDR, ru, \u0437\u0432\u0443\u043a \u0441 TS]"
 			            },
 			            {
