@@ -119,7 +119,7 @@
               }
               var video = {
                 title: element.title,
-                url: element.url
+                url: 'http://192.168.1.125:9118/proxy/'+ element.url
               };
               Lampa.Player.play(video);
               Lampa.Player.playlist([video]);
