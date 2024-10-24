@@ -169,7 +169,7 @@
         var device = tree.device;
         var folder = tree.tree[tree.tree.length - 1];
         this.drawLoading(Lampa.Lang.translate('loading'));
-        var serviceURL = 'http://192.168.1.5:50001/ContentDirectory/control'; // device.name;
+        var serviceURL = 'http://192.168.1.125:9118/proxy/http://192.168.1.5:50001/ContentDirectory/control'; // device.name;
         if(serviceURL.indexOf('http') === -1) serviceURL = 'http://' + serviceURL;
         var soapAction = '"urn:schemas-upnp-org:service:ContentDirectory:1#Browse"';
         var soapBody = `
