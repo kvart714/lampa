@@ -134,8 +134,8 @@
                       // season: media.season,
                       title: 'Test',
                       quality: '480p ',
-                      link: 'http:\/\/192.168.1.125:9118\/proxy\/http:\/\/192.168.1.5:50002\/v\/NDLNA\/6449.mkv'
-                      // translation: media.translation
+                      link: 'http:\/\/192.168.1.125:9118\/proxy\/http:\/\/192.168.1.5:50002\/v\/NDLNA\/6449.mkv', 
+                      translation: 'Synology NAS file'
                     }]);
       	component.loading(false); 
 			}
@@ -236,64 +236,33 @@
       this.search = function (_object) {
         console.log("synology search", _object);
 
-        var nasServerFolder = Lampa.Storage.get('synology_nas_server_folder');
-
         
         // this.find(172878);
       	
       	results = 
 			{
-			    "id": 173787,
-			    "title": "\u0414\u0438\u043a\u0438\u0439 \u0440\u043e\u0431\u043e\u0442",
-			    "original_title": "The Wild Robot",
-			    "year": 2024,
-			    "last_episode": null,
-
 			    "player_links": {
 			        "movie": [
 			            {
-			                "link": "https:\/\/chache09.werkecdn.me\/s\/FHkwpzK6OebvU7qCPOAgPj1UFBQUFBQUFBQUFBUjBXVUF3d0JV.6D9xmfQgPmiEidiacwEYVRVn_bCHL4IcQiJyXQ\/UHD_1212\/The.Wild.Robot.2024.Dt.ru.4K.SDR.WEBDL.BR.6t.2160p_[2160,,1080,720,480,].mp4",
-			                "translation": "\u0414\u0443\u0431\u043b\u044f\u0436 [4K, SDR, ru, \u0437\u0432\u0443\u043a \u0441 TS]"
+			                "link": "http:\/\/192.168.1.125:9118\/proxy\/http:\/\/192.168.1.5:50002\/v\/NDLNA\/6449.mkv",
+			                "translation": "Synology NAS file"
 			            },
 			            {
-			                "link": "https:\/\/chache09.werkecdn.me\/s\/FHkwpzK6OebvU7qCPOAgPj1UFBQUFBQUFBQUFBUjBXVUF3d0JV.6D9xmfQgPmiEidiacwEYVRVn_bCHL4IcQiJyXQ\/HD_45\/The.Wild.Robot.1080p.rus.LostFilm.TV_[2160,,1080,720,480,].mp4",
+			                "link": "https://chache09.werkecdn.me/s/FHkwpzK6OebvU7qCPOAgPj1UFBQUFBQUFBQUFBUjBXVUF3d0JV.6D9xmfQgPmiEidiacwEYVRVn_bCHL4IcQiJyXQ/HD_45/The.Wild.Robot.1080p.rus.LostFilm.TV_[2160,,1080,720,480,].mp4",
 			                "translation": "MVO [4K, SDR, ru, LostFilm]"
 			            },
 			            {
-			                "link": "https:\/\/chache09.werkecdn.me\/s\/FHkwpzK6OebvU7qCPOAgPj1UFBQUFBQUFBQUFBUjBXVUF3d0JV.6D9xmfQgPmiEidiacwEYVRVn_bCHL4IcQiJyXQ\/HD_45\/The.Wild.Robot.2024.2160p.SDR_[2160,1440,1080,720,480,].mp4",
+			                "link": "https://chache09.werkecdn.me/s/FHkwpzK6OebvU7qCPOAgPj1UFBQUFBQUFBQUFBUjBXVUF3d0JV.6D9xmfQgPmiEidiacwEYVRVn_bCHL4IcQiJyXQ/HD_45/The.Wild.Robot.2024.2160p.SDR_[2160,1440,1080,720,480,].mp4",
 			                "translation": "MVO [4K, SDR, ru, RGB]"
-			            },
-			            {
-			                "link": "https:\/\/chache09.werkecdn.me\/s\/FHkwpzK6OebvU7qCPOAgPj1UFBQUFBQUFBQUFBUjBXVUF3d0JV.6D9xmfQgPmiEidiacwEYVRVn_bCHL4IcQiJyXQ\/UHD_1212\/The.Wild.Robot.2024.D.Ukr.Line.4K.SDR.WEBDL.3t.2160p_[2160,,1080,720,480,].mp4",
-			                "translation": "\u0414\u0443\u0431\u043b\u044f\u0436 [4K, SDR, Ukr, Line]"
-			            },
-			            {
-			                "link": "https:\/\/chache09.werkecdn.me\/s\/FHkwpzK6OebvU7qCPOAgPj1UFBQUFBQUFBQUFBUjBXVUF3d0JV.6D9xmfQgPmiEidiacwEYVRVn_bCHL4IcQiJyXQ\/UHD_1212\/The.Wild.Robot.2024.DVO.Ukr.KolodiyTreyleriv.WEBDL.4K.SDR.2160pp_[2160,1440,1080,720,480,].mp4",
-			                "translation": "DVO [4K, SDR, Ukr, \u041a\u043e\u043b\u043e\u0434\u0456\u0439 \u0422\u0440\u0435\u0439\u043b\u0435\u0440\u0456\u0432]"
-			            },
-			            {
-			                "link": "https:\/\/chache09.werkecdn.me\/s\/FHkwpzK6OebvU7qCPOAgPj1UFBQUFBQUFBQUFBUjBXVUF3d0JV.6D9xmfQgPmiEidiacwEYVRVn_bCHL4IcQiJyXQ\/HDR10p\/The.Wild.Robot.2024.Dt.MVO.ru.D.Ukr.MVO.Line.4K.WEBDL.HDR10p.6t.2160p_[2160,,,,,].mp4",
-			                "translation": "\u0414\u0443\u0431\u043b\u044f\u0436 [4K, HDR10+, ru, Ukr]"
-			            },
-			            {
-			                "link": "https:\/\/chache09.werkecdn.me\/s\/FHkwpzK6OebvU7qCPOAgPj1UFBQUFBQUFBQUFBUjBXVUF3d0JV.6D9xmfQgPmiEidiacwEYVRVn_bCHL4IcQiJyXQ\/HDR10p\/The.Wild.Robot.2024.MVO.ru.RGB.DVO.Ukr.KT.WEBDL.4K.HDR10p.3t.2160pp_[2160,,,,,].mp4",
-			                "translation": "MVO [4K, HDR10+, ru, Ukr]"
-			            },
-			            {
-			                "link": "https:\/\/chache09.werkecdn.me\/s\/FHkwpzK6OebvU7qCPOAgPj1UFBQUFBQUFBQUFBUjBXVUF3d0JV.6D9xmfQgPmiEidiacwEYVRVn_bCHL4IcQiJyXQ\/HEVC\/The.Wild.Robot.2024.Dt.MVO.ru.D.Ukr.MVO.Line.4K.SDR.WEBDL.HEVC.6t.2160p_[2160,,,,,].mp4",
-			                "translation": "HEVC 4K AC3 DUB RU UKR"
-			            },
-			            {
-			                "link": "https:\/\/chache09.werkecdn.me\/s\/FHkwpzK6OebvU7qCPOAgPj1UFBQUFBQUFBQUFBUjBXVUF3d0JV.6D9xmfQgPmiEidiacwEYVRVn_bCHL4IcQiJyXQ\/HEVC\/The.Wild.Robot.2024.MVO.ru.RGB.DVO.Ukr.KT.WEBDL.4K.SDR.HEVC.3t.2160pp_[2160,,,,,].mp4",
-			                "translation": "HEVC 4K AC3 MVO RU UKR"
 			            }
 			        ],
 			        "playlist": []
 			    }
 			};
-        var json = results;
-        extractData(json);
+        extractData(results);
         append(filtred());
+
+
 
 				// this.getFilesInFolder(nasServerFolder);
       	component.loading(false);        
@@ -343,25 +312,19 @@
        * @param {Arrays} data
        */
       function extractData(data) {
-      	console.log('extractData', data);
-
-        extract = {};
-        var pl_links = data.player_links;
-        if (pl_links.movie && pl_links.movie.length > 0) {
-          var _transl_id = 0;
-          for (var _ID in pl_links.movie) {
-            var _file_episod = pl_links.movie[_ID];
-            ++_transl_id;
-            var file_url = _file_episod.link.replace(/\[(.+[\d]),?\]/i, '480');
-            extract[_transl_id] = {
-              file: file_url,
-              translation: _file_episod.translation,
-              quality: '480',
-              qualities: '480'
-            };
-          }
-        }
-        console.log('extractData', extract);
+      	console.log('extractData in', data);
+      	extract = {};
+				data.player_links.movie.forEach((movie, index) => {
+				    const id = (index + 1).toString(); // Convert index to string for keys
+				    extract[id] = {
+				        file: movie.link, 
+				        translation: movie.translation,
+				        quality: "480", // Assuming quality is always 480 as per your example
+				        qualities: "480" // Assuming qualities is always 480 as per your example
+				    };
+				});
+        
+        console.log('extractData out', extract);
       }
 
       /**
@@ -371,50 +334,43 @@
        * @returns string
        */
       function getFile(element, max_quality) {
-      	console.log('getFile', element, max_quality);
-        var translat = extract[element.translation];
-        var id = element.season + '_' + element.episode;
-        var file = '';
-        var quality = false;
+      	console.log('getFile in', element, max_quality);
+
+//       	{
+//     "title": "Дубляж [4K, SDR, ru, звук с TS]",
+//     "quality": "480p ",
+//     "qualitys": "480",
+//     "translation": "1",
+//     "info": "",
+//     "timeline": {
+//         "hash": "888470979",
+//         "percent": 0,
+//         "time": 0,
+//         "duration": 0,
+//         "profile": 378159
+//     }
+// }
+
+
+// {
+//     "file": "https://chache09.werkecdn.me/s/FHkwpzK6OebvU7qCPOAgPj1UFBQUFBQUFBQUFBUjBXVUF3d0JV.6D9xmfQgPmiEidiacwEYVRVn_bCHL4IcQiJyXQ/UHD_1212/The.Wild.Robot.2024.Dt.ru.4K.SDR.WEBDL.BR.6t.2160p_480.mp4",
+//     "quality": {
+//         "480p": "https://chache09.werkecdn.me/s/FHkwpzK6OebvU7qCPOAgPj1UFBQUFBQUFBQUFBUjBXVUF3d0JV.6D9xmfQgPmiEidiacwEYVRVn_bCHL4IcQiJyXQ/UHD_1212/The.Wild.Robot.2024.Dt.ru.4K.SDR.WEBDL.BR.6t.2160p_480.mp4",
+//         "360p": "https://chache09.werkecdn.me/s/FHkwpzK6OebvU7qCPOAgPj1UFBQUFBQUFBQUFBUjBXVUF3d0JV.6D9xmfQgPmiEidiacwEYVRVn_bCHL4IcQiJyXQ/UHD_1212/The.Wild.Robot.2024.Dt.ru.4K.SDR.WEBDL.BR.6t.2160p_360.mp4"
+//     }
+// }
+      	var file = '';
         if (translat) {
-          if (element.season) for (var i in translat.json) {
-            var elem = translat.json[i];
-            if (elem.folder) for (var f in elem.folder) {
-              var folder = elem.folder[f];
-              if (folder.id == id) {
-                file = folder.file;
-                break;
-              }
-            } else {
-              if (elem.id == id) {
-                file = elem.file;
-                break;
-              }
-            }
-          } else file = translat.file;
+        	console.log(translat);
+        	file = {
+		          file: translat.file,
+		          quality: {
+		          	"480p": translat.file
+		          }
+		        };        	
         }
-        max_quality = parseInt(max_quality);
-        if (file) {
-          var link = file.slice(0, file.lastIndexOf('_')) + '_';
-          var orin = file.split('?');
-          orin = orin.length > 1 ? '?' + orin.slice(1).join('?') : '';
-          if (file.split('_').pop().replace('.mp4', '') !== max_quality) {
-            file = link + max_quality + '.mp4' + orin;
-          }
-          quality = {};
-          var mass = [2160, 1440, 1080, 720, 480, 360];
-          mass = mass.slice(mass.indexOf(max_quality));
-          mass.forEach(function (n) {
-            quality[n + 'p'] = link + n + '.mp4' + orin;
-          });
-          var preferably = Lampa.Storage.get('video_quality_default', '1080') + 'p';
-          if (quality[preferably]) file = quality[preferably];
-        }
-        console.log('getFile', {file: file, quality: quality});
-        return {
-          file: file,
-          quality: quality
-        };
+        console.log('getFile out', file);
+        return file;
       }
 
 
@@ -423,40 +379,54 @@
        * @returns array
        */
       function filtred() {
+      	console.log('filtred results', results);
         var filtred = [];
-        // var filter_data = Lampa.Storage.get('online_filter', '{}');
-        if (Object.keys(results.player_links.playlist).length) {
-          for (var transl in extract) {
-            var element = extract[transl];
-            for (var season_id in element.json) {
-              var episode = element.json[season_id];
-              // if (episode.id == filter_data.season + 1) {
-                episode.folder.forEach(function (media) {
-                  // if (media.translation == filter_items.voice_info[filter_data.voice].id) {
-                    filtred.push({
-                      episode: parseInt(media.episode),
-                      season: media.season,
-                      title: media.episode + (media.title ? ' - ' + media.title : ''),
-                      quality: media.quality + 'p ',
-                      translation: media.translation
-                    });
-                  // }
-                });
-              // }
-            }
-          }
-        } else if (Object.keys(results.player_links.movie).length) {
-          for (var transl_id in extract) {
-            var _element = extract[transl_id];
-            filtred.push({
-              title: _element.translation,
-              quality: _element.quality + 'p ',
-              qualitys: _element.qualities,
-              translation: transl_id
-            });
-          }
-        }
-        return filtred;
+
+        console.log('filtred filtred', filtred);
+        return [
+			    {
+			        "title": "Дубляж [4K, SDR, ru, звук с TS]",
+			        "quality": "480p ",
+			        "qualitys": "480",
+			        "translation": "1",
+			        "info": "",
+			        "timeline": {
+			            "hash": "888470979",
+			            "percent": 0,
+			            "time": 0,
+			            "duration": 0,
+			            "profile": 378159
+			        }
+			    },
+			    {
+			        "title": "MVO [4K, SDR, ru, LostFilm]",
+			        "quality": "480p ",
+			        "qualitys": "480",
+			        "translation": "2",
+			        "info": "",
+			        "timeline": {
+			            "hash": "888470979",
+			            "percent": 0,
+			            "time": 0,
+			            "duration": 0,
+			            "profile": 378159
+			        }
+			    },
+			    {
+			        "title": "MVO [4K, SDR, ru, RGB]",
+			        "quality": "480p ",
+			        "qualitys": "480",
+			        "translation": "3",
+			        "info": "",
+			        "timeline": {
+			            "hash": "888470979",
+			            "percent": 0,
+			            "time": 0,
+			            "duration": 0,
+			            "profile": 378159
+			        }
+			    }
+				];
       }
 
       /**
