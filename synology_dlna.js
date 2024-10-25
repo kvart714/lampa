@@ -9,7 +9,7 @@
 
       this.create = function () {
         this.activity.loader(true);
-        server = Lampa.Storage.get('dlna_client_server');
+        server = Lampa.Storage.get('synology_dlna_server');
 
         if (server !== undefined && server !== null && server !== '') {
           scroll = new Lampa.Scroll({
@@ -25,7 +25,7 @@
           this.displayFolder();
         } else {
           var empty = new Lampa.Empty({
-            descr: Lampa.Lang.translate('dlna_client_nosuport')
+            descr: Lampa.Lang.translate('synology_dlna_client_no_address')
           });
           html.empty();
           html.append(empty.render(true));
@@ -43,6 +43,17 @@
         load.find('.dlna_client-loading__title').text(text);
         scroll.append(load);
       };
+
+      // local proxy is needed for Synology NAS with old upnp sdk used (CORS restricted)
+      // UPnP/1.0, Portable SDK for UPnP devices/1.6.18: https://github.com/pupnp/pupnp/commit/542c318acff73bf9be85b886a6e447bc473f57f2 
+      this.getProxyURL = function (url) {
+        var proxy = Lampa.Storage.get('synology_dlna_proxy');
+        if (proxy) {
+          if (proxy.indexOf('http') === -1) proxy = 'http://' + proxy;  
+          url = proxy + (proxy.endsWith('/') ? '' : '/') + url;
+        }
+        return url;        
+      }
 
       this.drawFolder = function (elems) {
         var _this2 = this;
@@ -93,6 +104,7 @@
             item.find('.dlna_client-file__icon').html(icon);
             item.find('.dlna_client-file__name').text(element.title);
             item.find('.dlna_client-file__size').text(add+Lampa.Utils.bytesToSize(element.size));
+
             item.on('hover:enter', function () {
               if(element.type==='object.item.imageItem.photo') {
                 var folder = tree.tree[tree.tree.length - 1];
@@ -101,7 +113,7 @@
                 }
                 // create image tag at fullscreen and wait bach or esc for close
                 var img = document.createElement('img');
-                img.src = element.url;
+                img.src = this.getProxyURL(element.url);
                 img.style.width = '100%';
                 img.style.height = '100%';
                 img.style.objectFit = 'contain';
@@ -119,7 +131,7 @@
               }
               var video = {
                 title: element.title,
-                url: 'http://192.168.1.125:9118/proxy/'+ element.url
+                url: this.getProxyURL(element.url)
               };
               Lampa.Player.play(video);
               Lampa.Player.playlist([video]);
@@ -169,22 +181,28 @@
         var device = tree.device;
         var folder = tree.tree[tree.tree.length - 1];
         this.drawLoading(Lampa.Lang.translate('loading'));
-        var serviceURL = 'http://192.168.1.125:9118/proxy/http://192.168.1.5:50001/ContentDirectory/control'; // device.name;
-        if(serviceURL.indexOf('http') === -1) serviceURL = 'http://' + serviceURL;
+
+        var serviceURL = device.name + (device.name.endsWith('/') ? '' : '/') + 'ContentDirectory/control';
+        if (serviceURL.indexOf('http') === -1) serviceURL = 'http://' + serviceURL;
+
+        serviceURL = this.getProxyURL(serviceURL);
+
+        console.log('SynoDLNA', serviceURL);
+
         var soapAction = '"urn:schemas-upnp-org:service:ContentDirectory:1#Browse"';
         var soapBody = `
-    <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
-        <s:Body>
-            <u:Browse xmlns:u="urn:schemas-upnp-org:service:ContentDirectory:1">
-                <ObjectID>`+folder.id+`</ObjectID>
-                <BrowseFlag>BrowseDirectChildren</BrowseFlag>
-                <Filter>*</Filter>
-                <StartingIndex>0</StartingIndex>
-                <RequestedCount>1000</RequestedCount>
-                <SortCriteria></SortCriteria>
-            </u:Browse>
-        </s:Body>
-    </s:Envelope>`;
+          <s:Envelope xmlns:s="http://schemas.xmlsoap.org/soap/envelope/" s:encodingStyle="http://schemas.xmlsoap.org/soap/encoding/">
+              <s:Body>
+                  <u:Browse xmlns:u="urn:schemas-upnp-org:service:ContentDirectory:1">
+                      <ObjectID>`+folder.id+`</ObjectID>
+                      <BrowseFlag>BrowseDirectChildren</BrowseFlag>
+                      <Filter>*</Filter>
+                      <StartingIndex>0</StartingIndex>
+                      <RequestedCount>1000</RequestedCount>
+                      <SortCriteria></SortCriteria>
+                  </u:Browse>
+              </s:Body>
+          </s:Envelope>`;
         $.ajax({
           url: serviceURL,
           type: "POST",
@@ -196,38 +214,15 @@
           },
           success: function(response) {
             var filesAndDirectories = _this3.parseXmlResponse(response.documentElement.outerHTML);
-            //console.log('Synology DLNA', filesAndDirectories);
+            //console.log('SynoDLNA', filesAndDirectories);
             _this3.drawFolder(filesAndDirectories);
           },
           error: function() {
-            console.log('Synology DLNA', "SOAP request failed");
+            console.log('SynoDLNA', "SOAP request failed");
           }
         });
       };
-    /*
-      <DIDL-Lite xmlns:dc="http://purl.org/dc/elements/1.1/" xmlns:upnp="urn:schemas-upnp-org:metadata-1-0/upnp/" xmlns="urn:schemas-upnp-org:metadata-1-0/DIDL-Lite/" xmlns:dlna="urn:schemas-dlna-org:metadata-1-0/">
-        <item id="64$5" parentID="64" restricted="1">
-          <dc:title>1091212_1_w_1000</dc:title>
-          <upnp:class>object.item.imageItem.photo</upnp:class>
-          <res size="629283" resolution="2100x2794" protocolInfo="http-get:*:image/jpeg:DLNA.ORG_PN=JPEG_LRG;DLNA.ORG_OP=01;DLNA.ORG_CI=0;DLNA.ORG_FLAGS=00F00000000000000000000000000000">http://192.168.0.210:8200/MediaItems/56.jpg</res>
-          <res resolution="576x768" protocolInfo="http-get:*:image/jpeg:DLNA.ORG_PN=JPEG_MED;DLNA.ORG_CI=1;DLNA.ORG_FLAGS=00F00000000000000000000000000000">http://192.168.0.210:8200/Resized/56.jpg?width=576,height=768</res>
-          <res resolution="358x480" protocolInfo="http-get:*:image/jpeg:DLNA.ORG_PN=JPEG_SM;DLNA.ORG_CI=1;DLNA.ORG_FLAGS=00F00000000000000000000000000000">http://192.168.0.210:8200/Resized/56.jpg?width=358,height=480</res>
-          <res resolution="118x160" protocolInfo="http-get:*:image/jpeg:DLNA.ORG_PN=JPEG_TN;DLNA.ORG_CI=1;DLNA.ORG_FLAGS=00F00000000000000000000000000000">http://192.168.0.210:8200/Resized/56.jpg?width=118,height=160</res>
-        </item>
-        <item id="64$F" parentID="64" restricted="1">
-          <dc:title>calling</dc:title>
-          <upnp:class>object.item.audioItem.musicTrack</upnp:class>
-          <res size="210653" duration="0:00:16.782" bitrate="96000" sampleFrequency="44100" nrAudioChannels="2" protocolInfo="http-get:*:audio/mpeg:DLNA.ORG_PN=MP3;DLNA.ORG_OP=01;DLNA.ORG_CI=0;DLNA.ORG_FLAGS=01700000000000000000000000000000">http://192.168.0.210:8200/MediaItems/599.mp3</res>
-        </item>
-        <item id="64$4" parentID="64" restricted="1">
-          <dc:title>video_2023-12-31_15-14-16</dc:title>
-          <upnp:class>object.item.videoItem</upnp:class>
-          <dc:date>2023-12-31T15:14:21</dc:date>
-          <res size="14359881" duration="0:00:43.866" bitrate="327352" sampleFrequency="44100" nrAudioChannels="2" resolution="720x1280" protocolInfo="http-get:*:video/mp4:DLNA.ORG_PN=AVC_MP4_;DLNA.ORG_OP=01;DLNA.ORG_CI=0;DLNA.ORG_FLAGS=01700000000000000000000000000000">http://192.168.0.210:8200/MediaItems/54.mp4</res>
-        </item>
-        <container id="64$8" parentID="64" restricted="1" searchable="1" childCount="0"><dc:title>Нова тека</dc:title><upnp:class>object.container.storageFolder</upnp:class><upnp:storageUsed>-1</upnp:storageUsed></container>
-      </DIDL-Lite>
-      */
+
       this.parseXmlResponse = function (xmlResponse) {
         var parser = new DOMParser();
         var xmlDoc = parser.parseFromString(xmlResponse, "text/xml");
@@ -328,37 +323,21 @@
     }
 
     function startPlugin() {
-      window.plugin_dlna_client = true;
+      window.plugin_synology_dlna_client = true;
       Lampa.Lang.add({
-        dlna_client_search_device: {
-          ru: 'Поиск устройств',
-          en: 'Device search',
-          uk: 'Пошук пристроїв',
-          be: 'Пошук прылад',
-          zh: '设备搜索',
-          pt: 'Pesquisa de dispositivos'
-        },
-        dlna_client_nosuport: {
+        synology_dlna_client_no_address: {
           ru: 'Введите адрес DLNA сервера в настройках',
           en: 'Enter the address of the DLNA server in the settings',
           uk: 'Введіть адресу DLNA сервера в налаштуваннях',
           be: 'Увядзіце адрас DLNA сервера ў наладах',
           zh: '在设置中输入DLNA服务器的地址',
           pt: 'Digite o endereço do servidor DLNA nas configurações'
-        },
-        dlna_client_all_device: {
-          ru: 'Все устройства',
-          en: 'All devices',
-          uk: 'Усі пристрої',
-          be: 'Усе прылады',
-          zh: '所有设备',
-          pt: 'Todos os dispositivos'
         }
       });
       var manifest = {
         type: 'plugin',
         version: '1.0.0',
-        name: 'Synology DLNA',
+        name: 'SynoDLNA',
         description: 'Synology DLNA client for Lampa',
         component: 'synology_dlna_client'
       };
@@ -372,28 +351,43 @@
       Lampa.Template.add(manifest.component + '_style', "\n        <style>\n        .dlna_client-main__wrap::after{content:'';display:block;clear:both}.dlna_client-main__split{clear:both;padding:1.2em;font-size:1.4em}.dlna_client-head{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-flex-wrap:wrap;-ms-flex-wrap:wrap;flex-wrap:wrap;line-height:1.4;font-size:1.2em;-webkit-box-align:center;-webkit-align-items:center;-moz-box-align:center;-ms-flex-align:center;align-items:center;min-height:4.1em;padding:.7em;padding-bottom:0}.dlna_client-head>*{margin:.5em;-webkit-border-radius:.3em;-moz-border-radius:.3em;border-radius:.3em;padding:.4em 1em;-o-text-overflow:ellipsis;text-overflow:ellipsis;max-width:20em;overflow:hidden;white-space:nowrap;-webkit-flex-shrink:0;-ms-flex-negative:0;flex-shrink:0}.dlna_client-head__device{background-color:#404040;font-weight:600;margin-right:1.4em}.dlna_client-head__device>svg{width:1.5em !important;height:1.5em !important;margin-right:1em;vertical-align:middle;opacity:.5}.dlna_client-head__split{padding:0;margin:0;overflow:inherit}.dlna_client-head__split::before{content:'';display:block;width:.3em;height:.3em;border-right:.2em solid #fff;border-bottom:.2em solid #fff;-webkit-transform:rotate(-45deg);-moz-transform:rotate(-45deg);-ms-transform:rotate(-45deg);-o-transform:rotate(-45deg);transform:rotate(-45deg);opacity:.5;margin-top:.15em}.dlna_client-device{float:left;width:33.3%;padding:1.5em;line-height:1.4}.dlna_client-device__body{background-color:#404040;-webkit-border-radius:1em;-moz-border-radius:1em;border-radius:1em;padding:1.5em;position:relative;min-height:12.5em}.dlna_client-device__name{font-weight:600;font-size:1.4em;margin-bottom:.4em;overflow:hidden;-o-text-overflow:'.';text-overflow:'.';display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical}.dlna_client-device__ip{opacity:.5}.dlna_client-device__icon{opacity:.5;margin-bottom:1em}.dlna_client-device__icon svg{width:4em !important;height:4em !important}.dlna_client-device.focus .dlna_client-device__body::after,.dlna_client-device.hover .dlna_client-device__body::after{content:'';position:absolute;top:-0.5em;left:-0.5em;right:-0.5em;bottom:-0.5em;border:.3em solid #fff;-webkit-border-radius:1.4em;-moz-border-radius:1.4em;border-radius:1.4em;z-index:-1;pointer-events:none}.dlna_client-loading{margin:0 auto;padding:1.5em;text-align:center}.dlna_client-loading__title{font-size:1.4em;margin-bottom:2em}.dlna_client-file{padding:1.5em;line-height:1.4;padding-bottom:0}.dlna_client-file__body{display:-webkit-box;display:-webkit-flex;display:-moz-box;display:-ms-flexbox;display:flex;-webkit-box-align:center;-webkit-align-items:center;-moz-box-align:center;-ms-flex-align:center;align-items:center;background-color:#404040;-webkit-border-radius:1em;-moz-border-radius:1em;border-radius:1em;padding:1.5em;position:relative}.dlna_client-file__icon{opacity:.5;margin-right:2em}.dlna_client-file__icon svg{width:3em !important;height:3em !important}.dlna_client-file__name{font-weight:600;font-size:1.4em;overflow:hidden;-o-text-overflow:'.';text-overflow:'.';display:-webkit-box;-webkit-line-clamp:2;line-clamp:2;-webkit-box-orient:vertical}.dlna_client-file__size{padding-left:2em;margin-left:auto}.dlna_client-file.focus .dlna_client-file__body::after,.dlna_client-file.hover .dlna_client-file__body::after{content:'';position:absolute;top:-0.5em;left:-0.5em;right:-0.5em;bottom:-0.5em;border:.3em solid #fff;-webkit-border-radius:1.4em;-moz-border-radius:1.4em;border-radius:1.4em;z-index:-1;pointer-events:none}\n        </style>\n    ");
 
       function add() {
+        // https://github.com/yumata/lampa-source/blob/main/src/components/settings/api.js
         Lampa.SettingsApi.addComponent({
-          component: 'dlna_client_config',
-          name: 'DLNA2',
+          component: 'synology_dlna_client_config',
+          name: 'SynoDLNA',
           icon: "<svg viewBox=\"0 0 512 512\" xml:space=\"preserve\" xmlns=\"http://www.w3.org/2000/svg\"><path fill=\"currentColor\" d=\"M256 0C114.833 0 0 114.833 0 256s114.833 256 256 256 256-114.833 256-256S397.167 0 256 0Zm0 472.341c-119.275 0-216.341-97.066-216.341-216.341S136.725 39.659 256 39.659c119.295 0 216.341 97.066 216.341 216.341S375.275 472.341 256 472.341z\"></path>\n" +
               "        <circle cx=\"160\" cy=\"250\" r=\"60\" fill=\"currentColor\"></circle>\n" +
               "        <circle cx=\"320\" cy=\"150\" r=\"60\" fill=\"currentColor\"></circle>\n" +
               "        <circle cx=\"320\" cy=\"350\" r=\"60\" fill=\"currentColor\"></circle><path fill=\"currentColor\" d=\"M35 135h270v30H35zm175.782 100h270v30h-270zM35 335h270v30H35z\"></path></svg>"
         });
         Lampa.SettingsApi.addParam({
-          component: 'dlna_client_config',
+          component: 'synology_dlna_client_config',
           param: {
-            name: 'dlna_client_server',
+            name: 'synology_dlna_server',
             type: 'input', //доступно select,input,trigger,title,static
             placeholder: '',
             values: '',
             default: ''
           },
           field: {
-            name: 'Synology DLNA сервер',
-            description: 'Адрес DLNA сервера для просмотра'
+            name: 'Адрес и порт DLNA сервера',
+            description: 'Например, 192.168.1.5:50001'
           }
         });
+        Lampa.SettingsApi.addParam({
+          component: 'synology_dlna_client_config',
+          param: {
+            name: 'synology_dlna_proxy',
+            type: 'input', //доступно select,input,trigger,title,static
+            placeholder: '',
+            values: '',
+            default: ''
+          },
+          field: {
+            name: 'Адрес и порт прокси',
+            description: 'Например, 127.0.0.1:9118/proxy'
+          }
+        });        
         var button = $("<li class=\"menu__item selector\">\n            <div class=\"menu__ico\">\n            " +
             "    <svg viewBox=\"0 0 512 512\" xml:space=\"preserve\" xmlns=\"http://www.w3.org/2000/svg\"><path fill=\"currentColor\" d=\"M256 0C114.833 0 0 114.833 0 256s114.833 256 256 256 256-114.833 256-256S397.167 0 256 0Zm0 472.341c-119.275 0-216.341-97.066-216.341-216.341S136.725 39.659 256 39.659c119.295 0 216.341 97.066 216.341 216.341S375.275 472.341 256 472.341z\"/>\n                    <circle cx=\"160\" cy=\"250\" r=\"60\" fill=\"currentColor\"/>\n                    <circle cx=\"320\" cy=\"150\" r=\"60\" fill=\"currentColor\"/>\n                    <circle cx=\"320\" cy=\"350\" r=\"60\" fill=\"currentColor\"/><path fill=\"currentColor\" d=\"M35 135h270v30H35zm175.782 100h270v30h-270zM35 335h270v30H35z\"/></svg>\n            </div>\n            <div class=\"menu__text\">".concat(manifest.name, "</div>\n        </li>"));
         button.on('hover:enter', function () {
@@ -415,6 +409,6 @@
       }
     }
 
-    if (!window.plugin_dlna_client) startPlugin();
+    if (!window.plugin_synology_dlna_client) startPlugin();
 
 })();
