@@ -113,7 +113,7 @@
                 }
                 // create image tag at fullscreen and wait bach or esc for close
                 var img = document.createElement('img');
-                img.src = this.getProxyURL(element.url);
+                img.src = _this2.getProxyURL(element.url);
                 img.style.width = '100%';
                 img.style.height = '100%';
                 img.style.objectFit = 'contain';
@@ -131,7 +131,7 @@
               }
               var video = {
                 title: element.title,
-                url: this.getProxyURL(element.url)
+                url: _this2.getProxyURL(element.url)
               };
               Lampa.Player.play(video);
               Lampa.Player.playlist([video]);
@@ -336,7 +336,7 @@
       });
       var manifest = {
         type: 'plugin',
-        version: '1.0.0',
+        version: '1.0.1',
         name: 'SynoDLNA',
         description: 'Synology DLNA client for Lampa',
         component: 'synology_dlna_client'
@@ -385,7 +385,7 @@
           },
           field: {
             name: 'Адрес и порт прокси',
-            description: 'Например, 127.0.0.1:9118/proxy'
+            description: 'Например, 192.168.1.125:9118/proxy'
           }
         });        
         var button = $("<li class=\"menu__item selector\">\n            <div class=\"menu__ico\">\n            " +
