@@ -91,6 +91,8 @@ https://and7ey.github.io/lampa/kinopoisk_rating.js
 
 Добавляет в приложение [Лампа](https://cub.red/lampa) возможность просматривать файлы (видео и фото) с DLNA-сервера, запущенного на Synology NAS. 
 
+<img width="1651" alt="image" src="https://github.com/user-attachments/assets/a3345456-6717-486b-948f-d9a516478dac">
+
 Плагин основан на [плагине](https://fredy314.github.io/dlna.js) от @fredy314, в котором сделаны следующие изменения:
 - Добавлена возможность указывать прокси
 - SOAPAction передается в кавычках
