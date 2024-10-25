@@ -1,7 +1,8 @@
-# Плагины "Кинопоиск" для Лампы
+# Плагины для Лампы
 
 1. [Кинопоиск](README.md#кинопоиск-kinopoiskjs)
 2. [Кинопоиск Оценки](README.md#кинопоиск-оценки-kinopoisk_ratingjs)
+3. [Synology DLNA](README.md#synology-dlna-synology_dlnajs)
 
 ## Кинопоиск (kinopoisk.js)
 
@@ -85,3 +86,25 @@ https://and7ey.github.io/lampa/kinopoisk_rating.js
     | 5-7           | Серый     |
     | 8-10          | Зелёный      |
     | отсутствует   | Белый      |
+
+## Synology DLNA (synology_dlna.js)
+
+Добавляет в приложение [Лампа](https://cub.red/lampa) возможность просматривать файлы (видео и фото) с DLNA-сервера, запущенного на Synology NAS. 
+
+Плагин основан на [плагине](https://fredy314.github.io/dlna.js) от @fredy314, в котором сделаны следующие изменения:
+- Добавлена возможность указывать прокси
+- SOAPAction передается в кавычках
+
+DLNA-сервер на старых (?) Synology NAS использует старую версию библиотеки [The Portable SDK for UPnP Devices](https://github.com/pupnp/pupnp), которая требует указания SOAPAction в кавычках и защищает запросы через CORS (что [исправлено](https://github.com/pupnp/pupnp/releases/tag/release-1.14.20) в новых версиях).
+
+### Особенности работы
+- Необходим прокси, установленный в локальной сети
+- Если вы используете [Lampac](https://github.com/immisterio/Lampac), то в нем есть встроенный прокси http://ip:9118/proxy, который необходимо включить в `init.conf`:
+```json
+{
+  "serverproxy": {
+    "encrypt": false,
+    "verifyip": false
+  }
+}
+```
