@@ -9,7 +9,7 @@
 
 Добавляет в приложение [Лампа](https://cub.red/lampa) список фильмов из папки "[Буду смотреть](https://www.kinopoisk.ru/mykp/folders/3575/?format=mini)" на Кинопоиске. 
 
-<img width="1680" alt="image" src="https://github.com/user-attachments/assets/180ca020-4f91-4416-b68d-21294f6e94ff">
+![lampa_kinopoisk](https://github.com/user-attachments/assets/1d0a1174-1488-4761-9b7c-47f89c9782cc)
 
 
 ### Установка
@@ -40,13 +40,15 @@ https://and7ey.github.io/lampa/kinopoisk.js
 ### Ошибки
 Для поиска ошибок посмотрите в консоль Лампы (в левом меню Лампы выберите пункт меню "Консоль" - он находится в самом низу). Для просмотра ошибок плагина перейдите на вкладку "Кинопоиск".
 
-<img width="1651" alt="image" src="https://github.com/user-attachments/assets/1a40f8f8-ddb1-454c-95a6-71ba49119fbb">
+![lampa_kinopoisk_errors](https://github.com/user-attachments/assets/61bd0a53-edd0-4b0e-9783-bb8c9e591be8)
+
 
 ## Кинопоиск Оценки (kinopoisk_rating.js)
 
 Отображает в Лампе ваши оценки фильмов на Кинопоиске. Позволяет оценивать фильмы на Кинопоиске через Лампу.
 
-<img width="1680" alt="image" src="https://github.com/user-attachments/assets/b7dce383-9379-47a5-993f-0035c8826fed">
+![lampa_kinopoisk_rating](https://github.com/user-attachments/assets/b8cd834b-964c-4c62-a711-d1d180313bc9)
+
 
 
 ### Установка
@@ -92,7 +94,8 @@ https://and7ey.github.io/lampa/kinopoisk_rating.js
 
 Добавляет в приложение [Лампа](https://cub.red/lampa) возможность просматривать файлы (видео и фото) с DLNA-сервера, запущенного на Synology NAS. 
 
-<img width="1651" alt="image" src="https://github.com/user-attachments/assets/a3345456-6717-486b-948f-d9a516478dac">
+![lampa_synology_dlna](https://github.com/user-attachments/assets/010967ad-3c76-43ab-97c1-e2f7f68a4e5f)
+
 
 Плагин основан на [плагине](https://fredy314.github.io/dlna.js) от @fredy314, в котором сделаны следующие изменения:
 - Добавлена возможность указывать прокси
@@ -132,8 +135,7 @@ https://and7ey.github.io/lampa/synology_dlna.js
 
 Добавляет DLNA-сервер от Synology NAS в приложение [Лампа](https://cub.red/lampa) как балансер (источник видео). 
 
-<img width="1651" alt="image" src="https://github.com/user-attachments/assets/df7f23ec-2526-49a9-bbf7-a84bb553b644">
-
+![lampa_synology_nas](https://github.com/user-attachments/assets/d8571fd3-bea2-4c7a-b91d-1f49799bd0dc)
 
 ### Установка
 
