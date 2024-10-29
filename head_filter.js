@@ -5,14 +5,14 @@
 
     var manifest = {
       type: 'other',
-      version: '0.0.2',
+      version: '0.0.3',
       name: 'Настройка шапки',
       description: 'Плагин для скрытия элементов в шапке Лампы',
       component: 'head_filter',
     };
     Lampa.Manifest.plugins = manifest;
 
-    const head = {
+    var head = {
       'head_filter_show_search': {name: 'Поиск', element: '.open--search'}, 
       'head_filter_show_settings': {name: 'Настройки', element: '.open--settings'}, 
       'head_filter_show_premium': {name: 'Премиум', element: '.open--premium'}, 
