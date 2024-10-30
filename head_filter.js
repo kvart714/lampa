@@ -1,11 +1,10 @@
-(async function() { 
-  'use strict'; 
+(function() {
+  'use strict';
 
   function startPlugin() {
-
     var manifest = {
       type: 'other',
-      version: '0.0.3',
+      version: '0.0.4',
       name: 'Настройка шапки',
       description: 'Плагин для скрытия элементов в шапке Лампы',
       component: 'head_filter',
@@ -25,39 +24,32 @@
       'head_filter_show_split': {name: 'Разделитель', element: '.head__split'}, 
       'head_filter_show_time': {name: 'Время', element: '.head__time'}, 
     };
-  
 
     function showHideElement(element, show) {
       if (show == true) {
-        $(element).show()
+        $(element).show();
       } else {
-        $(element).hide()
+        $(element).hide();
       }
     }
 
-    Lampa.Storage.listener.follow('change', function (event) {
-      if (event.name == 'activity') { // если приложение только запущено (activity)
-        Object.keys(head).forEach(key => {
+    Lampa.Storage.listener.follow('change', function(event) {
+      if (event.name == 'activity') {
+        Object.keys(head).forEach(function(key) {
           var show_element = Lampa.Storage.get(key, true); 
           showHideElement(head[key].element, show_element);     
         });
-      } else if (event.name in head) { // если изменен наш параметр
+      } else if (event.name in head) {
         var show_element = Lampa.Storage.get(event.name, true); 
         showHideElement(head[event.name].element, show_element);     
-      }      
+      }
     });
-
 
     Lampa.SettingsApi.addComponent({
       component: 'head_filter',
       name: 'Настройка шапки',
-      icon: `<svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg">
-              <circle cx="5" cy="12" r="2" stroke="currentColor" stroke-width="1.5"></circle>
-              <circle cx="12" cy="12" r="2" stroke="currentColor" stroke-width="1.5"></circle>
-              <circle cx="19" cy="12" r="2" stroke="currentColor" stroke-width="1.5"></circle>
-            </svg>`
+      icon: '<svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="5" cy="12" r="2" stroke="currentColor" stroke-width="1.5"></circle><circle cx="12" cy="12" r="2" stroke="currentColor" stroke-width="1.5"></circle><circle cx="19" cy="12" r="2" stroke="currentColor" stroke-width="1.5"></circle></svg>'
     });
-
 
     Lampa.SettingsApi.addParam({
       component: 'head_filter',
@@ -69,8 +61,7 @@
       }
     });
 
-
-    Object.keys(head).forEach(key => {
+    Object.keys(head).forEach(function(key) {
       Lampa.SettingsApi.addParam({
         component: 'head_filter',
         param: {
@@ -83,16 +74,15 @@
         }        
       });
     });
-
   }
 
-  if (window.appready) startPlugin();
-  else {
+  if (window.appready) {
+    startPlugin();
+  } else {
     Lampa.Listener.follow('app', function(e) {
-      if(e.type == 'ready') {
+      if (e.type == 'ready') {
         startPlugin();
       }
     });
   }
-
 })();
