@@ -4,7 +4,7 @@
   function startPlugin() {
     var manifest = {
       type: 'other',
-      version: '0.0.4',
+      version: '0.1.0',
       name: 'Настройка шапки',
       description: 'Плагин для скрытия элементов в шапке Лампы',
       component: 'head_filter',
@@ -35,21 +35,38 @@
 
     Lampa.Storage.listener.follow('change', function(event) {
       if (event.name == 'activity') {
-        Object.keys(head).forEach(function(key) {
-          var show_element = Lampa.Storage.get(key, true); 
-          showHideElement(head[key].element, show_element);     
-        });
+        setTimeout(function() {
+          Object.keys(head).forEach(function(key) {
+            var show_element = Lampa.Storage.get(key, true); 
+            showHideElement(head[key].element, show_element);     
+          });          
+        }, 1000);
       } else if (event.name in head) {
         var show_element = Lampa.Storage.get(event.name, true); 
         showHideElement(head[event.name].element, show_element);     
       }
     });
 
-    Lampa.SettingsApi.addComponent({
-      component: 'head_filter',
-      name: 'Настройка шапки',
-      icon: '<svg width="800px" height="800px" viewBox="0 0 24 24" fill="none" xmlns="http://www.w3.org/2000/svg"><circle cx="5" cy="12" r="2" stroke="currentColor" stroke-width="1.5"></circle><circle cx="12" cy="12" r="2" stroke="currentColor" stroke-width="1.5"></circle><circle cx="19" cy="12" r="2" stroke="currentColor" stroke-width="1.5"></circle></svg>'
-    });
+    // https://github.com/yumata/lampa-source/blob/main/src/interaction/template.js
+    Lampa.Template.add('settings_head_filter',`<div></div>`);
+
+    Lampa.SettingsApi.addParam({
+        component: 'interface',
+        param: {
+            type: 'button'
+        },
+        field: {
+            name: 'Шапка',
+            description: 'Настройка отображения элементов в шапке'
+        },
+        onChange: ()=>{
+            Lampa.Settings.create('head_filter',{
+                onBack: ()=>{
+                    Lampa.Settings.create('interface')
+                }
+            })
+        }
+    })   
 
     Lampa.SettingsApi.addParam({
       component: 'head_filter',
@@ -57,9 +74,9 @@
         type: 'title'
       },
       field: {
-        name: 'Отображать',
+        name: 'Отображать в шапке',
       }
-    });
+    });   
 
     Object.keys(head).forEach(function(key) {
       Lampa.SettingsApi.addParam({
@@ -74,6 +91,7 @@
         }        
       });
     });
+  
   }
 
   if (window.appready) {
