@@ -876,6 +876,8 @@
         contentType: "application/json",
         success: function success(response, textStatus, jqXHR) {
           console.log('LME Torrent manager', 'Auth result', response);
+          console.log('LME Torrent manager', 'Auth result', response.data);
+          console.log('LME Torrent manager', 'Auth result', response.data.sid);
           var data = {
             sID: response.data.sid,
             createDate: Math.floor(Date.now() / 1000)
