@@ -875,6 +875,7 @@
         // Если getHeaders возвращает объект с ключом headers
         contentType: "application/json",
         success: function success(response, textStatus, jqXHR) {
+          console.log('LME Torrent manager', 'Auth result', response);
           var data = {
             sID: response.data.sid,
             createDate: Math.floor(Date.now() / 1000)
