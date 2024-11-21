@@ -89,6 +89,9 @@
                                             Lampa.Storage.set('kinopoisk_movies', JSON.stringify(kinopoiskMovies));
                                         } else {
                                             console.log('Kinopoisk', 'Movie or TV with kinopoisk id ' + String(m.movie.id) + ' not released yet, release date:', movieDate);    
+                                            if (Lampa.Storage.get('kinopoisk_add_to_favorites', false)) { // add to favorites
+                                                Lampa.Favorite.add('wath', movieItem, 100);
+                                            }
                                         }
                                         
                                     } else {
@@ -275,7 +278,7 @@
     function startPlugin() {
         var manifest = {
             type: 'video',
-            version: '0.3.0',
+            version: '0.4.0',
             name: 'Кинопоиск',
             description: '',
             component: 'kinopoisk'
@@ -368,6 +371,43 @@
                 }
             }
         });
+
+        Lampa.SettingsApi.addParam({
+            component: 'kinopoisk',
+            param: {
+                type: 'title'
+            },
+            field: {
+                name: 'Список Буду смотреть',
+            }
+        })
+        Lampa.SettingsApi.addParam({
+            component: 'kinopoisk',
+            param: {
+                name: 'kinopoisk_add_to_favorites',
+                type: 'trigger',
+                default: false
+            },
+            field: {
+                name: 'Добавлять в Избранное',
+                description: 'Будущие, еще не вышедшие релизы добавляются в список Позже'
+            }
+        })        
+        Lampa.SettingsApi.addParam({
+            component: 'kinopoisk',
+            param: {
+                type: 'button',
+                name: 'kinopoisk_delete_cache'
+            },
+            field: {
+                name: 'Очистить кэш фильмов',
+                description: 'Необходимо при возникновении проблем'
+            },
+            onChange: () => {
+                Lampa.Storage.set('kinopoisk_movies', []);
+                Lampa.Noty.show('Кэш Кинопоиска очищен');
+            }
+        });        
     }
     if(!window.kinopoisk_ready) startPlugin();
 })();
