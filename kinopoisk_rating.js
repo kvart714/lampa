@@ -112,26 +112,26 @@
                 var kinopoiskId = e.data.movie.kinopoisk_id;
                 var tmdbId = e.data.movie.id;
                 if (!kinopoiskId) {
-                    console.log('Kinopoisk Rating', 'Kinopoisk id not found, trying to get it...');
+                    console.log('Kinopoisk Ratings', 'Kinopoisk id not found, trying to get it...');
                     network.silent('https://api.alloha.tv/?token=04941a9a3ca3ac16e2b4327347bbc1&tmdb=' + tmdbId,
                         function (data) { // on success
                             if (data && data.data && data.data.id_kp) {
                                 kinopoiskId = data.data.id_kp;
-                                console.log('Kinopoisk Rating', 'Kinopoisk id found: ' + String(kinopoiskId));
+                                console.log('Kinopoisk Ratings', 'Kinopoisk id found: ' + String(kinopoiskId));
 
                                 var rate = kinopoiskRatings[kinopoiskId];
                                 var color = getColorBasedOnRate(rate);
                                 $('.button--kinopoisk_rating svg path').attr('stroke', color);
                             } else {
-                                console.log('Kinopoisk Rating', 'Failed to find Kinopoisk id');
+                                console.log('Kinopoisk Ratings', 'Failed to find Kinopoisk id');
                             }
                         },
                         function (data) { // on error
-                            console.log('Kinopoisk Rating', 'Failed to get Kinopoisk id', data);
+                            console.log('Kinopoisk Ratings', 'Failed to get Kinopoisk id', data);
                         }
                   );
                 } else {
-                    console.log('Kinopoisk Rating', 'Kinopoisk id is known: ' + String(kinopoiskId));
+                    console.log('Kinopoisk Ratings', 'Kinopoisk id is known: ' + String(kinopoiskId));
                     var rate = kinopoiskRatings[kinopoiskId];
                     var color = getColorBasedOnRate(rate);
                     $('.button--kinopoisk_rating svg path').attr('stroke', color);
@@ -145,10 +145,10 @@
 
 
                         if (kinopoiskId) {
-                            console.log('Kinopoisk Rating', 'Reading ratings from the storage');
+                            console.log('Kinopoisk Ratings', 'Reading ratings from the storage');
 
                             var kinopoiskRating = kinopoiskRatings[kinopoiskId];
-                            console.log('Kinopoisk Rating', 'Kinopoisk id: ' + String(kinopoiskId) + ', rating: ' + kinopoiskRating);
+                            console.log('Kinopoisk Ratings', 'Kinopoisk id: ' + String(kinopoiskId) + ', rating: ' + kinopoiskRating);
 
                             let items = [
                                 {title: '10', selected: kinopoiskRating ==='10'},
@@ -317,11 +317,11 @@
                             })
                         } else {
                             Lampa.Noty.show('Подождите несколько секунд для завершение получения идентификатора фильма на Кинопоиске');
-                            console.log('Kinopoisk Rating', 'No kinopoisk id found', e.data);
+                            console.log('Kinopoisk Ratings', 'No kinopoisk id found', e.data);
                         }
                     } else {
                         Lampa.Noty.show('Ошибка обработки данных, оценить фильм невозможно');
-                        console.log('Kinopoisk Rating', 'No movie data found', e.data);
+                        console.log('Kinopoisk Ratings', 'No movie data found', e.data);
                     }
 
 
