@@ -4,7 +4,7 @@
   function startPlugin() {
     var manifest = {
       type: 'other',
-      version: '0.1.0',
+      version: '0.1.1',
       name: 'Настройка шапки',
       description: 'Плагин для скрытия элементов в шапке Лампы',
       component: 'head_filter',
@@ -21,6 +21,7 @@
       'head_filter_show_broadcast': {name: 'Вещание', element: '.open--broadcast'},
       'head_filter_show_fullscreen': {name: 'Полноэкранный режим', element: '.full-screen'}, 
       'head_filter_show_reload': {name: 'Обновление страницы', element: '.m-reload-screen'},
+      'head_filter_show_blackfriday': {name: 'Черная пятница', element: '.black-friday__button'}, 
       'head_filter_show_split': {name: 'Разделитель', element: '.head__split'}, 
       'head_filter_show_time': {name: 'Время', element: '.head__time'}, 
     };
