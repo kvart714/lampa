@@ -22,7 +22,7 @@
 
                     var kinopoiskRatingsReceived = {};
                     receivedRatings.forEach(m => {
-                        if (m.item.movieUserVote.voting.value) {
+                        if (m.item && m.item.movieUserVote && m.item.movieUserVote.voting.value) {
                             kinopoiskRatingsReceived[m.item.id] = String(m.item.movieUserVote.voting.value);
                         }
                     });
