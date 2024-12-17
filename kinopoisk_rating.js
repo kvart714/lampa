@@ -217,46 +217,74 @@
                 }
 
 
-                if (showTrivias && kinopoiskId) {
-                    console.log('Kinopoisk Rating', 'Getting trivias for movie ' + String(kinopoiskId) + '...');
-                    network.silent('https://script.google.com/macros/s/AKfycbxbrniXm-gOZBtYDAuGK860NyEcgaYKN54CHFRh_7NU-aI2ZCI5DIBLwH5AxKWeYj9u/exec?method=getTrivias&oauth=' + oauth + '&movie=' + String(kinopoiskId),
-                        function (data) { // on success
-                            if (data && data.data && data.data.movie && data.data.movie.trivias && data.data.movie.trivias.total > 0) {
-                                console.log('Kinopoisk Rating', 'Movie ' + String(kinopoiskId) + ' trivias received, count ' + String(data.data.movie.trivias.total));
+                setTimeout(function() { // timeout to wait for kinopoisk id
 
-                                if ($('.kinopoisk-trivias').length === 0) {
-                                    $('.items-line')
-                                      .after(`<div class="items-line layer--visible layer--render kinopoisk-trivias">
-                                            <div class="items-line__head">
-                                                <div class="items-line__title">Знаете ли вы, что...</div>
-                                            </div>
-                                            <div class="items-line__body">
-                                                <div class="full-descr">
-                                                    <div class="full-descr__left">
-                                                        <div class="full-descr__text selector kinopoisk-trivias-text"></div>
+                    if (showTrivias && kinopoiskId) {
+                        console.log('Kinopoisk Rating', 'Getting trivias for movie ' + String(kinopoiskId) + '...');
+                        network.silent('https://script.google.com/macros/s/AKfycbxbrniXm-gOZBtYDAuGK860NyEcgaYKN54CHFRh_7NU-aI2ZCI5DIBLwH5AxKWeYj9u/exec?method=getTrivias&oauth=' + oauth + '&movie=' + String(kinopoiskId),
+                            function (data) { // on success
+                                console.log(data);
+                                if (data && data.data && data.data.movie && data.data.movie.trivias && data.data.movie.trivias.total > 0) {
+                                    console.log('Kinopoisk Rating', 'Movie ' + String(kinopoiskId) + ' trivias received, count ' + String(data.data.movie.trivias.total));
+
+                                    if ($('.kinopoisk-trivias').length === 0) {
+                                        $('.items-line:first')
+                                          .after(`<div class="items-line layer--visible layer--render kinopoisk-trivias">
+                                                <div class="items-line__head">
+                                                    <div class="items-line__title">Знаете ли вы, что...</div>
+                                                </div>
+                                                <div class="items-line__body">
+                                                    <div class="scroll scroll--horizontal">
+                                                        <div class="scroll__content">
+                                                            <div class="scroll__body full-reviews kinopoisk-trivias-texts">
+                                                            </div>
+                                                        </div>
                                                     </div>
                                                 </div>
                                             </div>
-                                        </div>
-                                        `); 
+                                            `); 
 
-                                    var trivias = data.data.movie.trivias.items;
-                                    for (var i = 0; i < trivias.length; i++) {
-                                        var trivia_text = trivias[i].text;
-                                        trivia_text = trivia_text.replace(/<a[^>]*>/g, '').replace(/<\/a>/g, ''); // remove links
-                                        $('.kinopoisk-trivias-text').append(trivia_text + '<br><br>');
-                                    }
-                                    
-                                }       
+                                        var trivias = data.data.movie.trivias.items;
+                                        var trivias_texts = '';
+                                        for (var i = 0; i < trivias.length; i++) {
+                                            var trivia_text = trivias[i].text;
+                                            trivia_text = trivia_text.replace(/<a[^>]*>/g, '').replace(/<\/a>/g, ''); // remove links
+                                            trivias_texts = trivias_texts + trivia_text + '<br><br>';
+                                        }
+
+                                        for (var i = 0; i < trivias.length; i++) {
+                                            var trivia_text = trivias[i].text;
+                                            trivia_text = trivia_text.replace(/<a[^>]*>/g, '').replace(/<\/a>/g, ''); // remove links
+                                            var trivia_html = $('<div class="full-review selector layer--visible type--line"><div class="full-review__text">' + trivia_text + '</div></div>');
+                                            $('.kinopoisk-trivias-texts').append(trivia_html);
+                                            trivia_html.on('hover:enter', function (card) {
+                                                Lampa.Modal.open({
+                                                    title: "Знаете ли вы, что...",
+                                                    html: $('<div><div class="broadcast__text" style="text-align:left"><div class="otzyv">'+trivias_texts+'</div></div></div>'),
+                                                    size: "large",
+                                                    mask: !0,
+                                                    onBack: function() {
+                                                        Lampa.Modal.close()
+                                                    },
+                                                    onSelect: function() {}
+                                                });                                                
+                                            });
+
+                                        }
+                                        
+                                    }       
+                                }
+
+                            },
+                            function (data) { // on error
+                               console.log('Kinopoisk Rating', 'Failed to get trivias for movie ' + String(kinopoiskId), data);
                             }
+                        );
+                        
+                    }                
 
-                        },
-                        function (data) { // on error
-                           console.log('Kinopoisk Rating', 'Failed to get trivias for movie ' + String(kinopoiskId), data);
-                        }
-                    );
                     
-                }                
+                }, 1000);
 
                 $('.button--kinopoisk_rating').on('hover:enter', function (card) {
 
