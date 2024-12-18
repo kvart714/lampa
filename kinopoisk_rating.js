@@ -162,10 +162,10 @@
         var ratings_postponed = Lampa.Storage.get('kinopoisk_my_ratings_postponed', {});
         var delay = 1000;
         Object.keys(ratings_postponed).forEach(function(key) {
-            console.log('Kinopoisk Rating', 'Starting to schedule postponed ratings...');
+            console.log('Kinopoisk Ratings', 'Starting to schedule postponed ratings...');
             setTimeout(setRating, delay, oauth, key, ratings_postponed[key], true); // oauth, kinopoiskId, rating, background
             delay = delay + 1000;
-            console.log('Kinopoisk Rating', 'Finished to schedule postponed ratings');
+            console.log('Kinopoisk Ratings', 'Finished to schedule postponed ratings');
         });
 
         var showTrivias = Lampa.Storage.get('kinopoisk_show_trivias', true);
@@ -190,26 +190,26 @@
 
 
                 if (!kinopoiskId) {
-                    console.log('Kinopoisk Rating', 'Kinopoisk id not found, trying to get it...');
+                    console.log('Kinopoisk Ratings', 'Kinopoisk id not found, trying to get it...');
                     network.silent('https://api.alloha.tv/?token=04941a9a3ca3ac16e2b4327347bbc1&tmdb=' + tmdbId, 
                         function (data) { // on success
                             if (data && data.data && data.data.id_kp) {
                                 kinopoiskId = data.data.id_kp;
-                                console.log('Kinopoisk Rating', 'Kinopoisk id found: ' + String(kinopoiskId));
+                                console.log('Kinopoisk Ratings', 'Kinopoisk id found: ' + String(kinopoiskId));
 
                                 var rate = kinopoiskRatings[kinopoiskId];
                                 var color = getColorBasedOnRate(rate);
                                 $('.button--kinopoisk_rating svg path').attr('stroke', color);
                             } else {
-                                console.log('Kinopoisk Rating', 'Failed to find Kinopoisk id');
+                                console.log('Kinopoisk Ratings', 'Failed to find Kinopoisk id');
                             }
                         },
                         function (data) { // on error
-                            console.log('Kinopoisk Rating', 'Failed to get Kinopoisk id', data);
+                            console.log('Kinopoisk Ratings', 'Failed to get Kinopoisk id', data);
                         }
                   );
                 } else {
-                    console.log('Kinopoisk Rating', 'Kinopoisk id is known: ' + String(kinopoiskId));
+                    console.log('Kinopoisk Ratings', 'Kinopoisk id is known: ' + String(kinopoiskId));
                     var rate = kinopoiskRatings[kinopoiskId];
                     var color = getColorBasedOnRate(rate);
                     $('.button--kinopoisk_rating svg path').attr('stroke', color);
@@ -220,12 +220,12 @@
                 setTimeout(function() { // timeout to wait for kinopoisk id
 
                     if (showTrivias && kinopoiskId) {
-                        console.log('Kinopoisk Rating', 'Getting trivias for movie ' + String(kinopoiskId) + '...');
+                        console.log('Kinopoisk Ratings', 'Getting trivias for movie ' + String(kinopoiskId) + '...');
                         network.silent('https://script.google.com/macros/s/AKfycbxbrniXm-gOZBtYDAuGK860NyEcgaYKN54CHFRh_7NU-aI2ZCI5DIBLwH5AxKWeYj9u/exec?method=getTrivias&oauth=' + oauth + '&movie=' + String(kinopoiskId),
                             function (data) { // on success
                                 console.log(data);
                                 if (data && data.data && data.data.movie && data.data.movie.trivias && data.data.movie.trivias.total > 0) {
-                                    console.log('Kinopoisk Rating', 'Movie ' + String(kinopoiskId) + ' trivias received, count ' + String(data.data.movie.trivias.total));
+                                    console.log('Kinopoisk Ratings', 'Movie ' + String(kinopoiskId) + ' trivias received, count ' + String(data.data.movie.trivias.total));
 
                                     if ($('.kinopoisk-trivias').length === 0) {
                                         $('.items-line:first')
@@ -277,7 +277,7 @@
 
                             },
                             function (data) { // on error
-                               console.log('Kinopoisk Rating', 'Failed to get trivias for movie ' + String(kinopoiskId), data);
+                               console.log('Kinopoisk Ratings', 'Failed to get trivias for movie ' + String(kinopoiskId), data);
                             }
                         );
                         
@@ -293,10 +293,10 @@
 
 
                         if (kinopoiskId) {
-                            console.log('Kinopoisk Rating', 'Reading ratings from the storage');
+                            console.log('Kinopoisk Ratings', 'Reading ratings from the storage');
                             
                             var kinopoiskRating = kinopoiskRatings[kinopoiskId];
-                            console.log('Kinopoisk Rating', 'Kinopoisk id: ' + String(kinopoiskId) + ', rating: ' + kinopoiskRating);
+                            console.log('Kinopoisk Ratings', 'Kinopoisk id: ' + String(kinopoiskId) + ', rating: ' + kinopoiskRating);
 
                             let items = [
                                 {title: '10', selected: kinopoiskRating ==='10'},
@@ -415,12 +415,12 @@
                             })
                         } else {
                             Lampa.Noty.show('Подождите несколько секунд для завершения получения идентификатора фильма на Кинопоиске');
-                            console.log('Kinopoisk Rating', 'No kinopoisk id found', e.data);
+                            console.log('Kinopoisk Ratings', 'No kinopoisk id found', e.data);
                         }
                     } else {
                         $('.button--kinopoisk_rating_icon').replaceWith(buttonIcon);
                         Lampa.Noty.show('Ошибка обработки данных, оценить фильм невозможно');
-                        console.log('Kinopoisk Rating', 'No movie data found', e.data);                        
+                        console.log('Kinopoisk Ratings', 'No movie data found', e.data);                        
                     }
 
 
