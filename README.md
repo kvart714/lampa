@@ -46,11 +46,13 @@ https://and7ey.github.io/lampa/kinopoisk.js
 
 ## Кинопоиск Оценки (kinopoisk_rating.js)
 
-Отображает в Лампе ваши оценки фильмов на Кинопоиске. Позволяет оценивать фильмы на Кинопоиске через Лампу. Показывает интересные факты о фильме ("Знаете ли вы, что...") из Кинопоиска.
+Отображает в Лампе ваши оценки фильмов на Кинопоиске. Позволяет оценивать фильмы на Кинопоиске через Лампу. Показывает интересные факты о фильме ("Знаете ли вы, что...") и Трейлеры фильма из Кинопоиска.
 
 ![lampa_kinopoisk_rating](https://github.com/user-attachments/assets/b8cd834b-964c-4c62-a711-d1d180313bc9)
 
 ![lampa_kinopoisk_rating_interesting](https://github.com/user-attachments/assets/ed6f6857-d0fa-4b93-8724-4f5ffeb174e8)
+
+![lampa_kinopoisk_rating_trailers](https://github.com/user-attachments/assets/b263fb49-9505-4286-9482-6821720aee7f)
 
 
 ### Установка
