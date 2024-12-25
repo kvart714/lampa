@@ -305,13 +305,13 @@
                                     $('.button--kinopoisk_trailers_icon').replaceWith(buttonTrailersIcon);
                                 } else {
                                     console.log('Kinopoisk Ratings', 'No trailers found for movie ' + String(kinopoiskId));
-                                    $('.button--kinopoisk_trailers_icon').hide();
+                                    $('.button--kinopoisk_trailers').hide();
                                 }
 
                             },
                             function (data) { // on error
                                console.log('Kinopoisk Ratings', 'Failed to get trailers for movie ' + String(kinopoiskId), data);
-                               $('.button--kinopoisk_trailers_icon').hide();
+                               $('.button--kinopoisk_trailers').hide();
                             }
                         );
 
