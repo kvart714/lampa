@@ -4,7 +4,6 @@
     var buttonIcon = '<svg class="button--kinopoisk_rating_icon" width="24" height="23" viewBox="0 0 24 23" fill="none" xmlns="http://www.w3.org/2000/svg"><path d="M15.6162 7.10981L15.8464 7.55198L16.3381 7.63428L22.2841 8.62965C22.8678 8.72736 23.0999 9.44167 22.6851 9.86381L18.4598 14.1641L18.1104 14.5196L18.184 15.0127L19.0748 20.9752C19.1622 21.5606 18.5546 22.002 18.025 21.738L12.6295 19.0483L12.1833 18.8259L11.7372 19.0483L6.34171 21.738C5.81206 22.002 5.20443 21.5606 5.29187 20.9752L6.18264 15.0127L6.25629 14.5196L5.9069 14.1641L1.68155 9.86381C1.26677 9.44167 1.49886 8.72736 2.08255 8.62965L8.02855 7.63428L8.52022 7.55198L8.75043 7.10981L11.5345 1.76241C11.8078 1.23748 12.5589 1.23748 12.8322 1.76241L15.6162 7.10981Z" stroke="currentColor" stroke-width="2.2"></path></svg>';
     var buttonLoader = '<svg class="button--kinopoisk_rating_icon" xmlns="http://www.w3.org/2000/svg" style="margin: auto; background: none; display: block; shape-rendering: auto;" width="94px" height="94px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid"><circle cx="50" cy="50" fill="none" stroke="#ffffff" stroke-width="5" r="35" stroke-dasharray="164.93361431346415 56.97787143782138"><animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" values="0 50 50;360 50 50" keyTimes="0;1"></animateTransform></circle></svg>';
     var buttonTrailersIcon = '<svg class="button--kinopoisk_trailers_icon" width="239" height="239" viewBox="0 0 239 239" fill="currentColor" xmlns="http://www.w3.org/2000/svg" xml:space="preserve"><path fill="currentColor" d="M215 121.415l-99.297-6.644 90.943 36.334a106.416 106.416 0 0 0 8.354-29.69z" /><path fill="currentColor" d="M194.608 171.609C174.933 197.942 143.441 215 107.948 215 48.33 215 0 166.871 0 107.5 0 48.13 48.33 0 107.948 0c35.559 0 67.102 17.122 86.77 43.539l-90.181 48.07L162.57 32.25h-32.169L90.892 86.862V32.25H64.77v150.5h26.123v-54.524l39.509 54.524h32.169l-56.526-57.493 88.564 46.352z" /><path d="M206.646 63.895l-90.308 36.076L215 93.583a106.396 106.396 0 0 0-8.354-29.688z" fill="currentColor"/></svg>';
-    var buttonTrailersLoader = '<svg class="button--kinopoisk_trailers_icon" xmlns="http://www.w3.org/2000/svg" style="margin: auto; background: none; display: block; shape-rendering: auto;" width="94px" height="94px" viewBox="0 0 100 100" preserveAspectRatio="xMidYMid"><circle cx="50" cy="50" fill="none" stroke="#ffffff" stroke-width="5" r="35" stroke-dasharray="164.93361431346415 56.97787143782138"><animateTransform attributeName="transform" type="rotate" repeatCount="indefinite" dur="1s" values="0 50 50;360 50 50" keyTimes="0;1"></animateTransform></circle></svg>';
 
     // get 20 first records only if limit is true
     function getKinopoiskRatings(offset=0, limit=true, showResult=true)
@@ -151,6 +150,145 @@
 
     }
 
+    function displayTrailers(kinopoiskId, oauth) {
+        if (kinopoiskId) {
+            console.log('Kinopoisk Ratings', 'Getting trailers for movie ' + String(kinopoiskId) + '...');
+            network.silent('https://script.google.com/macros/s/AKfycbwqmWyAH66dliw2EfEkvnnhlhEnXHwAwD6v2oBoV4oXtKyYy2wLat4kTVg_6K54rgk6/exec?method=getTrailers&oauth=' + oauth + '&movie=' + String(kinopoiskId),
+                function (data) { // on success
+                    if (data && data.data && data.data.movie && data.data.movie.trailers && data.data.movie.trailers.total > 0) {
+                        console.log('Kinopoisk Ratings', 'Movie ' + String(kinopoiskId) + ' trailers received, count ' + String(data.data.movie.trailers.total));
+                        var trailers = data.data.movie.trailers.items;
+                        var kinopoisk_trailers = [];
+                        for (var i = 0; i < trailers.length; i++) {
+                            kinopoisk_trailers.push({
+                                title: trailers[i].title,
+                                url: trailers[i].streamUrl,
+                                date: trailers[i].createdAt,
+                                icon: 'http:' + trailers[i].preview.avatarsUrl + '/280x178',
+                            });
+                            
+                        }
+                        
+                        if (kinopoisk_trailers.length > 0 && $('.button--kinopoisk_trailers').length === 0) { // avoid duplicate buttons
+                            $('.full-start-new__buttons')
+                              .append('<div class="full-start__button selector button--kinopoisk_trailers">'+buttonTrailersIcon+'<span>Трейлеры</span></div>');
+
+                            $('.button--kinopoisk_trailers').on('hover:enter', function (card) {
+                                
+                                var trailers = [];
+                                for (var i = 0; i < kinopoisk_trailers.length; i++) {
+                                    var trailer = kinopoisk_trailers[i];
+                                    var date = new Date(trailer.date);
+                                    trailers.push({
+                                        title: trailer.title,
+                                        subtitle: date.getDate() + ' ' + Lampa.Lang.translate('month_'+date.getMonth()+'_e') + ' ' + date.getFullYear(),
+                                        url: trailer.url,
+                                        icon: '<img class="size-youtube" src="' + trailer.icon + '">',
+                                        template: 'selectbox_icon'                            
+                                    });
+                                }
+
+                                Lampa.Select.show({
+                                    title: 'Трейлеры Кинопоиск',
+                                    items: trailers,
+                                    onSelect: (a)=>{
+                                        Lampa.Player.play(a)
+                                    },
+                                    onBack: ()=>{
+                                        Lampa.Controller.toggle('full_start')
+                                    }
+                                })                    
+                            });
+                        }
+
+
+                    } else {
+                        console.log('Kinopoisk Ratings', 'No trailers found for movie ' + String(kinopoiskId));
+                    }
+
+                },
+                function (data) { // on error
+                   console.log('Kinopoisk Ratings', 'Failed to get trailers for movie ' + String(kinopoiskId), data);
+                }
+            );
+        } else {
+            console.log('Kinopoisk Ratings', 'Can not get trailers for unknown kinopoisk id');
+        }
+    }
+
+    function displayTrivias(kinopoiskId, oauth) {
+        if (kinopoiskId) {
+            console.log('Kinopoisk Ratings', 'Getting trivias for movie ' + String(kinopoiskId) + '...');
+            network.silent('https://script.google.com/macros/s/AKfycbwqmWyAH66dliw2EfEkvnnhlhEnXHwAwD6v2oBoV4oXtKyYy2wLat4kTVg_6K54rgk6/exec?method=getTrivias&oauth=' + oauth + '&movie=' + String(kinopoiskId),
+                function (data) { // on success
+                    if (data && data.data && data.data.movie && data.data.movie.trivias) {
+                        if (data.data.movie.trivias.total > 0) {
+                            console.log('Kinopoisk Ratings', 'Movie ' + String(kinopoiskId) + ' trivias received, count ' + String(data.data.movie.trivias.total));
+
+                            if ($('.kinopoisk-trivias').length === 0) {
+                                $('.items-line:first')
+                                    .after(`<div class="items-line layer--visible layer--render kinopoisk-trivias">
+                                        <div class="items-line__head">
+                                            <div class="items-line__title">Знаете ли вы, что...</div>
+                                        </div>
+                                        <div class="items-line__body">
+                                            <div class="scroll scroll--horizontal">
+                                                <div class="scroll__content">
+                                                    <div class="scroll__body full-reviews kinopoisk-trivias-texts">
+                                                    </div>
+                                                </div>
+                                            </div>
+                                        </div>
+                                    </div>
+                                    `); 
+
+                                var trivias = data.data.movie.trivias.items;
+                                var trivias_texts = '';
+                                // all trivias to be displayed once modal is opened
+                                for (var i = 0; i < trivias.length; i++) {
+                                    var trivia_text = trivias[i].text;
+                                    trivia_text = trivia_text.replace(/<a[^>]*>/g, '').replace(/<\/a>/g, ''); // remove links
+                                    trivias_texts = trivias_texts + trivia_text + '<br><br>';
+                                }
+
+                                for (var i = 0; i < trivias.length; i++) {
+                                    // one trivia to be displayed on the card
+                                    var trivia_text = trivias[i].text;
+                                    trivia_text = trivia_text.replace(/<a[^>]*>/g, '').replace(/<\/a>/g, ''); // remove links
+                                    var trivia_html = $('<div class="full-review selector layer--visible type--line"><div class="full-review__text">' + trivia_text + '</div></div>');
+                                    $('.kinopoisk-trivias-texts').append(trivia_html);
+                                    trivia_html.on('hover:enter', function (card) {
+                                        Lampa.Modal.open({
+                                            title: "Знаете ли вы, что...",
+                                            html: $('<div><div class="broadcast__text" style="text-align:left"><div class="otzyv">'+trivias_texts+'</div></div></div>'),
+                                            size: "large",
+                                            mask: !0,
+                                            onBack: function() {
+                                                Lampa.Modal.close()
+                                            },
+                                            onSelect: function() {}
+                                        });                                                
+                                    });
+
+                                }
+                            }
+                        } else {
+                            console.log('Kinopoisk Ratings', 'No trivias found for movie ' + String(kinopoiskId), data);    
+                        }   
+                    } else {
+                        console.log('Kinopoisk Ratings', 'Failed to parse trivias for movie ' + String(kinopoiskId), data);
+                    }
+
+                },
+                function (data) { // on error
+                   console.log('Kinopoisk Ratings', 'Failed to get trivias for movie ' + String(kinopoiskId), data);
+                }
+            );            
+        } else {
+            console.log('Kinopoisk Ratings', 'Can not get trivias for unknown kinopoisk id');
+        }
+    }    
+
 
     function startPlugin() {
         window.kinopoisk_rating_ready = true;
@@ -202,6 +340,9 @@
                                 var rate = kinopoiskRatings[kinopoiskId];
                                 var color = getColorBasedOnRate(rate);
                                 $('.button--kinopoisk_rating svg path').attr('stroke', color);
+
+                                if (showTrailers) displayTrailers(kinopoiskId, oauth);
+                                if (showTrivias) displayTrivias(kinopoiskId, oauth);
                             } else {
                                 console.log('Kinopoisk Ratings', 'Failed to find Kinopoisk id');
                             }
@@ -215,145 +356,9 @@
                     var rate = kinopoiskRatings[kinopoiskId];
                     var color = getColorBasedOnRate(rate);
                     $('.button--kinopoisk_rating svg path').attr('stroke', color);
-
-                }
-
-
-                setTimeout(function() { // timeout to wait for kinopoisk id
-
-                    if (showTrivias && kinopoiskId) {
-                        console.log('Kinopoisk Ratings', 'Getting trivias for movie ' + String(kinopoiskId) + '...');
-                        network.silent('https://script.google.com/macros/s/AKfycbwqmWyAH66dliw2EfEkvnnhlhEnXHwAwD6v2oBoV4oXtKyYy2wLat4kTVg_6K54rgk6/exec?method=getTrivias&oauth=' + oauth + '&movie=' + String(kinopoiskId),
-                            function (data) { // on success
-                                if (data && data.data && data.data.movie && data.data.movie.trivias && data.data.movie.trivias.total > 0) {
-                                    console.log('Kinopoisk Ratings', 'Movie ' + String(kinopoiskId) + ' trivias received, count ' + String(data.data.movie.trivias.total));
-
-                                    if ($('.kinopoisk-trivias').length === 0) {
-                                        $('.items-line:first')
-                                          .after(`<div class="items-line layer--visible layer--render kinopoisk-trivias">
-                                                <div class="items-line__head">
-                                                    <div class="items-line__title">Знаете ли вы, что...</div>
-                                                </div>
-                                                <div class="items-line__body">
-                                                    <div class="scroll scroll--horizontal">
-                                                        <div class="scroll__content">
-                                                            <div class="scroll__body full-reviews kinopoisk-trivias-texts">
-                                                            </div>
-                                                        </div>
-                                                    </div>
-                                                </div>
-                                            </div>
-                                            `); 
-
-                                        var trivias = data.data.movie.trivias.items;
-                                        var trivias_texts = '';
-                                        for (var i = 0; i < trivias.length; i++) {
-                                            var trivia_text = trivias[i].text;
-                                            trivia_text = trivia_text.replace(/<a[^>]*>/g, '').replace(/<\/a>/g, ''); // remove links
-                                            trivias_texts = trivias_texts + trivia_text + '<br><br>';
-                                        }
-
-                                        for (var i = 0; i < trivias.length; i++) {
-                                            var trivia_text = trivias[i].text;
-                                            trivia_text = trivia_text.replace(/<a[^>]*>/g, '').replace(/<\/a>/g, ''); // remove links
-                                            var trivia_html = $('<div class="full-review selector layer--visible type--line"><div class="full-review__text">' + trivia_text + '</div></div>');
-                                            $('.kinopoisk-trivias-texts').append(trivia_html);
-                                            trivia_html.on('hover:enter', function (card) {
-                                                Lampa.Modal.open({
-                                                    title: "Знаете ли вы, что...",
-                                                    html: $('<div><div class="broadcast__text" style="text-align:left"><div class="otzyv">'+trivias_texts+'</div></div></div>'),
-                                                    size: "large",
-                                                    mask: !0,
-                                                    onBack: function() {
-                                                        Lampa.Modal.close()
-                                                    },
-                                                    onSelect: function() {}
-                                                });                                                
-                                            });
-
-                                        }
-                                        
-                                    }       
-                                }
-
-                            },
-                            function (data) { // on error
-                               console.log('Kinopoisk Ratings', 'Failed to get trivias for movie ' + String(kinopoiskId), data);
-                            }
-                        );
-                        
-                    }                
-
-                    if (showTrailers && kinopoiskId) {
-                        console.log('Kinopoisk Ratings', 'Getting trailers for movie ' + String(kinopoiskId) + '...');
-                        network.silent('https://script.google.com/macros/s/AKfycbwqmWyAH66dliw2EfEkvnnhlhEnXHwAwD6v2oBoV4oXtKyYy2wLat4kTVg_6K54rgk6/exec?method=getTrailers&oauth=' + oauth + '&movie=' + String(kinopoiskId),
-                            function (data) { // on success
-                                if (data && data.data && data.data.movie && data.data.movie.trailers && data.data.movie.trailers.total > 0) {
-                                    console.log('Kinopoisk Ratings', 'Movie ' + String(kinopoiskId) + ' trailers received, count ' + String(data.data.movie.trailers.total));
-                                    var trailers = data.data.movie.trailers.items;
-                                    var kinopoisk_trailers = [];
-                                    for (var i = 0; i < trailers.length; i++) {
-                                        kinopoisk_trailers.push({
-                                            title: trailers[i].title,
-                                            url: trailers[i].streamUrl,
-                                            date: trailers[i].createdAt,
-                                            icon: 'http:' + trailers[i].preview.avatarsUrl + '/280x178',
-                                        });
-                                        
-                                    }
-                                    e.data.movie.kinopoisk_trailers = kinopoisk_trailers;
-                                    $('.button--kinopoisk_trailers_icon').replaceWith(buttonTrailersIcon);
-                                } else {
-                                    console.log('Kinopoisk Ratings', 'No trailers found for movie ' + String(kinopoiskId));
-                                    $('.button--kinopoisk_trailers').hide();
-                                }
-
-                            },
-                            function (data) { // on error
-                               console.log('Kinopoisk Ratings', 'Failed to get trailers for movie ' + String(kinopoiskId), data);
-                               $('.button--kinopoisk_trailers').hide();
-                            }
-                        );
-
-
-                    }
-
                     
-                }, 1000);
-
-
-                if (showTrailers && $('.button--kinopoisk_trailers').length === 0) { // avoid duplicate buttons
-                    $('.full-start-new__buttons')
-                      .append('<div class="full-start__button selector button--kinopoisk_trailers">'+buttonTrailersLoader+'<span>Трейлеры</span></div>');
-
-                    $('.button--kinopoisk_trailers').on('hover:enter', function (card) {
-                        
-                        if (e.data.movie.kinopoisk_trailers) {
-                            var trailers = [];
-                            for (var i = 0; i < e.data.movie.kinopoisk_trailers.length; i++) {
-                                var trailer = e.data.movie.kinopoisk_trailers[i];
-                                var date = new Date(trailer.date);
-                                trailers.push({
-                                    title: trailer.title,
-                                    subtitle: date.getDate() + ' ' + Lampa.Lang.translate('month_'+date.getMonth()+'_e') + ' ' + date.getFullYear(),
-                                    url: trailer.url,
-                                    icon: '<img class="size-youtube" src="' + trailer.icon + '">',
-                                    template: 'selectbox_icon'                            
-                                });
-                            }
-
-                            Lampa.Select.show({
-                                title: 'Трейлеры Кинопоиск',
-                                items: trailers,
-                                onSelect: (a)=>{
-                                    Lampa.Player.play(a)
-                                },
-                                onBack: ()=>{
-                                    Lampa.Controller.toggle('full_start')
-                                }
-                            })                    
-                        }
-                    });
+                    if (showTrailers) displayTrailers(kinopoiskId, oauth);
+                    if (showTrivias) displayTrivias(kinopoiskId, oauth);
                 }
 
 
