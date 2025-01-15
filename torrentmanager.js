@@ -869,7 +869,7 @@
     }
     function auth() {
       $.ajax({
-        url: "".concat(proxy).concat(url, "/webapi/auth.cgi?api=SYNO.API.Auth&method=login&account=").concat(user, "&passwd=").concat(pass, "&format=sid&version=2&session=LMETorrentManager"),
+        url: "".concat(proxy).concat(url, "/webapi/auth.cgi?api=SYNO.API.Auth&method=login&account=").concat(user, "&passwd=").concat(pass, "&format=sid&version=7&session=LMETorrentManager"),
         method: "GET",
         headers: getHeaders(),
         // Если getHeaders возвращает объект с ключом headers
