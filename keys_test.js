@@ -7,13 +7,14 @@
     noHoverStyle.innerHTML = "* { pointer-events: none !important; }";
     document.head.appendChild(noHoverStyle);
 
-    document.addEventListener("keydown", function (e) {
-        var code = e.code;
-        Lampa.Noty.show('keydown code: '+ code);        
-    });
+    // document.addEventListener("keydown", function (e) {
+    //     var code = e.code;
+    //     Lampa.Noty.show('keydown code: '+ code);        
+    // });
     
     document.addEventListener("mouseup", function (e) {    
         Lampa.Controller.enter();
+        e.preventDefault();
     });
 
     
@@ -36,12 +37,16 @@
         var movementY = e.movementY;
         if (movementX < 0) {
             Lampa.Controller.move('left');
+            e.preventDefault();
         } else if (movementX > 0) {
             Lampa.Controller.move('right');
+            e.preventDefault();
         } else if (movementY < 0) {
             Lampa.Controller.move('up');
+            e.preventDefault();
         } else if (movementY > 0) {
             Lampa.Controller.move('down');
+            e.preventDefault();
         }
 
         // Lampa.Noty.show('mouse move, button: ' + button + ', movementX: ' + movementX);
