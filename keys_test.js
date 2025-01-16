@@ -6,9 +6,9 @@
         Lampa.Noty.show('keydown code: '+ code);
     });
 
-    document.addEventListener("mousedown", function (e) {
+    document.addEventListener("mouseup", function (e) {
         var button = e.button;
-        Lampa.Noty.show('mouse moved, button: ' + button);
+        Lampa.Noty.show('mouse up, button: ' + button);
     });
     
 
