@@ -3,7 +3,7 @@
 
     let time = 0;
 
-    $('body').toggleClass('no--cursor',true);
+    document.body.toggleClass('no--cursor',true);
 
     Lampa.Keypad.listener.follow('keydown', function (e) {
         var code = e.code;
