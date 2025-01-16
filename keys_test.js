@@ -27,7 +27,7 @@
             let event = new KeyboardEvent("keydown", { key: "ArrowUp", keyCode: 13, which: 13 });
             $('body').dispatchEvent(event);
 
-            e.preventDefault();            
+            // e.preventDefault();            
         } else if (movementY > 0) {
             Lampa.Controller.move('down');
         }
