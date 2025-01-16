@@ -3,8 +3,7 @@
 
     let time = 0;
 
-    // let body = document.querySelector('.scroll__body');
-    // body.toggleClass('no--cursor',true);
+    $('body').toggleClass('no--cursor',true);
 
     Lampa.Keypad.listener.follow('keydown', function (e) {
         var code = e.code;
@@ -22,14 +21,13 @@
         if (movementX < 0) {
             Lampa.Controller.move('left');
         } else if (movementX > 0) {
-            // Lampa.Controller.move('right');
-            //let event = new KeyboardEvent("keydown", { key: "ArrowUp", keyCode: 13, which: 13 });
-            // inputElement.dispatchEvent(event);
-            Lampa.Keypad.listener.send('keydown',{code: 13, enabled: true, event: {}})
-
-            e.preventDefault();
+            Lampa.Controller.move('right');
         } else if (movementY < 0) {
-            Lampa.Controller.move('up');
+            // Lampa.Controller.move('up');
+            let event = new KeyboardEvent("keydown", { key: "ArrowUp", keyCode: 13, which: 13 });
+            $('body').dispatchEvent(event);
+
+            e.preventDefault();            
         } else if (movementY > 0) {
             Lampa.Controller.move('down');
         }
