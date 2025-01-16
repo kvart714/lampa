@@ -10,6 +10,18 @@
         Lampa.Noty.show('keydown code: '+ code);
     });
 
+    document.addEventListener("mousedown", function (e) {    
+        Lampa.Noty.show('mouse down');
+    });
+
+    document.addEventListener("mouseup", function (e) {    
+        Lampa.Noty.show('mouse up');
+    });
+    
+    document.addEventListener("keyup", function (e) {    
+        Lampa.Noty.show('key up');
+    });
+    
     // https://github.com/yumata/lampa-source/blob/main/src/interaction/keypad.js
     document.addEventListener("mousemove", function (e) {
     	if (time > Date.now() - 200) return
