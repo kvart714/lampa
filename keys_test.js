@@ -7,7 +7,8 @@
     });
 
     document.addEventListener("mousemove", function (e) {
-        Lampa.Noty.show('mouse moved');
+        var button = e.button;
+        Lampa.Noty.show('mouse moved, button: ' + button);
     });
     
 
