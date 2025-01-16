@@ -22,10 +22,15 @@
         if (movementX < 0) {
             Lampa.Controller.move('left');
         } else if (movementX > 0) {
-            Lampa.Controller.move('right');
-        } else if (movementY > 0) {
-            Lampa.Controller.move('up');
+            // Lampa.Controller.move('right');
+            //let event = new KeyboardEvent("keydown", { key: "ArrowUp", keyCode: 13, which: 13 });
+            // inputElement.dispatchEvent(event);
+            Lampa.Keypad.listener.send('keydown',{code: 13, enabled: true, event: {}})
+
+            e.preventDefault();
         } else if (movementY < 0) {
+            Lampa.Controller.move('up');
+        } else if (movementY > 0) {
             Lampa.Controller.move('down');
         }
 
