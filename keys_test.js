@@ -24,7 +24,7 @@
             Lampa.Controller.move('right');
         } else if (movementY < 0) {
             // Lampa.Controller.move('up');
-            let event = new KeyboardEvent("keydown", { key: "ArrowUp", keyCode: 13, which: 13 });
+            let event = new KeyboardEvent("keydown", { key: "ArrowUp", keyCode: 38, which: 38 });
             document.body.dispatchEvent(event);
 
             // e.preventDefault();            
