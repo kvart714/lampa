@@ -877,7 +877,7 @@
         success: function success(response, textStatus, jqXHR) {
           console.log('LME Torrent manager', 'Synology auth result', response);
           var data = {
-            sID: JSON.parse(response).data.sid,
+            sID: response.data.sid, // JSON.parse(response).data.sid,
             createDate: Math.floor(Date.now() / 1000)
           };
           Lampa.Storage.set("lmetorrentsynologyKey", JSON.stringify(data));
