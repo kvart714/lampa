@@ -19,27 +19,6 @@
     
     // https://github.com/yumata/lampa-source/blob/main/src/interaction/keypad.js
     document.addEventListener("mousemove", function (e) {
-    	e.stopPropagation();
-
-  const event = document.createEvent("MouseEvents");
-  event.initMouseEvent(
-    "mousemove",
-    true,
-    true,
-    window,
-    0,
-    0,
-    0,
-    80,
-    20,
-    false,
-    false,
-    false,
-    false,
-    0,
-    null,
-  );
-  document.body.dispatchEvent(event);    
         
         if (time > Date.now() - 100) return
     	time = Date.now();
