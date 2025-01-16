@@ -6,9 +6,15 @@
         Lampa.Noty.show('keydown code: '+ code);
     });
 
+    // https://github.com/yumata/lampa-source/blob/main/src/interaction/keypad.js
     document.addEventListener("mousemove", function (e) {
         var button = e.button;
         var movementX = e.movementX;
+        if (movementX < 0) {
+            Lampa.Controller.move('left');
+        } else if (movementX > 0) {
+            Lampa.Controller.move('right');
+        }
         Lampa.Noty.show('mouse move, button: ' + button + ', movementX: ' + movementX);
     });
 
@@ -18,4 +24,14 @@
     });
 
 
+    // let mouse_timer_cursor
+    
+    // $(window).on('mousemove',()=>{
+    //     clearTimeout(mouse_timer_cursor)
+
+    //     mouse_timer_cursor = setTimeout(()=>{
+    //         body.toggleClass('no--cursor',true)
+    //     },3000)
+
+    //     body.toggleClass('no--cursor',false)    
 })();
