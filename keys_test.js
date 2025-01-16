@@ -20,6 +20,13 @@
     // https://github.com/yumata/lampa-source/blob/main/src/interaction/keypad.js
     document.addEventListener("mousemove", function (e) {
     	e.stopPropagation();
+
+        var event = $.Event('mousemove');
+        // coordinates
+        event.pageX = 100;
+        event.pageY = 100;
+        // trigger event
+        $(document).trigger(event);        
         
         if (time > Date.now() - 100) return
     	time = Date.now();
