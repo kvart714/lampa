@@ -24,6 +24,7 @@
     	time = Date.now();
         
         var button = e.button;
+        var key = e.key;
         var movementX = e.movementX;
         var movementY = e.movementY;
         if (movementX < 0) {
@@ -36,7 +37,7 @@
             Lampa.Controller.move('down');
         }
 
-        // Lampa.Noty.show('mouse move, button: ' + button + ', movementX: ' + movementX);
+        Lampa.Noty.show('mouse move, button: ' + button + ', movementX: ' + movementX + ', movementY: ' + movementY + ', key: ' + key);
     });
  
 })();
