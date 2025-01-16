@@ -7,9 +7,15 @@
     });
 
     document.addEventListener("mousemove", function (e) {
-        var button = e.offsetX;
-        Lampa.Noty.show('mouse move, offsetX: ' + button);
+        var button = e.button;
+        var movementX = e.movementX;
+        Lampa.Noty.show('mouse move, button: ' + button + ', movementX: ' + movementX);
     });
-    
+
+    document.addEventListener("mousedown", function (e) {
+        var button = e.button;
+        Lampa.Noty.show('mouse down, button: ' + button);
+    });
+
 
 })();
