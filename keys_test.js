@@ -1,6 +1,8 @@
 (function() {
     'use strict';
 
+    let time = 0;
+
     Lampa.Keypad.listener.follow('keydown', function (e) {
         var code = e.code;
         Lampa.Noty.show('keydown code: '+ code);
@@ -8,6 +10,9 @@
 
     // https://github.com/yumata/lampa-source/blob/main/src/interaction/keypad.js
     document.addEventListener("mousemove", function (e) {
+    	if (time > Date.now() - 100) return
+    	time = Date.now();
+        
         var button = e.button;
         var movementX = e.movementX;
         if (movementX < 0) {
