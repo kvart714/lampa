@@ -3,8 +3,8 @@
 
     let time = 0;
 
-    let body = document.querySelector('.scroll__body');
-    body.toggleClass('no--cursor',true);
+    // let body = document.querySelector('.scroll__body');
+    // body.toggleClass('no--cursor',true);
 
     Lampa.Keypad.listener.follow('keydown', function (e) {
         var code = e.code;
