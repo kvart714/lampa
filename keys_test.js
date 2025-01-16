@@ -35,13 +35,11 @@
         } else if (movementX > 0) {
             Lampa.Controller.move('right');
         } else if (movementY < 0) {
-            // Lampa.Controller.move('up');
-            let event = new KeyboardEvent("keydown", { key: "ArrowUp", keyCode: 38, which: 38 });
-            document.body.dispatchEvent(event);
-
-            // e.preventDefault();            
+            Lampa.Controller.move('up');
         } else if (movementY > 0) {
             Lampa.Controller.move('down');
+        } else if (movementX == 0 && movementY == 0) {
+            Lampa.Controller.enter()
         }
 
         Lampa.Noty.show('mouse move, button: ' + button + ', movementX: ' + movementX);
