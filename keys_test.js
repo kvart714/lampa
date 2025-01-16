@@ -3,9 +3,6 @@
 
     let time = 0;
 
-    const noHoverStyle = document.createElement("style");
-    noHoverStyle.innerHTML = "* { pointer-events: none !important; }";
-    document.head.appendChild(noHoverStyle);
 
     // document.addEventListener("keydown", function (e) {
     //     var code = e.code;
@@ -22,7 +19,7 @@
     
     // https://github.com/yumata/lampa-source/blob/main/src/interaction/keypad.js
     document.addEventListener("mousemove", function (e) {
-    	e.preventDefault();
+    	e.stopPropagation();
         
         if (time > Date.now() - 100) return
     	time = Date.now();
