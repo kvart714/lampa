@@ -3,28 +3,32 @@
 
     let time = 0;
 
-    document.body.toggleClass('no--cursor',true);
+    const noHoverStyle = document.createElement("style");
+    noHoverStyle.innerHTML = "* { pointer-events: none !important; }";
+    document.head.appendChild(noHoverStyle);
 
-    Lampa.Keypad.listener.follow('keydown', function (e) {
+    document.addEventListener("keydown", function (e) {
         var code = e.code;
-        Lampa.Noty.show('keydown code: '+ code);
+        Lampa.Noty.show('keydown code: '+ code);        
     });
-
-    document.addEventListener("mousedown", function (e) {    
-        Lampa.Noty.show('mouse down');
-    });
-
+    
     document.addEventListener("mouseup", function (e) {    
         Lampa.Controller.enter();
     });
+
     
-    document.addEventListener("keyup", function (e) {    
-        Lampa.Noty.show('key up');
-    });
+    // document.addEventListener("mousedown", function (e) {    
+    //     Lampa.Noty.show('mouse down');
+    // });
+
+    
+    // document.addEventListener("keyup", function (e) {    
+    //     Lampa.Noty.show('key up');
+    // });
     
     // https://github.com/yumata/lampa-source/blob/main/src/interaction/keypad.js
     document.addEventListener("mousemove", function (e) {
-    	if (time > Date.now() - 200) return
+    	if (time > Date.now() - 100) return
     	time = Date.now();
         
         var button = e.button;
@@ -40,18 +44,7 @@
             Lampa.Controller.move('down');
         }
 
-        Lampa.Noty.show('mouse move, button: ' + button + ', movementX: ' + movementX);
+        // Lampa.Noty.show('mouse move, button: ' + button + ', movementX: ' + movementX);
     });
-
-
-    // let mouse_timer_cursor
-    
-    // $(window).on('mousemove',()=>{
-    //     clearTimeout(mouse_timer_cursor)
-
-    //     mouse_timer_cursor = setTimeout(()=>{
-    //         body.toggleClass('no--cursor',true)
-    //     },3000)
-
-    //     body.toggleClass('no--cursor',false)    
+ 
 })();
