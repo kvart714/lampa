@@ -15,7 +15,7 @@
     });
 
     document.addEventListener("mouseup", function (e) {    
-        Lampa.Noty.show('mouse up');
+        Lampa.Controller.enter();
     });
     
     document.addEventListener("keyup", function (e) {    
@@ -38,8 +38,6 @@
             Lampa.Controller.move('up');
         } else if (movementY > 0) {
             Lampa.Controller.move('down');
-        } else if (movementX == 0 && movementY == 0) {
-            Lampa.Controller.enter()
         }
 
         Lampa.Noty.show('mouse move, button: ' + button + ', movementX: ' + movementX);
