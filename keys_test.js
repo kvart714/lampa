@@ -4,17 +4,14 @@
     let time = 0;
 
 
-    // document.addEventListener("keydown", function (e) {
-    //     var code = e.code;
-    //     Lampa.Noty.show('keydown code: '+ code);        
-    // });
     
-    document.addEventListener("mouseup", function (e) {    
-        e.preventDefault();
+    // document.addEventListener("mouseup", function (e) {    
+    //     e.preventDefault();
         
-        Lampa.Controller.enter();
-    });
+    //     Lampa.Controller.enter();
+    // });
 
+    Lampa.Noty.show('ver 1'); // Yandex.Browser for TV doesn't allow to refresh the page without cache 
 
     let modal = $('<div><div class="about">Разрешите доступ</div><br><div class="broadcast__device selector" style="textalign: center">Готово</div></div>')
     Lampa.Modal.open({
@@ -25,6 +22,7 @@
             Lampa.Modal.close()
         },
         onSelect: () => { // on button click
+            Lampa.Noty.show('ok');
             document.body.requestPointerLock();
         }
     })
