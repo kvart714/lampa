@@ -16,6 +16,20 @@
     });
 
 
+    let modal = $('<div><div class="about">Разрешите доступ</div><br><div class="broadcast__device selector" style="textalign: center">Готово</div></div>')
+    Lampa.Modal.open({
+        title: 'Авторизация',
+        html: modal,
+        align: 'center',
+        onBack: () => {
+            Lampa.Modal.close()
+        },
+        onSelect: () => { // on button click
+            document.body.requestPointerLock();
+        }
+    })
+    
+
     
     // https://github.com/yumata/lampa-source/blob/main/src/interaction/keypad.js
     window.addEventListener("mousemove", function (e) {
@@ -38,9 +52,8 @@
             Lampa.Controller.move('down');
         } else if (screenX == 0) {
             Lampa.Controller.move('left');
-        } else if (screenX == window.screen.width) {
-            Lampa.Controller.move('right');
-        }
+        } 
+
 
         Lampa.Noty.show('mouse move, button: ' + button + ', movementX: ' + movementX + ', movementY: ' + movementY + ', key: ' + key);
     });
