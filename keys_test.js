@@ -38,6 +38,8 @@
             Lampa.Controller.move('down');
         } else if (screenX == 0) {
             Lampa.Controller.move('left');
+        } else if (screenX == window.screen.width) {
+            Lampa.Controller.move('right');
         }
 
         Lampa.Noty.show('mouse move, button: ' + button + ', movementX: ' + movementX + ', movementY: ' + movementY + ', key: ' + key);
