@@ -36,7 +36,7 @@
             Lampa.Controller.move('up');
         } else if (movementY > 0) {
             Lampa.Controller.move('down');
-        } else if (screenX == 0} {
+        } else if (screenX == 0) {
             Lampa.Controller.move('left');
         }
 
