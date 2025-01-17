@@ -27,6 +27,7 @@
         var key = e.key;
         var movementX = e.movementX;
         var movementY = e.movementY;
+        var screenX = e.screenX;
         if (movementX < 0) {
             Lampa.Controller.move('left');            
         } else if (movementX > 0) {
@@ -35,6 +36,8 @@
             Lampa.Controller.move('up');
         } else if (movementY > 0) {
             Lampa.Controller.move('down');
+        } else if (screenX == 0} {
+            Lampa.Controller.move('left');
         }
 
         Lampa.Noty.show('mouse move, button: ' + button + ', movementX: ' + movementX + ', movementY: ' + movementY + ', key: ' + key);
