@@ -68,7 +68,7 @@
          // }
         // }        
         var movies_watched = Lampa.Storage.get('stats_movies_watched', {});
-        var movies_watched_updated = updateJSON(e, movies_watched);
+        var movies_watched_updated = updateReactions(e, movies_watched);
         Lampa.Storage.set('stats_movies_watched', movies_watched_updated);
       }
     });
