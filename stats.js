@@ -497,126 +497,172 @@
 
         console.log("Stats", "Data to be used for menu generation prepared", JSON.stringify(result, null, 2));
 
-        Lampa.SettingsApi.addParam({
-            component: "stats",
-            param: {
-                type: "static",
-            },
-            field: {
-                name: result["firstMovieOfYear"].movie.t,
-                description: "первый фильм 2025 года",
-            }
-        });
+        try {
+            Lampa.SettingsApi.addParam({
+                component: "stats",
+                param: {
+                    type: "static",
+                },
+                field: {
+                    name: result["firstMovieOfYear"].movie.t,
+                    description: "первый фильм 2025 года",
+                }
+            });
+        } catch (err) {
+            console.log('Stats', 'Failed to display first movie of the year');
+        }
 
-        Lampa.SettingsApi.addParam({
-            component: "stats",
-            param: {
-                type: "static",
-            },
-            field: {
-                name: result["watchedMovies"].count,
-                description: getNumEnding(result["watchedMovies"].count, ["фильм просмотрен", "фильма просмотрено", "фильмов просмотрено"]),
-            }
-        });
+        try {
+            Lampa.SettingsApi.addParam({
+                component: "stats",
+                param: {
+                    type: "static",
+                },
+                field: {
+                    name: result["watchedMovies"].count,
+                    description: getNumEnding(result["watchedMovies"].count, ["фильм просмотрен", "фильма просмотрено", "фильмов просмотрено"]),
+                }
+            });
+        } catch (err) {
+            console.log('Stats', 'Failed to watched movies count');
+        }
 
-        Lampa.SettingsApi.addParam({
-            component: "stats",
-            param: {
-                type: "static",
-            },
-            field: {
-                name: result["moviesWithReactions"],
-                description: getNumEnding(result["watchedMovies"].count, ["фильм", "фильма", "фильмов"]) + " с оценкой",
-            }
-        });
 
-        Lampa.SettingsApi.addParam({
-            component: "stats",
-            param: {
-                type: "static",
-            },
-            field: {
-                name: result["unwatchedMovies"].count,
-                description: getNumEnding(result["unwatchedMovies"].count, ["фильм недосмотрен", "фильма недосмотрено", "фильмов недосмотрено"]),
-            }
-        });
+        try {
+            Lampa.SettingsApi.addParam({
+                component: "stats",
+                param: {
+                    type: "static",
+                },
+                field: {
+                    name: result["moviesWithReactions"],
+                    description: getNumEnding(result["watchedMovies"].count, ["фильм", "фильма", "фильмов"]) + " с оценкой",
+                }
+            });
+        } catch (err) {
+            console.log('Stats', 'Failed to display number of reactions');
+        }
 
-        Lampa.SettingsApi.addParam({
-            component: "stats",
-            param: {
-                type: "static",
-            },
-            field: {
-                name: result["cardsViewedOnly"].count,
-                description: getNumEnding(result["cardsViewedOnly"].count, ["карточка фильма просмотрена", "карточки фильмов просмотрено", "карточек фильмов просмотрено"]),
-            }
-        });
+        try {
+            Lampa.SettingsApi.addParam({
+                component: "stats",
+                param: {
+                    type: "static",
+                },
+                field: {
+                    name: result["unwatchedMovies"].count,
+                    description: getNumEnding(result["unwatchedMovies"].count, ["фильм недосмотрен", "фильма недосмотрено", "фильмов недосмотрено"]),
+                }
+            });
+        } catch (err) {
+            console.log('Stats', 'Failed to display not finished movies count');
+        }
+            
 
-        Lampa.SettingsApi.addParam({
-            component: "stats",
-            param: {
-                type: "static",
-            },
-            field: {
-                name: result["topGenre"].genre,
-                description: "самый популярный жанр",
-            }
-        });
+        try {
+            Lampa.SettingsApi.addParam({
+                component: "stats",
+                param: {
+                    type: "static",
+                },
+                field: {
+                    name: result["cardsViewedOnly"].count,
+                    description: getNumEnding(result["cardsViewedOnly"].count, ["карточка фильма просмотрена", "карточки фильмов просмотрено", "карточек фильмов просмотрено"]),
+                }
+            });
+        } catch (err) {
+            console.log('Stats', 'Failed to display number of cards viewed');
+        }
+        
+        try {
+            Lampa.SettingsApi.addParam({
+                component: "stats",
+                param: {
+                    type: "static",
+                },
+                field: {
+                    name: result["topGenre"].genre,
+                    description: "самый популярный жанр",
+                }
+            });
+        } catch (err) {
+            console.log('Stats', 'Failed to display most popular genre');
+        }
+            
+        try {
+            Lampa.SettingsApi.addParam({
+                component: "stats",
+                param: {
+                    type: "static",
+                },
+                field: {
+                    name: Lampa.Lang.translate("reactions_" + result["mostPopularReaction"]).toLowerCase(),
+                    description: "самая частая реакция",
+                }
+            });
+        } catch (err) {
+            console.log('Stats', 'Failed to display most popular reaction');
+        }
+            
+        try {
+            Lampa.SettingsApi.addParam({
+                component: "stats",
+                param: {
+                    type: "static",
+                },
+                field: {
+                    name: result["mostPopularDay"],
+                    description: "самый популярный день для просмотра фильмов",
+                }
+            });
+        } catch (err) {
+            console.log('Stats', 'Failed to display most popular day');
+        }            
 
-        Lampa.SettingsApi.addParam({
-            component: "stats",
-            param: {
-                type: "static",
-            },
-            field: {
-                name: Lampa.Lang.translate("reactions_" + result["mostPopularReaction"]).toLowerCase(),
-                description: "самая частая реакция",
-            }
-        });
+        try {
+            Lampa.SettingsApi.addParam({
+                component: "stats",
+                param: {
+                    type: "static",
+                },
+                field: {
+                    name: result["mostPopularMonth"],
+                    description: "самый популярный месяц для просмотра фильмов",
+                }
+            });
+        } catch (err) {
+            console.log('Stats', 'Failed to display most popular month');
+        }            
 
-        Lampa.SettingsApi.addParam({
-            component: "stats",
-            param: {
-                type: "static",
-            },
-            field: {
-                name: result["mostPopularDay"],
-                description: "самый популярный день для просмотра фильмов",
-            }
-        });
+        try {
+            Lampa.SettingsApi.addParam({
+                component: "stats",
+                param: {
+                    type: "static",
+                },
+                field: {
+                    name: result["totalTime"] + " ч.",
+                    description: "общее время просмотра фильмов",
+                }
+            });
+        } catch (err) {
+            console.log('Stats', 'Failed to display total time');
+        }            
 
-        Lampa.SettingsApi.addParam({
-            component: "stats",
-            param: {
-                type: "static",
-            },
-            field: {
-                name: result["mostPopularMonth"],
-                description: "самый популярный месяц для просмотра фильмов",
-            }
-        });
-
-        Lampa.SettingsApi.addParam({
-            component: "stats",
-            param: {
-                type: "static",
-            },
-            field: {
-                name: result["totalTime"] + " ч.",
-                description: "общее время просмотра фильмов",
-            }
-        });
-
-        Lampa.SettingsApi.addParam({
-            component: "stats",
-            param: {
-                type: "static",
-            },
-            field: {
-                name: result["maxTimeMovie"].movie.t,
-                description: "самый длинный просмотренный фильм (" + result["maxTimeMovie"].time + " мин.)",
-            }
-        });
+        try {
+            Lampa.SettingsApi.addParam({
+                component: "stats",
+                param: {
+                    type: "static",
+                },
+                field: {
+                    name: result["maxTimeMovie"].movie.t,
+                    description: "самый длинный просмотренный фильм (" + result["maxTimeMovie"].time + " мин.)",
+                }
+            });
+        } catch (err) {
+            console.log('Stats', 'Failed to display longest movie');
+        }        
     } else {
         Lampa.SettingsApi.addParam({
             component: "stats",
