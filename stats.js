@@ -13,20 +13,6 @@
         };
         Lampa.Manifest.plugins = manifest;
 
-        var currentDate = new Date();
-        var currentMonth = currentDate.getMonth() + 1;
-        var currentDay = currentDate.getDate();
-        var currentYear = currentDate.getFullYear();
-        // detect year to be used in statistics calculations
-        var statsYear = null;
-        if (currentMonth === 12 && currentDay >= 14 && currentDay <= 31) {
-            // from Dec 14 to Dec 31
-            statsYear = currentYear;
-        } else if (currentMonth === 1 && currentDay >= 1 && currentDay <= 15) {
-            // from Jan 1 to Jan 15
-            statsYear = currentYear - 1;
-        }
-
         // not used currently
         // Lampa.Timeline.listener.follow('view', function (e) {
         //   console.log('Stats', 'view', e);
