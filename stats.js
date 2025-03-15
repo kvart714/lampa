@@ -314,47 +314,52 @@
         }
 
         console.log('Stats', 'Generating result json...');
-        var result = {
-            year: year,
-            watchedMovies: {
-                count: watchedMovies,
-                examples: watchedExamples,
-            },
-            topGenre: {
-                genre: Lampa.Api.sources.tmdb.getGenresNameFromIds("movie", [topGenre[0]])[0].toLowerCase(), // TODO: TV series not supported
-                examples: topGenre.map(function (genre) {
-                    var example = Object.values(filteredJson).find(function (movie) {
-                        return movie.g.includes(Number(genre));
-                    });
-                    return getMovieDetails(example);
-                }),
-            },
-            unwatchedMovies: {
-                count: unwatchedMovies,
-                examples: unwatchedExamples,
-            },
-            moviesWithReactions: moviesWithReactions,
-            mostPopularReaction: mostPopularReaction, 
-            cardsViewedOnly: {
-                count: cardsViewedOnly, 
-                examples: cardsViewedOnlyExamples,
-            },
-            mostPopularDay: Lampa.Lang.translate("week_" + mostPopularDay).toLowerCase(),
-            mostPopularMonth: Lampa.Lang.translate("month_" + mostPopularMonth).toLowerCase().substring(0,3),
-            firstMovieOfYear: firstMovieOfYear
-                ? {
-                      date: Lampa.Utils.parseTime(firstMovieOfYear.date).short.toLowerCase(),
-                      movie: firstMovieOfYear.movie,
-                  }
-                : null,
-            totalTime: Math.floor(totalTime / 3600), // seconds to hours
-            maxTimeMovie: maxTimeMovie
-                ? {
-                      time: Math.floor(maxTime / 60), // seconds to minutes
-                      movie: getMovieDetails(maxTimeMovie),
-                  }
-                : null,
-        };
+        try {
+            var result = {
+                year: year,
+                watchedMovies: {
+                    count: watchedMovies,
+                    examples: watchedExamples,
+                },
+                topGenre: {
+                    genre: Lampa.Api.sources.tmdb.getGenresNameFromIds("movie", [topGenre[0]])[0].toLowerCase(), // TODO: TV series not supported
+                    examples: topGenre.map(function (genre) {
+                        var example = Object.values(filteredJson).find(function (movie) {
+                            return movie.g.includes(Number(genre));
+                        });
+                        return getMovieDetails(example);
+                    }),
+                },
+                unwatchedMovies: {
+                    count: unwatchedMovies,
+                    examples: unwatchedExamples,
+                },
+                moviesWithReactions: moviesWithReactions,
+                mostPopularReaction: mostPopularReaction, 
+                cardsViewedOnly: {
+                    count: cardsViewedOnly, 
+                    examples: cardsViewedOnlyExamples,
+                },
+                mostPopularDay: Lampa.Lang.translate("week_" + mostPopularDay).toLowerCase(),
+                mostPopularMonth: Lampa.Lang.translate("month_" + mostPopularMonth).toLowerCase().substring(0,3),
+                firstMovieOfYear: firstMovieOfYear
+                    ? {
+                          date: Lampa.Utils.parseTime(firstMovieOfYear.date).short.toLowerCase(),
+                          movie: firstMovieOfYear.movie,
+                      }
+                    : null,
+                totalTime: Math.floor(totalTime / 3600), // seconds to hours
+                maxTimeMovie: maxTimeMovie
+                    ? {
+                          time: Math.floor(maxTime / 60), // seconds to minutes
+                          movie: getMovieDetails(maxTimeMovie),
+                      }
+                    : null,
+            };
+            console.log('Stats', 'Result json generated');
+        } catch (err) {
+            console.log('Stats', 'Failed to generate json', err);
+        }
 
         return result;
     }
