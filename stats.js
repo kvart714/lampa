@@ -401,7 +401,7 @@
     console.log('Stats', 'Detected the year to work with', statsYear);
     console.log('Stats', 'The current year is', currentYear);
 
-    var statsDebug = Lampa.Storage.get("stats_debug", true);
+    var statsDebug = Lampa.Storage.get("stats_debug", false);
 
     if (statsDebug) {
         console.log('Stats', 'Debug mode is enabled');
@@ -802,6 +802,7 @@
         }
     }
 
+    Lampa.Storage.set("stats_movies_watched", {});
     if (window.appready) {
         try {
             console.log('Stats', 'Starting the plugin...');
