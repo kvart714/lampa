@@ -363,6 +363,7 @@
     }
 
     console.log('Stats', 'Detected the year to work with', statsYear);
+    console.log('Stats', 'The current year is', currentYear);
 
     var statsDebug = Lampa.Storage.get("stats_debug", false);
 
@@ -454,6 +455,8 @@
     // generate menu with stats
     var stats = Lampa.Storage.get("stats_movies_watched");
     if (stats) {
+        console.log("Stats", "Data found", stats);
+        
         var result = analyzeMovies(stats, currentYear); // always display current year data
 
         console.log("Stats", "results", result);
@@ -466,7 +469,7 @@
             field: {
                 name: result["firstMovieOfYear"].movie.t,
                 description: "первый фильм 2025 года",
-            },
+            }
         });
 
         Lampa.SettingsApi.addParam({
@@ -477,7 +480,7 @@
             field: {
                 name: result["watchedMovies"].count,
                 description: getNumEnding(result["watchedMovies"].count, ["фильм просмотрен", "фильма просмотрено", "фильмов просмотрено"]),
-            },
+            }
         });
 
         Lampa.SettingsApi.addParam({
@@ -488,7 +491,7 @@
             field: {
                 name: result["moviesWithReactions"],
                 description: getNumEnding(result["watchedMovies"].count, ["фильм", "фильма", "фильмов"]) + " с оценкой",
-            },
+            }
         });
 
         Lampa.SettingsApi.addParam({
@@ -499,7 +502,7 @@
             field: {
                 name: result["unwatchedMovies"].count,
                 description: getNumEnding(result["unwatchedMovies"].count, ["фильм недосмотрен", "фильма недосмотрено", "фильмов недосмотрено"]),
-            },
+            }
         });
 
         Lampa.SettingsApi.addParam({
@@ -510,7 +513,7 @@
             field: {
                 name: result["cardsViewedOnly"].count,
                 description: getNumEnding(result["cardsViewedOnly"].count, ["карточка фильма просмотрена", "карточки фильмов просмотрено", "карточек фильмов просмотрено"]),
-            },
+            }
         });
 
         Lampa.SettingsApi.addParam({
@@ -521,7 +524,7 @@
             field: {
                 name: result["topGenre"].genre,
                 description: "самый популярный жанр",
-            },
+            }
         });
 
         Lampa.SettingsApi.addParam({
@@ -532,7 +535,7 @@
             field: {
                 name: Lampa.Lang.translate("reactions_" + result["mostPopularReaction"]).toLowerCase(),
                 description: "самая частая реакция",
-            },
+            }
         });
 
         Lampa.SettingsApi.addParam({
@@ -543,7 +546,7 @@
             field: {
                 name: result["mostPopularDay"],
                 description: "самый популярный день для просмотра фильмов",
-            },
+            }
         });
 
         Lampa.SettingsApi.addParam({
@@ -554,7 +557,7 @@
             field: {
                 name: result["mostPopularMonth"],
                 description: "самый популярный месяц для просмотра фильмов",
-            },
+            }
         });
 
         Lampa.SettingsApi.addParam({
@@ -565,7 +568,7 @@
             field: {
                 name: result["totalTime"] + " ч.",
                 description: "общее время просмотра фильмов",
-            },
+            }
         });
 
         Lampa.SettingsApi.addParam({
@@ -576,7 +579,7 @@
             field: {
                 name: result["maxTimeMovie"].movie.t,
                 description: "самый длинный просмотренный фильм (" + result["maxTimeMovie"].time + " мин.)",
-            },
+            }
         });
     } else {
         Lampa.SettingsApi.addParam({
@@ -587,7 +590,7 @@
             field: {
                 name: "нет данных",
                 description: "данные появляются после некоторого времени использования Лампы",
-            },
+            }
         });
     }
     console.log('Stats', 'Finished to create menu elements');
