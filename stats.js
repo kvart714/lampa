@@ -6,7 +6,7 @@
     function startPlugin() {
         var manifest = {
             type: "other",
-            version: "0.1.0",
+            version: "0.1.1",
             name: "Статистика",
             description: "Плагин для ведения статистики использования Лампы",
             component: "stats",
@@ -382,6 +382,20 @@
             statsYear = currentYear;
         }
 
+        Lampa.SettingsApi.addParam({
+            component: "stats",
+            param: {
+                type: "button",
+            },
+            field: {
+                name: "Удалить кэш",
+            },
+            onChange: () => {
+                Lampa.Storage.set("stats_movies_watched", {});
+                Lampa.Storage.set("stats_gists", {});
+                Lampa.Noty.show("Данные плагина Стастика удалены");
+            }
+        });
 
         Lampa.SettingsApi.addParam({
             component: "stats",
