@@ -401,7 +401,7 @@
     console.log('Stats', 'Detected the year to work with', statsYear);
     console.log('Stats', 'The current year is', currentYear);
 
-    var statsDebug = Lampa.Storage.get("stats_debug", false);
+    var statsDebug = Lampa.Storage.get("stats_debug", true);
 
     if (statsDebug) {
         console.log('Stats', 'Debug mode is enabled');
