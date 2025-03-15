@@ -326,8 +326,8 @@
                 count: cardsViewedOnly, 
                 examples: cardsViewedOnlyExamples,
             },
-            mostPopularDay: Lampa.Lang.translate("day_" + mostPopularDay).toLowerCase(),
-            mostPopularMonth: Lampa.Lang.translate("month_" + mostPopularMonth).toLowerCase(),
+            mostPopularDay: Lampa.Lang.translate("week_" + mostPopularDay).toLowerCase(),
+            mostPopularMonth: Lampa.Lang.translate("month_" + mostPopularMonth).toLowerCase().substring(0,3),
             firstMovieOfYear: firstMovieOfYear
                 ? {
                       date: Lampa.Utils.parseTime(firstMovieOfYear.date).short.toLowerCase(),
