@@ -347,7 +347,8 @@
     }
 
     // *** MENU ***
-
+    console.log('Stats', 'Starting to create menu elements...');
+    
     Lampa.SettingsApi.addComponent({
         component: "stats",
         icon: pluginSVG,
@@ -375,9 +376,13 @@
         statsYear = currentYear - 1;
     }
 
+    console.log('Stats', 'Detected the year to work with', statsYear);
+
     var statsDebug = Lampa.Storage.get("stats_debug", false);
 
     if (statsDebug) {
+        console.log('Stats', 'Debug mode is enabled');
+        
         if (!statsYear) {
             statsYear = currentYear;
         }
@@ -587,7 +592,19 @@
                 description: "самый длинный просмотренный фильм (" + result["maxTimeMovie"].time + " мин.)",
             },
         });
+    } else {
+        Lampa.SettingsApi.addParam({
+            component: "stats",
+            param: {
+                type: "static",
+            },
+            field: {
+                name: "нет данных",
+                description: "данные появляются после некоторого времени использования Лампы",
+            },
+        });
     }
+    console.log('Stats', 'Finished to create menu elements');
 
     // *** HEAD BUTTON ***
     function addHeadButton() {
@@ -761,12 +778,18 @@
     }
 
     if (window.appready) {
-        cleanupStorage(); // remove old records
-        startPlugin();
+        try {
+            console.log('Stats', 'Starting the plugin...');
+            cleanupStorage();
+            startPlugin();
+        } catch (err) {
+            console.log('Stats', 'Something went wrong', err);
+        }
     } else {
         Lampa.Listener.follow("app", function (e) {
             console.log("Stats", "app", e);
             if (e.type == "ready") {
+                cleanupStorage();
                 startPlugin();
             }
         });
