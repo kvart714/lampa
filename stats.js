@@ -201,6 +201,8 @@
             for (var key in filteredJson) {
                 // calculate watchedMovies and unwatchedMovies
                 var movie = filteredJson[key];
+                console.log('Stats', 'Processing movie...', movie.t);
+                console.log('Stats', 'Counting number of watched movies...');
                 if (movie.p && movie.p > 90) {
                     watchedMovies++;
                     if (watchedExamples.length < 3) {
@@ -214,19 +216,22 @@
                         };
                     }
                 }
+                console.log('Stats', 'Counting number of unfinished movies...');
                 if (movie.p && movie.p <= 90) {
                     unwatchedMovies++;
                     if (unwatchedExamples.length < 3) {
                         unwatchedExamples.push(getMovieDetails(movie));
                     }
                 }
-    
+
                 // calculate moviesWithReactions
+                console.log('Stats', 'Counting movies with reactions...');
                 if (movie.r && movie.r.length > 0) {
                     moviesWithReactions++;
                 }
     
                 // calculate cardsViewedOnly
+                console.log('Stats', 'Counting watched cards...');
                 if (!movie.d) {
                     cardsViewedOnly++;
                     if (cardsViewedOnlyExamples.length < 3) {
@@ -235,12 +240,14 @@
                 }
     
                 // calculate genres
+                console.log('Stats', 'Calculating popular genres...');
                 if (movie.g) {
                     movie.g.forEach(function (genre) {
                         genreCounts[genre] = (genreCounts[genre] || 0) + 1;
                     });
                 }
     
+                console.log('Stats', 'Count number of movies watched each day and each month...');
                 if (movie.d) {
                     var date = new Date(movie.d);
                     var day = date.getDate();
@@ -253,6 +260,7 @@
                 }
     
                 // count number of each reaction, will be used later
+                console.log('Stats', 'Count number of each reaction...');
                 if (movie.r) {
                     movie.r.forEach(function (reaction) {
                         reactionCounts[reaction] = (reactionCounts[reaction] || 0) + 1;
@@ -260,7 +268,7 @@
                 }
     
                 // count total time watched
-                console.log("Stats", movie.ti);
+                console.log('Stats', 'Count total watch time...', movie.ti);
                 if (movie.ti) {
                     totalTime += movie.ti;
     
@@ -272,6 +280,7 @@
                 }
             }
     
+            console.log('Stats', 'Choosing most popular genre...');
             if (Object.keys(genreCounts).length !== 0) {
                 var topGenre = Object.keys(genreCounts)
                     .sort(function (a, b) {
@@ -280,18 +289,21 @@
                     .slice(0, 1);
             }
     
+            console.log('Stats', 'Choosing most popular reaction...');
             if (Object.keys(reactionCounts).length !== 0) {
                 var mostPopularReaction = Object.keys(reactionCounts).sort(function (a, b) {
                     return reactionCounts[b] - reactionCounts[a];
                 })[0];
             }
     
+            console.log('Stats', 'Choosing most popular day...');
             if (Object.keys(dayCounts).length !== 0) {
                 var mostPopularDay = Object.keys(dayCounts).sort(function (a, b) {
                     return dayCounts[b] - dayCounts[a];
                 })[0];
             }
-    
+
+            console.log('Stats', 'Choosing most popular month...');
             if (Object.keys(monthCounts).length !== 0) {
                 var mostPopularMonth = Object.keys(monthCounts).sort(function (a, b) {
                     return monthCounts[b] - monthCounts[a];
@@ -301,6 +313,7 @@
             console.log('Stats', 'No data in filtered movies list');
         }
 
+        console.log('Stats', 'Generating result json...');
         var result = {
             year: year,
             watchedMovies: {
@@ -399,7 +412,7 @@
             onChange: () => {
                 Lampa.Storage.set("stats_movies_watched", {});
                 Lampa.Storage.set("stats_gists", {});
-                Lampa.Noty.show("Данные плагина Стастика удалены");
+                Lampa.Noty.show("Данные плагина Статистика удалены");
             }
         });
 
@@ -468,7 +481,7 @@
 
     // generate menu with stats
     var stats = Lampa.Storage.get("stats_movies_watched");
-    if (stats && Object.keys(stats).length) {
+    if (stats && Object.keys(stats).length > 0) {
         console.log("Stats", "Data found", JSON.stringify(stats, null, 2));
         
         var result = analyzeMovies(stats, currentYear); // always display current year data
