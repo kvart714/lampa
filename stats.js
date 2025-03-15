@@ -495,7 +495,7 @@
         
         var result = analyzeMovies(stats, currentYear); // always display current year data
 
-        console.log("Stats", "results", result);
+        console.log("Stats", "Data to be used for menu generation prepared", JSON.stringify(result, null, 2));
 
         Lampa.SettingsApi.addParam({
             component: "stats",
