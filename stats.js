@@ -155,6 +155,8 @@
     }
 
     function analyzeMovies(json, year, ignoreSeries = true) {
+        console.log('Stats', 'Starting to analyze movies data...', json, year, ignoreSeries);
+        
         // ignore series
         var filteredJson = {};
         if (ignoreSeries) {
@@ -176,7 +178,7 @@
         }
         filteredJson = filteredJsonYear;
 
-        // console.log('Stats', 'filteredJson', filteredJson);
+        console.log('Stats', 'Movies list after filterings', JSON.stringify(filteredJson, null, 2));
 
         var watchedMovies = 0;
         var watchedExamples = [];
@@ -455,7 +457,7 @@
     // generate menu with stats
     var stats = Lampa.Storage.get("stats_movies_watched");
     if (stats) {
-        console.log("Stats", "Data found", stats);
+        console.log("Stats", "Data found", JSON.stringify(stats, null, 2));
         
         var result = analyzeMovies(stats, currentYear); // always display current year data
 
