@@ -106,7 +106,7 @@
                         id: card.id,
                         ot: card.original_name ? card.original_name : card.original_title,
                         t: card.title,
-                        g: card.genres,
+                        g: card.genres.map(genre => genre.id), // keep ids only
                         i: card.img,
                         ty: card.seasons ? "tv" : "movie",
                         y: new Date().getFullYear(),
@@ -281,6 +281,7 @@
             }
     
             console.log('Stats', 'Choosing most popular genre...');
+            var topGenre = '';
             if (Object.keys(genreCounts).length !== 0) {
                 var topGenre = Object.keys(genreCounts)
                     .sort(function (a, b) {
@@ -288,13 +289,16 @@
                     })
                     .slice(0, 1);
             }
+            console.log('Stats', 'Most popular genre is', topGenre);
     
             console.log('Stats', 'Choosing most popular reaction...');
+            var mostPopularReaction = '';
             if (Object.keys(reactionCounts).length !== 0) {
                 var mostPopularReaction = Object.keys(reactionCounts).sort(function (a, b) {
                     return reactionCounts[b] - reactionCounts[a];
                 })[0];
             }
+            console.log('Stats', 'Most popular reaction is', mostPopularReaction);
     
             console.log('Stats', 'Choosing most popular day...');
             if (Object.keys(dayCounts).length !== 0) {
@@ -436,7 +440,7 @@
                 } else {
                     var result = analyzeMovies(stats, currentYear); // always display current year data
                     var result_str = JSON.stringify(result, null, 2);
-                    console.log("Stats", "results", result);
+                    console.log("Stats", "Here is the result", result);
 
                     let modal = $('<div class="about"><div class="about__rules"><pre>' + result_str + "</pre></div></div>");
 
