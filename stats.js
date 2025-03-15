@@ -197,97 +197,109 @@
         var maxTime = 0;
         var maxTimeMovie = null;
 
-        for (var key in filteredJson) {
-            // calculate watchedMovies and unwatchedMovies
-            var movie = filteredJson[key];
-            if (movie.p && movie.p > 90) {
-                watchedMovies++;
-                if (watchedExamples.length < 3) {
-                    watchedExamples.push(getMovieDetails(movie));
+        if (Object.keys(filteredJson).length !== 0) {
+            for (var key in filteredJson) {
+                // calculate watchedMovies and unwatchedMovies
+                var movie = filteredJson[key];
+                if (movie.p && movie.p > 90) {
+                    watchedMovies++;
+                    if (watchedExamples.length < 3) {
+                        watchedExamples.push(getMovieDetails(movie));
+                    }
+    
+                    if (movie.d && (!firstMovieOfYear || movie.d < firstMovieOfYear.date)) {
+                        firstMovieOfYear = {
+                            date: movie.d,
+                            movie: getMovieDetails(movie),
+                        };
+                    }
                 }
-
-                if (movie.d && (!firstMovieOfYear || movie.d < firstMovieOfYear.date)) {
-                    firstMovieOfYear = {
-                        date: movie.d,
-                        movie: getMovieDetails(movie),
-                    };
+                if (movie.p && movie.p <= 90) {
+                    unwatchedMovies++;
+                    if (unwatchedExamples.length < 3) {
+                        unwatchedExamples.push(getMovieDetails(movie));
+                    }
+                }
+    
+                // calculate moviesWithReactions
+                if (movie.r && movie.r.length > 0) {
+                    moviesWithReactions++;
+                }
+    
+                // calculate cardsViewedOnly
+                if (!movie.d) {
+                    cardsViewedOnly++;
+                    if (cardsViewedOnlyExamples.length < 3) {
+                        cardsViewedOnlyExamples.push(getMovieDetails(movie));
+                    }
+                }
+    
+                // calculate genres
+                if (movie.g) {
+                    movie.g.forEach(function (genre) {
+                        genreCounts[genre] = (genreCounts[genre] || 0) + 1;
+                    });
+                }
+    
+                if (movie.d) {
+                    var date = new Date(movie.d);
+                    var day = date.getDate();
+                    var month = date.getMonth() + 1;
+                    var year = date.getFullYear();
+    
+                    // calculate number of movies per day and per month
+                    dayCounts[day] = (dayCounts[day] || 0) + 1;
+                    monthCounts[month] = (monthCounts[month] || 0) + 1;
+                }
+    
+                // count number of each reaction, will be used later
+                if (movie.r) {
+                    movie.r.forEach(function (reaction) {
+                        reactionCounts[reaction] = (reactionCounts[reaction] || 0) + 1;
+                    });
+                }
+    
+                // count total time watched
+                console.log("Stats", movie.ti);
+                if (movie.ti) {
+                    totalTime += movie.ti;
+    
+                    // count max movie time watched
+                    if (movie.ti > maxTime) {
+                        maxTime = movie.ti;
+                        maxTimeMovie = movie;
+                    }
                 }
             }
-            if (movie.p && movie.p <= 90) {
-                unwatchedMovies++;
-                if (unwatchedExamples.length < 3) {
-                    unwatchedExamples.push(getMovieDetails(movie));
-                }
+    
+            if (Object.keys(genreCounts).length !== 0) {
+                var topGenre = Object.keys(genreCounts)
+                    .sort(function (a, b) {
+                        return genreCounts[b] - genreCounts[a];
+                    })
+                    .slice(0, 1);
             }
-
-            // calculate moviesWithReactions
-            if (movie.r && movie.r.length > 0) {
-                moviesWithReactions++;
+    
+            if (Object.keys(reactionCounts).length !== 0) {
+                var mostPopularReaction = Object.keys(reactionCounts).sort(function (a, b) {
+                    return reactionCounts[b] - reactionCounts[a];
+                })[0];
             }
-
-            // calculate cardsViewedOnly
-            if (!movie.d) {
-                cardsViewedOnly++;
-                if (cardsViewedOnlyExamples.length < 3) {
-                    cardsViewedOnlyExamples.push(getMovieDetails(movie));
-                }
+    
+            if (Object.keys(dayCounts).length !== 0) {
+                var mostPopularDay = Object.keys(dayCounts).sort(function (a, b) {
+                    return dayCounts[b] - dayCounts[a];
+                })[0];
             }
-
-            // calculate genres
-            if (movie.g) {
-                movie.g.forEach(function (genre) {
-                    genreCounts[genre] = (genreCounts[genre] || 0) + 1;
-                });
+    
+            if (Object.keys(monthCounts).length !== 0) {
+                var mostPopularMonth = Object.keys(monthCounts).sort(function (a, b) {
+                    return monthCounts[b] - monthCounts[a];
+                })[0];
             }
-
-            if (movie.d) {
-                var date = new Date(movie.d);
-                var day = date.getDate();
-                var month = date.getMonth() + 1;
-                var year = date.getFullYear();
-
-                // calculate number of movies per day and per month
-                dayCounts[day] = (dayCounts[day] || 0) + 1;
-                monthCounts[month] = (monthCounts[month] || 0) + 1;
-            }
-
-            // count number of each reaction, will be used later
-            if (movie.r) {
-                movie.r.forEach(function (reaction) {
-                    reactionCounts[reaction] = (reactionCounts[reaction] || 0) + 1;
-                });
-            }
-
-            // count total time watched
-            console.log("Stats", movie.ti);
-            if (movie.ti) {
-                totalTime += movie.ti;
-
-                // count max movie time watched
-                if (movie.ti > maxTime) {
-                    maxTime = movie.ti;
-                    maxTimeMovie = movie;
-                }
-            }
+        } else {
+            console.log('Stats', 'No data in filtered movies list');
         }
-
-        var topGenre = Object.keys(genreCounts)
-            .sort(function (a, b) {
-                return genreCounts[b] - genreCounts[a];
-            })
-            .slice(0, 1);
-
-        var mostPopularReaction = Object.keys(reactionCounts).sort(function (a, b) {
-            return reactionCounts[b] - reactionCounts[a];
-        })[0];
-
-        var mostPopularDay = Object.keys(dayCounts).sort(function (a, b) {
-            return dayCounts[b] - dayCounts[a];
-        })[0];
-
-        var mostPopularMonth = Object.keys(monthCounts).sort(function (a, b) {
-            return monthCounts[b] - monthCounts[a];
-        })[0];
 
         var result = {
             year: year,
@@ -456,7 +468,7 @@
 
     // generate menu with stats
     var stats = Lampa.Storage.get("stats_movies_watched");
-    if (stats) {
+    if (stats && Object.keys(stats).length) {
         console.log("Stats", "Data found", JSON.stringify(stats, null, 2));
         
         var result = analyzeMovies(stats, currentYear); // always display current year data
