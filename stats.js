@@ -802,7 +802,7 @@
         }
     }
 
-    Lampa.Storage.set("stats_movies_watched", {});
+
     if (window.appready) {
         try {
             console.log('Stats', 'Starting the plugin...');
