@@ -241,13 +241,13 @@
     
                 // calculate genres
                 console.log('Stats', 'Calculating popular genres...');
-                if (movie.g) {
+                if (movie.g && movie.d && movie.p && movie.p > 90) { // consider watched movies only
                     movie.g.forEach(function (genre) {
                         genreCounts[genre] = (genreCounts[genre] || 0) + 1;
                     });
                 }
     
-                console.log('Stats', 'Count number of movies watched each day and each month...');
+                console.log('Stats', 'Counting number of movies watched each day and each month...');
                 if (movie.d) {
                     var date = new Date(movie.d);
                     var day = date.getDate();
@@ -281,7 +281,7 @@
             }
     
             console.log('Stats', 'Choosing most popular genre...');
-            var topGenre = '';
+            var topGenre = null;
             if (Object.keys(genreCounts).length !== 0) {
                 var topGenre = Object.keys(genreCounts)
                     .sort(function (a, b) {
@@ -292,7 +292,7 @@
             console.log('Stats', 'Most popular genre is', topGenre);
     
             console.log('Stats', 'Choosing most popular reaction...');
-            var mostPopularReaction = '';
+            var mostPopularReaction = null;
             if (Object.keys(reactionCounts).length !== 0) {
                 var mostPopularReaction = Object.keys(reactionCounts).sort(function (a, b) {
                     return reactionCounts[b] - reactionCounts[a];
@@ -301,18 +301,22 @@
             console.log('Stats', 'Most popular reaction is', mostPopularReaction);
     
             console.log('Stats', 'Choosing most popular day...');
+            var mostPopularDay = null;
             if (Object.keys(dayCounts).length !== 0) {
                 var mostPopularDay = Object.keys(dayCounts).sort(function (a, b) {
                     return dayCounts[b] - dayCounts[a];
                 })[0];
             }
+            console.log('Stats', 'Most popular day is', mostPopularDay);
 
             console.log('Stats', 'Choosing most popular month...');
+            var mostPopularMonth = null;
             if (Object.keys(monthCounts).length !== 0) {
                 var mostPopularMonth = Object.keys(monthCounts).sort(function (a, b) {
                     return monthCounts[b] - monthCounts[a];
                 })[0];
             }
+            console.log('Stats', 'Most popular month is', mostPopularMonth);
         } else {
             console.log('Stats', 'No data in filtered movies list');
         }
@@ -325,7 +329,7 @@
                     count: watchedMovies,
                     examples: watchedExamples,
                 },
-                topGenre: {
+                topGenre: topGenre ? {
                     genre: Lampa.Api.sources.tmdb.getGenresNameFromIds("movie", [topGenre[0]])[0].toLowerCase(), // TODO: TV series not supported
                     examples: topGenre.map(function (genre) {
                         var example = Object.values(filteredJson).find(function (movie) {
@@ -333,7 +337,7 @@
                         });
                         return getMovieDetails(example);
                     }),
-                },
+                } : null,
                 unwatchedMovies: {
                     count: unwatchedMovies,
                     examples: unwatchedExamples,
@@ -344,8 +348,8 @@
                     count: cardsViewedOnly, 
                     examples: cardsViewedOnlyExamples,
                 },
-                mostPopularDay: Lampa.Lang.translate("week_" + mostPopularDay).toLowerCase(),
-                mostPopularMonth: Lampa.Lang.translate("month_" + mostPopularMonth).toLowerCase().substring(0,3),
+                mostPopularDay: mostPopularDay ? Lampa.Lang.translate("week_" + mostPopularDay).toLowerCase() : null,
+                mostPopularMonth: mostPopularMonth ? Lampa.Lang.translate("month_" + mostPopularMonth).toLowerCase().substring(0,3) : null,
                 firstMovieOfYear: firstMovieOfYear
                     ? {
                           date: Lampa.Utils.parseTime(firstMovieOfYear.date).short.toLowerCase(),
@@ -495,7 +499,7 @@
         
         var result = analyzeMovies(stats, currentYear); // always display current year data
 
-        console.log("Stats", "Data to be used for menu generation prepared", JSON.stringify(result, null, 2));
+        console.log("Stats", "Data to be used for menu generation", JSON.stringify(result, null, 2));
 
         try {
             Lampa.SettingsApi.addParam({
@@ -590,46 +594,58 @@
         }
             
         try {
-            Lampa.SettingsApi.addParam({
-                component: "stats",
-                param: {
-                    type: "static",
-                },
-                field: {
-                    name: Lampa.Lang.translate("reactions_" + result["mostPopularReaction"]).toLowerCase(),
-                    description: "самая частая реакция",
-                }
-            });
+            if (result["mostPopularReaction"]) {
+                Lampa.SettingsApi.addParam({
+                    component: "stats",
+                    param: {
+                        type: "static",
+                    },
+                    field: {
+                        name: Lampa.Lang.translate("reactions_" + result["mostPopularReaction"]).toLowerCase(),
+                        description: "самая частая реакция",
+                    }
+                });
+            } else {
+                console.log('Stats', 'No most popular reaction found');
+            }
         } catch (err) {
             console.log('Stats', 'Failed to display most popular reaction');
         }
             
         try {
-            Lampa.SettingsApi.addParam({
-                component: "stats",
-                param: {
-                    type: "static",
-                },
-                field: {
-                    name: result["mostPopularDay"],
-                    description: "самый популярный день для просмотра фильмов",
-                }
-            });
+            if (result["mostPopularDay"]) {
+                Lampa.SettingsApi.addParam({
+                    component: "stats",
+                    param: {
+                        type: "static",
+                    },
+                    field: {
+                        name: result["mostPopularDay"],
+                        description: "самый популярный день для просмотра фильмов",
+                    }
+                });
+            } else {
+                console.log('Stats', 'No most popular day found');
+            }                
         } catch (err) {
             console.log('Stats', 'Failed to display most popular day');
         }            
 
         try {
-            Lampa.SettingsApi.addParam({
-                component: "stats",
-                param: {
-                    type: "static",
-                },
-                field: {
-                    name: result["mostPopularMonth"],
-                    description: "самый популярный месяц для просмотра фильмов",
-                }
-            });
+            if (result["mostPopularMonth"]) {
+                Lampa.SettingsApi.addParam({
+                    component: "stats",
+                    param: {
+                        type: "static",
+                    },
+                    field: {
+                        name: result["mostPopularMonth"],
+                        description: "самый популярный месяц для просмотра фильмов",
+                    }
+                });
+            } else {
+                console.log('Stats', 'No most popular month found');
+            }                     
         } catch (err) {
             console.log('Stats', 'Failed to display most popular month');
         }            
