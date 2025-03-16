@@ -682,6 +682,7 @@
         Authorization: "Basic ".concat(btoa(user$1 + ":" + pass$1)),
         "Content-Type": "application/json"
       };
+      console.log('Headers', headers);
       if (Lampa.Storage.get("lmetorrenttransmissionKey")) {
         headers["X-Transmission-Session-Id"] = Lampa.Storage.get("lmetorrenttransmissionKey");
       }
@@ -691,7 +692,7 @@
       return headers;
     }
     function auth$1() {
-      $.ajax({
+      var req = {
         url: "".concat(proxy$1).concat(url$1).concat(path),
         method: "POST",
         headers: getHeaders$1(),
@@ -707,10 +708,12 @@
           }
           if (jqXHR.status !== 200 && jqXHR.status !== 409) {
             console.log('LME Torrent manager', 'Transmission auth', jqXHR.status, jqXHR);
-            Lampa.Noty.show(Lampa.Lang.translate('AuthDenied'));
+            Lampa.Noty.show('AuthDenied ver1');
           }
         }
-      });
+      }
+      console.log('Request: ', req);
+      $.ajax(req);
     }
     function GetData$1() {
       var settings = {
@@ -886,7 +889,7 @@
         error: function error(jqXHR) {
           if (jqXHR.status !== 200) {
             console.log('LME Torrent manager', 'Synology auth', jqXHR.status, jqXHR);
-            Lampa.Noty.show(Lampa.Lang.translate('AuthDenied'));
+            Lampa.Noty.show('AuthDenied 2');
           }
         }
       });
