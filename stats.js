@@ -250,7 +250,7 @@
                 console.log('Stats', 'Counting number of movies watched each day and each month...');
                 if (movie.d) {
                     var date = new Date(movie.d);
-                    var day = date.getDay();
+                    var day = (date.getDay() + 6) % 7 + 1; // convert 0-6 (Sun-Sat) to 1-7 (Mon-Sun)
                     var month = date.getMonth() + 1;
                     var year = date.getFullYear();
     
