@@ -250,7 +250,7 @@
                 console.log('Stats', 'Counting number of movies watched each day and each month...');
                 if (movie.d) {
                     var date = new Date(movie.d);
-                    var day = date.getDate();
+                    var day = date.getDay();
                     var month = date.getMonth() + 1;
                     var year = date.getFullYear();
     
