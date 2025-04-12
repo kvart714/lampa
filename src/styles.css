@@ -1,0 +1,37 @@
+.progress {
+    position: absolute;   
+    height: 160px;
+    width: 160px;
+    cursor: pointer;
+    top: 50%;
+    left: 50%;
+    margin: -80px 0 0 -80px;
+}
+
+.progress-circle {
+  transform: rotate(-90deg);
+	margin-top: -40px;
+}
+
+.progress-circle-back {
+	fill: none; 
+	stroke: #AAA;
+	stroke-width:10px;
+}
+
+.progress-circle-prog {
+	fill: none; 
+	stroke: #FFF;
+	stroke-width: 10px;  
+  stroke-dasharray: 100;
+  stroke-dashoffset: calc(0);
+    transition: stroke-dasharray 0.7s linear 0s;
+}
+
+.progress-text {
+	width: 100%;
+	position: absolute;
+	top: 60px;
+	text-align: center;
+	font-size: 2em;
+}

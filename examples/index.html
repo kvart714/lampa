@@ -1,0 +1,56 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Пример с jQuery</title>
+    
+    <!-- Подключаем jQuery через CDN -->
+    <script src="https://code.jquery.com/jquery-3.6.0.min.js"></script>
+</head>
+<body>
+    <h1>Привет, мир!</h1>
+    
+    <!-- Кнопка для выполнения JavaScript -->
+    <button id="myButton">Нажми меня!</button>
+
+    <script>
+        // Код с использованием jQuery
+        $(document).ready(function() {
+            $('#myButton').click(function() {
+                
+                
+var req = {
+// url: "http://192.168.1.1:9091/transmission/rpc",
+url: "http://127.0.0.1:9091/transmission/rpc",
+method: "POST",
+headers: {
+    Authorization: "Basic ".concat(btoa("admin:714bdfy714")),
+    "Content-Type": "application/json"
+  },
+// Если getHeaders возвращает объект с ключом headers
+contentType: "application/json",
+success: function success(response, textStatus, jqXHR) {
+  console.log('Response:', response);
+  //resolve(Lampa.Noty.show(Lampa.Lang.translate('actionSentSuccessfully')));
+},
+error: function error(jqXHR) {
+  if (jqXHR.status === 409) {
+    Lampa.Storage.set("lmetorrenttransmissionKey", jqXHR.getResponseHeader("X-Transmission-Session-Id"));
+    Lampa.Noty.show(Lampa.Lang.translate('AuthSuccess'));
+  }
+  if (jqXHR.status !== 200 && jqXHR.status !== 409) {
+    console.log('LME Torrent manager', 'Transmission auth', jqXHR.status, jqXHR);
+    Lampa.Noty.show('AuthDenied ver1');
+  }
+}
+}
+console.log('Request:', req);
+$.ajax(req);
+
+
+            });
+        });
+    </script>
+</body>
+</html>

@@ -1,0 +1,25 @@
+{
+    "compilerOptions": {
+        "target": "es5",
+        "module": "none",
+        "lib": ["es2015", "dom"],
+        "strict": true,
+        "esModuleInterop": true,
+        "skipLibCheck": true,
+        "forceConsistentCasingInFileNames": true,
+        "outDir": "./dist",
+        "outFile": "./dist/index.js",
+        "typeRoots": ["./node_modules/@types", "./types"]
+    },
+    "include": [
+        "src/test.ts",
+        "src/log.ts",
+        "src/transmission-rpc-client.ts",
+        "src/transmission.ts",
+        "src/worker.ts",
+        "src/app.ts",
+        "src/index.ts",
+        "types/*.d.ts"
+    ],
+    "exclude": ["node_modules", "**/*.spec.ts"]
+}
