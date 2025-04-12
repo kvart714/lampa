@@ -79,10 +79,6 @@ export class TransmissionService {
                 ids: [response.arguments['torrent-added'].id],
                 labels: [ID_KEY + tmdbId],
             })
-
-            Lampa.Noty.show(Lampa.Lang.translate('actionSentSuccessfully'))
-
-            return
         }
     }
 

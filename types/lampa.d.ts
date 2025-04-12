@@ -256,6 +256,25 @@ declare namespace Lampa {
         ): void
       };
 
+    type Player = {
+        play(options: {
+            title: string
+            url: string
+            subtitles?: Array<{
+                label: string
+                url: string
+                language?: string
+                default?: boolean
+            }>
+            poster?: string
+            headers?: Record<string, string>
+            autoplay?: boolean
+        }): void
+        stop(): void
+        pause(): void
+        resume(): void
+    }
+
     const Lang: Lang
     const Storage: Storage
     const Template: Template
@@ -288,6 +307,7 @@ declare namespace Lampa {
     const Listener: {
         follow: Follow
     }
+    const Player: Player;
 }
 
 type AppEvent = {

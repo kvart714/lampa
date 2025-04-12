@@ -55,7 +55,7 @@ function formatTorrent(torrent: TorrentInfo) {
 }
 
 // TODO: move texts to translations
-function openActions(torrent: TorrentInfo) {
+function openActions(movie: MovieInfo, torrent: TorrentInfo) {
     Lampa.Select.show({
         title: 'Действия',
         items: [
@@ -63,6 +63,10 @@ function openActions(torrent: TorrentInfo) {
                 title: 'Открыть',
                 onSelect() {
                     // TODO: add open action
+                    // Lampa.Player.play({
+                    //     title: movie.title || movie.original_title || torrent.name,
+                    //     url: baseDir + '/' + torrent.files[0].name,
+                    // })
                 },
             },
             torrent.status === DOWNLOADING_STATUS
@@ -93,6 +97,9 @@ function openActions(torrent: TorrentInfo) {
                 },
             },
         ],
+        onBack: function onBack() {
+            Lampa.Controller.toggle('full_start')
+        },
     })
 }
 
@@ -104,11 +111,14 @@ export function updateDownloadCard(torrent: TorrentInfo) {
 
     for (const key in updatedData) {
         const el = card.querySelector(`[data-key="${key}"]`)
-        if (el) el.textContent = updatedData[key as keyof typeof updatedData] as string
+        if (el)
+            el.textContent = updatedData[
+                key as keyof typeof updatedData
+            ] as string
     }
 
     card.querySelector(
-        '.download-container__progress-bar-progress'
+        '.download-card__progress-bar-progress'
     )!.setAttribute('style', `width: ${updatedData.percent};`)
 }
 
@@ -126,7 +136,7 @@ export default function () {
                 )
 
                 $('#download-card-' + torrent.id).on('hover:enter', () => {
-                    openActions(torrent)
+                    openActions(e.data.movie, torrent)
                 })
             }
         }

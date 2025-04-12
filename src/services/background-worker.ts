@@ -7,12 +7,15 @@ import { updateDownloadCircle } from '../components/download-circle/download-cir
 export class BackgroundWorker {
     private static subscription: number
     private static errorCount = 0
+    private static notified = false
 
     static start(intervalInSeconds: number) {
         if (BackgroundWorker.subscription) {
             clearInterval(BackgroundWorker.subscription)
         }
 
+        BackgroundWorker.errorCount = 0
+        BackgroundWorker.notified = false
         BackgroundWorker.subscription = setInterval(
             BackgroundWorker.tick,
             intervalInSeconds * 1000
@@ -31,14 +34,26 @@ export class BackgroundWorker {
                     updateDownloadCircle(torrent)
                 }
             }
+
+            // TODO: move texts to translations
+            BackgroundWorker.notifyFirstTime('Подключение к Transmission успешно установлено')
         } catch (error: any) {
             log('Error:', error)
+            
             BackgroundWorker.errorCount++
             if (BackgroundWorker.errorCount > 10) {
                 clearInterval(BackgroundWorker.subscription)
                 log('Stopping background worker due to too many errors')
-                BackgroundWorker.errorCount = 0
             }
+
+            BackgroundWorker.notifyFirstTime('Обнаружена ошибка. Подробнее в консоли')
+        }
+    }
+
+    private static notifyFirstTime(msg: string) {
+        if (!BackgroundWorker.notified) {
+            Lampa.Noty.show(msg)
+            BackgroundWorker.notified = true
         }
     }
 }

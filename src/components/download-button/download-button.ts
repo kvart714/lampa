@@ -2,6 +2,7 @@ import html from './download-button.html'
 import icon from './../../icon.svg'
 import { MovieDataStorage } from '../../services/movies-data-storage'
 import { TransmissionService } from '../../services/transmission'
+import { log } from '../../log'
 
 function addDownloadButton(data: MovieData) {
     const button = $(
@@ -12,21 +13,6 @@ function addDownloadButton(data: MovieData) {
     )
 
     button.on('hover:enter', (e) => {
-        // try {
-        //     (Lampa as any).Player.play({
-        //         title: 'LALKA',
-        //         url: 'smb://192.168.1.1/download/Arcane.S01.2021.2160p.BDRemux-Rutracker/Arcane.S01E07.The.Boy.Savior.2160p.BDRemux-Rutracker.mkv'
-        //     })
-        //     // Android.openPlayer('https://www.sample-videos.com/video321/mp4/720/big_buck_bunny_720p_1mb.mp4', {})
-        //     // Android.openPlayer('ftp://pc:111@192.168.1.120:1493/device/Download/Flud/Shrek.2001.BDRip_s.x264.RG.Tru.mkv', {})
-        //     // Android.openPlayer('smb://admin:password@192.168.1.1/download/Arcane.S01.2021.2160p.BDRemux-Rutracker/Arcane.S01E07.The.Boy.Savior.2160p.BDRemux-Rutracker.mkv', {})
-        // }
-        // catch (e) {
-        //     log(JSON.stringify(e))
-        // }
-
-        // return
-
         MovieDataStorage.selectMovie(data.movie)
         Lampa.Activity.push({
             url: '',
