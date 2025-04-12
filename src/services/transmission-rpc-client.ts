@@ -23,14 +23,17 @@ export class TransmissionRpcClient {
             this.sessionId = response.headers.get('X-Transmission-Session-Id')
 
             if (this.sessionId == null) {
-                throw new Error('Session ID is null')
+                throw new Error('Can`t authorize to Transmission RPC')
             }
 
             return this.POST(request)
         }
 
         if (!response.ok) {
-            throw new Error(`Error: ${response.statusText}`)
+            throw {
+                message: `Transmission RPC error: ${response.statusText}`,
+                status: response.status,
+            }
         }
 
         return await response.json()

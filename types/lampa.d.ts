@@ -45,7 +45,7 @@ declare namespace Lampa {
             name: string
             type: 'select' | 'input' | 'trigger' | 'title' | 'static'
             default: any
-            values: Record<string, any> | string
+            values?: Record<string, any> | string
             placeholder?: string
         }
         field: {
