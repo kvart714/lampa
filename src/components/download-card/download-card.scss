@@ -1,0 +1,73 @@
+.download-card {
+    all: unset;
+    display: block;
+    width: 80%;
+    height: auto;
+    margin: 0;
+    margin-top: 0.75em;
+    padding: 0.75em;
+    background-color: rgba(0, 0, 0, 0.3);
+    color: white;
+    transition: background-color 0.3s;
+    border-radius: 1em;
+
+    &__file-info {
+      display: flex;
+      justify-content: space-between;
+      margin-bottom: 0.5em;
+
+      .file-name, .speed {
+          font-size: 1.5em;
+      }
+    }
+
+    &__progress-bar {
+      height: 6px;
+      background: #ddd;
+      border-radius: 6px;
+      overflow: hidden;
+      margin-top: 0.7em;
+      margin-bottom: 0.5em;
+
+      &-progress {
+        height: 100%;
+        background: #ffa500;
+        transition: width 0.5s ease;
+      }
+    }
+
+    &__stats {
+        position: relative;
+        display: flex;
+        flex-direction: column;
+        gap: 0.5em;
+        font-size: 1.1em;
+
+        .speed {
+            position: absolute;
+            top: 0;
+            right: 0;
+            font-size: inherit;
+        }
+
+        .percent {
+            position: absolute;
+            bottom: 0;
+            left: 50%;
+            transform: translateX(-50%);
+            font-size: inherit;
+        }
+
+        .downloaded {
+            text-align: left;
+            font-size: inherit;
+        }
+
+        .eta {
+            position: absolute;
+            bottom: 0;
+            right: 0;
+            font-size: inherit;
+        }
+    }
+}
