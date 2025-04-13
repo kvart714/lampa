@@ -3,6 +3,7 @@
     "version": "1.0.0",
     "scripts": {
         "build": "node build.js --prod",
+        "publish": "node build.js --publish",
         "watch": "node build.js --watch --sourcemap",
         "start": "http-server dist --cors"
     },

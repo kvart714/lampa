@@ -51,4 +51,5 @@ jspm_packages/
 
 dist
 server/downloads
+server/config/settings.json
 server/config

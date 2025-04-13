@@ -2,15 +2,18 @@ const esbuild = require('esbuild')
 const { sassPlugin } = require('esbuild-sass-plugin')
 const chalk = require('chalk')
 
-const sourcemap = process.argv.includes('--sourcemap')
-const minify = process.argv.includes('--minify')
-const watch = process.argv.includes('--watch')
-    
+const publish = process.argv.includes('--publish')
+const sourcemap = publish ? false : process.argv.includes('--sourcemap')
+const minify = publish ? true : process.argv.includes('--minify')
+const watch = publish ? false : process.argv.includes('--watch')
+
+const outfile = publish ? 'publish/tdownloader/main.js' : 'dist/main.js'
+
 ;(async () => {
     const ctx = await esbuild.context({
         entryPoints: ['src/main.ts'],
         bundle: true,
-        outfile: 'dist/main.js',
+        outfile: outfile,
         sourcemap: sourcemap,
         sourcesContent: false,
         sourceRoot: '/src',
