@@ -1,5 +1,6 @@
 import { TorrentsDataStorage } from '../../services/torrents-data-storage'
 import { TransmissionService } from '../../services/transmission'
+import { URL_KEY } from '../../settings'
 import html from './download-card.html'
 import scss from './download-card.scss'
 
@@ -54,44 +55,43 @@ function formatTorrent(torrent: TorrentInfo) {
     }
 }
 
-// TODO: move texts to translations
 function openActions(movie: MovieInfo, torrent: TorrentInfo) {
     Lampa.Select.show({
-        title: 'Действия',
+        title: Lampa.Lang.translate('actions.title'),
         items: [
             {
-                title: 'Открыть',
+                title: Lampa.Lang.translate('actions.open'),
                 onSelect() {
                     // TODO: add open action
-                    // Lampa.Player.play({
-                    //     title: movie.title || movie.original_title || torrent.name,
-                    //     url: baseDir + '/' + torrent.files[0].name,
-                    // })
+                    Lampa.Player.play({
+                        title: movie.title || movie.original_title || torrent.name,
+                        url: Lampa.Storage.field(URL_KEY) + '/downloads/complete/' + torrent.files[0].name,
+                    })
                 },
             },
             torrent.status === DOWNLOADING_STATUS
                 ? {
-                      title: 'Пауза',
+                      title: Lampa.Lang.translate('actions.pause'),
                       onSelect() {
                           TransmissionService.stopTorrent(torrent)
                       },
                   }
                 : {
-                      title: 'Продолжить',
+                      title: Lampa.Lang.translate('actions.resume'),
                       onSelect() {
                           TransmissionService.startTorrent(torrent)
                       },
                   },
             {
-                title: 'Удалить',
-                subtitle: 'Удалить торрент и файл',
+                title: Lampa.Lang.translate('actions.delete'),
+                subtitle: Lampa.Lang.translate('actions.delete-with-file'),
                 onSelect() {
                     TransmissionService.fullRemoveTorrent(torrent)
                 },
             },
             {
-                title: 'Удалить торрент',
-                subtitle: 'Удалить торрент, но оставить файл',
+                title: Lampa.Lang.translate('actions.delete-torrent'),
+                subtitle: Lampa.Lang.translate('actions.delete-torrent-keep-file'),
                 onSelect() {
                     TransmissionService.removeTorrent(torrent)
                 },

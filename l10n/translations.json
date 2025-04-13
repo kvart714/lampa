@@ -73,5 +73,45 @@
     "download-card.size.4": {
         "en": "TB",
         "ru": "ТБ"
+    },
+    "actions.title": {
+        "ru": "Действия",
+        "en": "Actions"
+    },
+    "actions.open": {
+        "ru": "Открыть",
+        "en": "Open"
+    },
+    "actions.pause": {
+        "ru": "Пауза",
+        "en": "Pause"
+    },
+    "actions.resume": {
+        "ru": "Продолжить",
+        "en": "Resume"
+    },
+    "actions.delete": {
+        "ru": "Удалить",
+        "en": "Delete"
+    },
+    "actions.delete-with-file": {
+        "ru": "Удалить торрент и файл",
+        "en": "Delete torrent and file"
+    },
+    "actions.delete-torrent": {
+        "ru": "Удалить торрент",
+        "en": "Delete torrent"
+    },
+    "actions.delete-torrent-keep-file": {
+        "ru": "Удалить торрент, но оставить файл",
+        "en": "Delete torrent but keep file"
+    },
+    "background-worker.connection-success": {
+        "ru": "Подключение к Transmission успешно установлено",
+        "en": "Connection to Transmission successfully established"
+    },
+    "background-worker.error-detected": {
+        "ru": "Обнаружена ошибка. Подробнее в консоли",
+        "en": "An error has been detected. See console for details"
     }
 }

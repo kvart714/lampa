@@ -35,8 +35,9 @@ export class BackgroundWorker {
                 }
             }
 
-            // TODO: move texts to translations
-            BackgroundWorker.notifyFirstTime('Подключение к Transmission успешно установлено')
+            BackgroundWorker.notifyFirstTime(
+                Lampa.Lang.translate('background-worker.connection-success')
+            )
         } catch (error: any) {
             log('Error:', error)
             
@@ -46,7 +47,9 @@ export class BackgroundWorker {
                 log('Stopping background worker due to too many errors')
             }
 
-            BackgroundWorker.notifyFirstTime('Обнаружена ошибка. Подробнее в консоли')
+            BackgroundWorker.notifyFirstTime(
+                Lampa.Lang.translate('background-worker.error-detected')
+            )
         }
     }
 
