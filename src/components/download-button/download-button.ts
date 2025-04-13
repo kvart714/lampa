@@ -1,8 +1,9 @@
 import html from './download-button.html'
 import icon from './../../icon.svg'
-import { MovieDataStorage } from '../../services/movies-data-storage'
+import { DownloadsDataStorage } from '../../services/downloads-data-storage'
 import { TransmissionService } from '../../services/transmission'
 import { log } from '../../log'
+import { addDownloadCard } from '../download-card/download-card'
 
 function addDownloadButton(data: MovieData) {
     const button = $(
@@ -13,7 +14,6 @@ function addDownloadButton(data: MovieData) {
     )
 
     button.on('hover:enter', (e) => {
-        MovieDataStorage.selectMovie(data.movie)
         Lampa.Activity.push({
             url: '',
             title: Lampa.Lang.translate('download'),
@@ -41,17 +41,31 @@ export default function () {
     })
 
     Lampa.Listener.follow('torrent', (e) => {
+        const component = Lampa.Activity.active()
         if (
             e.type === 'render' &&
-            Lampa.Activity.active().component === 'torrents-download'
+            component.component === 'torrents-download'
         ) {
             $(e.item).off('hover:enter')
             $(e.item).on('hover:enter', () => {
-                MovieDataStorage.addSelectedMovie()
 
-                TransmissionService.AddTorrent(e.element)
+                DownloadsDataStorage.addMovie(component.movie)
+
+                TransmissionService.addTorrent(component.movie, e.element)
 
                 Lampa.Activity.back()
+
+                addDownloadCard({
+                    id: component.movie.id,
+                    name: 'Initialization',
+                    percentDone: 0,
+                    eta: 0,
+                    speed: 0,
+                    status: 4,
+                    totalSize: 0,
+                    externalId: 0,
+                    files: [],
+                })
             })
         }
     })

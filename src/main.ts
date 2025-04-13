@@ -6,6 +6,7 @@ import useDownloadCircles from './components/download-circle/download-circle'
 import { BackgroundWorker } from './services/background-worker'
 import useDownloadButton from './components/download-button/download-button'
 import useDownloadCard from './components/download-card/download-card'
+import { log } from './log'
 
 function startPlugin() {
     ;(window as any).plugin_transmission_ready = true

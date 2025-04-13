@@ -42,7 +42,7 @@ function formatTorrent(torrent: TorrentInfo) {
     return {
         id: torrent.id,
         fileName: torrent.name,
-        percent: (100 * torrent.percentDone).toFixed(0) + '%',
+        percent: (100 * torrent.percentDone).toFixed(2) + '%',
         speed: torrent.speed > 0 ? formatSpeed(torrent.speed) : '',
         downloadedSize: formatBytes(torrent.percentDone * torrent.totalSize),
         totalSize: formatBytes(torrent.totalSize),
@@ -55,7 +55,7 @@ function formatTorrent(torrent: TorrentInfo) {
     }
 }
 
-function openActions(movie: MovieInfo, torrent: TorrentInfo) {
+function openActions(torrent: TorrentInfo, name?: string) {
     Lampa.Select.show({
         title: Lampa.Lang.translate('actions.title'),
         items: [
@@ -64,8 +64,11 @@ function openActions(movie: MovieInfo, torrent: TorrentInfo) {
                 onSelect() {
                     // TODO: add open action
                     Lampa.Player.play({
-                        title: movie.title || movie.original_title || torrent.name,
-                        url: Lampa.Storage.field(URL_KEY) + '/downloads/complete/' + torrent.files[0].name,
+                        title: name || torrent.name,
+                        url:
+                            Lampa.Storage.field(URL_KEY) +
+                            '/downloads/' +
+                            torrent.files[0].name,
                     })
                 },
             },
@@ -91,7 +94,9 @@ function openActions(movie: MovieInfo, torrent: TorrentInfo) {
             },
             {
                 title: Lampa.Lang.translate('actions.delete-torrent'),
-                subtitle: Lampa.Lang.translate('actions.delete-torrent-keep-file'),
+                subtitle: Lampa.Lang.translate(
+                    'actions.delete-torrent-keep-file'
+                ),
                 onSelect() {
                     TransmissionService.removeTorrent(torrent)
                 },
@@ -100,6 +105,17 @@ function openActions(movie: MovieInfo, torrent: TorrentInfo) {
         onBack: function onBack() {
             Lampa.Controller.toggle('full_start')
         },
+    })
+}
+
+export function addDownloadCard(torrent: TorrentInfo, name?: string) {
+    const card = $(
+        Lampa.Template.get('download-card', formatTorrent(torrent))
+    )
+    $('.full-start-new__right').append(card)
+
+    card.on('hover:enter', () => {
+        openActions(torrent, name)
     })
 }
 
@@ -117,9 +133,10 @@ export function updateDownloadCard(torrent: TorrentInfo) {
             ] as string
     }
 
-    card.querySelector(
-        '.download-card__progress-bar-progress'
-    )!.setAttribute('style', `width: ${updatedData.percent};`)
+    card.querySelector('.download-card__progress-bar-progress')!.setAttribute(
+        'style',
+        `width: ${updatedData.percent};`
+    )
 }
 
 export default function () {
@@ -128,16 +145,9 @@ export default function () {
 
     Lampa.Listener.follow('full', (e) => {
         if (e.type === 'complite') {
-            const id = e.data.movie.id
-            const torrent = TorrentsDataStorage.getMovie(id)!
+            const torrent = TorrentsDataStorage.getMovie(e.data.movie.id)!
             if (torrent) {
-                $('.full-start-new__right').append(
-                    Lampa.Template.get('download-card', formatTorrent(torrent))
-                )
-
-                $('#download-card-' + torrent.id).on('hover:enter', () => {
-                    openActions(e.data.movie, torrent)
-                })
+                addDownloadCard(torrent, e.data.movie.title || e.data.movie.original_title)
             }
         }
     })

@@ -60,16 +60,15 @@ export class TransmissionService {
         )
     }
 
-    public static async AddTorrent(
-        selectedTorrent: LampaTorrent
+    public static async addTorrent(
+        movie: MovieInfo,
+        selectedTorrent: LampaTorrent,
     ): Promise<void> {
-        const tmdbId = new URLSearchParams(window.location.search).get('card')
-
         const response = await TransmissionService.getClient().addTorrent({
             paused: false,
             sequential_download: true,
             filename: selectedTorrent.MagnetUri || selectedTorrent.Link,
-            labels: [ID_KEY + tmdbId],
+            labels: [ID_KEY + movie.id],
         })
 
         if (response.arguments?.['torrent-added']) {
@@ -77,7 +76,7 @@ export class TransmissionService {
             // for version 3.0.0 and below we have to set the labels manually with an additional request
             await TransmissionService.getClient().setTorrent({
                 ids: [response.arguments['torrent-added'].id],
-                labels: [ID_KEY + tmdbId],
+                labels: [ID_KEY + movie.id],
             })
         }
     }

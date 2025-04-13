@@ -1,4 +1,4 @@
-import { MovieDataStorage } from '../../services/movies-data-storage'
+import { DownloadsDataStorage } from '../../services/downloads-data-storage'
 import { TorrentsDataStorage } from '../../services/torrents-data-storage'
 import { addDownloadCircle } from '../download-circle/download-circle'
 import html from './menu-button.html'
@@ -16,7 +16,7 @@ class DownloadsTabComponent extends Lampa.InteractionCategory {
         this.build({
             secuses: true,
             page: 1,
-            results: MovieDataStorage.getMovies(),
+            results: DownloadsDataStorage.getMovies(),
         })
     }
 
