@@ -1,0 +1,96 @@
+.download-complete,
+.download-circle {
+    display: flex;
+    justify-content: center;
+    align-items: center;
+    width: 40px;
+    height: 40px;
+    position: absolute;
+    top: 50%;
+    left: 50%;
+    transform: translate(-50%, -50%) scale(2);
+
+    &__circle {
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        width: 40px;
+        height: 40px;
+        cursor: pointer;
+        position: relative;
+
+        &-svg {
+            transform: rotate(-90deg);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+    }
+
+    &__full_in-progress {
+        fill: none;
+        stroke: rgba(255, 255, 255, 0.5);
+    }
+
+    &__full_complete {
+        fill: white;
+        stroke: none;
+    }
+
+    &__partial_complete {
+        display: none;
+    }
+
+    &__partial_in-progress {
+        transition: stroke-dashoffset 0.5s ease;
+    }
+
+    &__down-arrow {
+        position: absolute;
+        display: flex;
+        justify-content: center;
+        align-items: center;
+        top: 50%;
+        left: 50%;
+        transform: translate(-50%, -50%);
+        overflow: hidden;
+
+        svg {
+            width: 24px;
+            height: 24px;
+        }
+
+        &-svg_in-progress {
+            fill: rgba(255,255,255,0.5)
+        }
+
+        &-svg_complete {
+            fill: "white"
+        }
+
+        &-svg-animated_in-progress {
+            position: absolute;
+            clip-path: inset(0 0 100% 0);
+            animation: pulseColor 2s ease-out infinite;
+        }
+
+        &-svg-animated_complete {
+            display: none;
+        }
+    }
+}
+
+@keyframes pulseColor {
+    0% {
+        clip-path: inset(0 0 100% 0);
+    }
+    30% {
+        clip-path: inset(0 0 0 0);
+    }
+    70% {
+        clip-path: inset(0 0 0 0);
+    }
+    100% {
+        clip-path: inset(100% 0 0 0);
+    }
+}

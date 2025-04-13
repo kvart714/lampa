@@ -1,0 +1,30 @@
+version: '3.8'
+
+services:
+  transmission:
+    image: linuxserver/transmission
+    container_name: transmission
+    restart: unless-stopped
+    ports:
+      - 9091:9091
+      - 51413:51413
+      - 51413:51413/udp
+    environment:
+      - PUID=1000
+      - PGID=1000
+      - TZ=Europe/Moscow
+      - USER=admin
+      - PASS=admin
+    volumes:
+      - ./config:/config
+      - ./downloads:/downloads
+
+  nginx:
+    image: nginx:alpine
+    container_name: nginx
+    restart: unless-stopped
+    ports:
+      - 8000:8000
+    volumes:
+      - ./downloads:/downloads
+      - ./nginx.conf:/etc/nginx/conf.d/default.conf

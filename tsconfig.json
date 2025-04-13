@@ -1,0 +1,22 @@
+{
+    "compilerOptions": {
+      "target": "es6",
+      "module": "esnext",
+      "moduleResolution": "node",
+      "strict": true,
+      "jsx": "react",
+      "esModuleInterop": true,
+      "skipLibCheck": true,
+      "forceConsistentCasingInFileNames": true,
+      "lib": ["dom", "es2015"],
+      "typeRoots": ["./node_modules/@types", "./types"],
+      "resolveJsonModule": true
+    },
+    "include": [
+      "src/**/*",
+      "types/*.d.ts"
+    ],
+    "exclude": [
+      "node_modules"
+    ]
+  }

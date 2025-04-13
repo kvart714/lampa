@@ -712,7 +712,7 @@
           }
         }
       }
-      console.log('Request: ', req);
+      console.log('Request:', req);
       $.ajax(req);
     }
     function GetData$1() {

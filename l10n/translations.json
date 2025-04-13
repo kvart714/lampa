@@ -1,0 +1,117 @@
+{
+    "downloads": {
+        "ru": "Загрузки",
+        "en": "Downloads"
+    },
+    "download": {
+        "ru": "Скачать",
+        "en": "Download"
+    },
+
+    "download-card.time.0": {
+        "en": "d",
+        "ru": "д"
+    },
+    "download-card.time.1": {
+        "en": "h",
+        "ru": "ч"
+    },
+    "download-card.time.2": {
+        "en": "min",
+        "ru": "мин"
+    },
+    "download-card.time.3": {
+        "en": "s",
+        "ru": "сек"
+    },
+
+    "download-card.status.0": {
+        "en": "stopped",
+        "ru": "пауза"
+    },
+    "download-card.status.1": {
+        "en": "queued to verify local data",
+        "ru": "ждёт проверки"
+    },
+    "download-card.status.2": {
+        "en": "verifying local data",
+        "ru": "проверка"
+    },
+    "download-card.status.3": {
+        "en": "queued to download",
+        "ru": "ждёт загрузки"
+    },
+    "download-card.status.4": {
+        "en": "downloading",
+        "ru": "загрузка"
+    },
+    "download-card.status.5": {
+        "en": "queued to seed",
+        "ru": "ждёт раздачи"
+    },
+    "download-card.status.6": {
+        "en": "seeding",
+        "ru": "раздача"
+    },
+
+    "download-card.size.0": {
+        "en": "B",
+        "ru": "Б"
+    },
+    "download-card.size.1": {
+        "en": "KB",
+        "ru": "КБ"
+    },
+    "download-card.size.2": {
+        "en": "MB",
+        "ru": "МБ"
+    },
+    "download-card.size.3": {
+        "en": "GB",
+        "ru": "ГБ"
+    },
+    "download-card.size.4": {
+        "en": "TB",
+        "ru": "ТБ"
+    },
+    "actions.title": {
+        "ru": "Действия",
+        "en": "Actions"
+    },
+    "actions.open": {
+        "ru": "Открыть",
+        "en": "Open"
+    },
+    "actions.pause": {
+        "ru": "Пауза",
+        "en": "Pause"
+    },
+    "actions.resume": {
+        "ru": "Продолжить",
+        "en": "Resume"
+    },
+    "actions.delete": {
+        "ru": "Удалить",
+        "en": "Delete"
+    },
+    "actions.delete-with-file": {
+        "ru": "Удалить торрент и файл",
+        "en": "Delete torrent and file"
+    },
+    "actions.delete-torrent": {
+        "ru": "Удалить торрент",
+        "en": "Delete torrent"
+    },
+    "actions.delete-torrent-keep-file": {
+        "ru": "Удалить торрент, но оставить файл",
+        "en": "Delete torrent but keep file"
+    },
+    "background-worker.connection-success": {
+        "ru": "Подключение к Transmission успешно установлено",
+        "en": "Connection to Transmission successfully established"
+    },
+    "background-worker.error-detected": {
+        "ru": "Обнаружена ошибка. Подробнее в консоли",
+        "en": "An error has been detected. See console for details"
+    }
+}
