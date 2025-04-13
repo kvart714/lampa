@@ -15,10 +15,8 @@ services:
       - TZ=Europe/Moscow
       - USER=admin
       - PASS=admin
-      - TRANSMISSION_INCOMPLETE_DIR_ENABLED=false
-      - TRANSMISSION_DOWNLOAD_DIR=/downloads/LALKA
     volumes:
-      # - ./config:/config
+      - ./config:/config
       - ./downloads:/downloads
 
   nginx:
