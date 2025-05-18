@@ -8,6 +8,7 @@ export function openActions(
     torrent: TorrentInfo,
     name?: string
 ) {
+    torrent = TorrentsDataStorage.ensureMovie(torrent)!
     Lampa.Select.show({
         title: Lampa.Lang.translate('actions.title'),
         items: [
@@ -25,7 +26,7 @@ export function openActions(
                     })
                 },
             },
-            ...(source === 'downloads-tab'
+            ...(source === 'downloads-tab' && torrent.id
                 ? [
                       {
                           title: Lampa.Lang.translate('actions.open-card'),

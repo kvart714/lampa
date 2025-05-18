@@ -1,5 +1,20 @@
 @use "sass:math";
 
+@keyframes pulseColor {
+  0% {
+    clip-path: inset(0 0 100% 0);
+  }
+  30% {
+    clip-path: inset(0 0 0 0);
+  }
+  70% {
+    clip-path: inset(0 0 0 0);
+  }
+  100% {
+    clip-path: inset(100% 0 0 0);
+  }
+}
+
 $spacing-vertical:   16px;
 $spacing-horizontal: 24px;
 $icon-size:          24px;
@@ -32,21 +47,37 @@ $hover-shadow:       0 2px 8px rgba(0,0,0,0.1);
     box-shadow: $hover-shadow;
   }
 
-  &.downloading .downloads-tab__icon {
-    visibility: visible;
-    background: none;
-    color: #fff;
+  &.downloading {
+    .downloads-tab__icon {
+      visibility: visible;
+      background: none;
+      color: #fff;
+
+      svg {
+        clip-path: inset(0 0 100% 0);
+        animation: pulseColor 2s infinite ease-in-out;
+      }
+    }
   }
 
-  &.paused .downloads-tab__icon {
-    visibility: hidden;
+  &.paused {
+    .downloads-tab__icon {
+      visibility: visible;
+      background: none;
+      color: #ffffff71;
+    }
   }
 
   &.completed .downloads-tab__icon {
     visibility: visible;
     background: #fff;
-    color: #000;
+    color: rgb(66, 66, 66);
     border-radius: 50%;
+
+    svg {
+      mix-blend-mode: destination-out;
+      isolation: isolate;
+    }
   }
 }
 
@@ -104,11 +135,14 @@ $hover-shadow:       0 2px 8px rgba(0,0,0,0.1);
   width: 100%;
   height: $progress-height;
   background: rgba(255,255,255,0.1);
-  border-radius: math.div($progress-height,2);
+  border-radius: math.div($progress-height, 2);
   overflow: hidden;
 }
 
 .downloads-tab__progress-fill {
   height: 100%;
   background: linear-gradient(90deg, #4a90e2, #357ab8);
+  transition: width 0.3s ease;
 }
+
+

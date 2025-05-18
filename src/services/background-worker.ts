@@ -1,10 +1,9 @@
 import { log } from '../log'
-import { TransmissionService } from './torrent-client/transmission/transmission'
 import { TorrentClientFactory } from './torrent-client/torrent-client-factory'
-import { TorrentsDataStorage } from './torrents-data-storage'
 import { updateDownloadCard } from '../components/download-card/download-card'
 import { updateDownloadCircle } from '../components/download-circle/download-circle'
-import { QBittorrentWebApiClient } from './torrent-client/qbit/qbittorrent-webapi-client'
+import { updateDownloadsTab } from '../components/downloads-tab/downloads-tab'
+import { TorrentsDataStorage } from './torrents-data-storage'
 
 export class BackgroundWorker {
     private static subscription: number
@@ -30,12 +29,13 @@ export class BackgroundWorker {
         try {
             const torrents = await TorrentClientFactory.getClient().getTorrents()
 
-            // TorrentsDataStorage.setMovies(torrents)
+            TorrentsDataStorage.setMovies(torrents)
 
             if ($('.d-updatable').length) {
                 for (const torrent of torrents) {
                     updateDownloadCard(torrent)
                     updateDownloadCircle(torrent)
+                    updateDownloadsTab(torrent)
                 }
             }
 

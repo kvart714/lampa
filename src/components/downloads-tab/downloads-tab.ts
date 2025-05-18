@@ -14,7 +14,7 @@ class DownloadsTabComponent {
     public create(): void {
         this.scroll = new Lampa.Scroll({ mask: true, over: true, step: 200 })
 
-        const $list = $('<div class="downloads-tab__list"></div>')
+        const $list = $('<div class="downloads-tab__list d-updatable"></div>')
 
         const torrents: TorrentInfo[] = TorrentsDataStorage.getMovies()
         torrents.forEach((torrent) => {
@@ -47,6 +47,7 @@ class DownloadsTabComponent {
 
         this.html.append(this.scroll.render())
     }
+
     public render(js: boolean = false): HTMLElement | JQuery {
         return this.html
     }
@@ -84,12 +85,41 @@ class DownloadsTabComponent {
     public refresh(): void {}
     public pause(): void {}
     public stop(): void {}
-    public destroy(): void {}
+    public destroy(): void {
+        this.scroll.destroy()
+        this.html.remove()
+    }
 
     private openTorrent(torrent: TorrentInfo): void {
-        
         openActions('downloads-tab', torrent)
     }
+}
+
+export function updateDownloadsTab(torrent: TorrentInfo): void {
+    const fmt = formatTorrent(torrent)
+    const statusClass =
+        torrent.status === STATUS_CODES.DOWNLOADING
+            ? 'downloading'
+            : torrent.percentDone === 1
+            ? 'completed'
+            : 'paused'
+
+    const $row = $(document).find(
+        `.downloads-tab__item[data-id="${torrent.id}"]`
+    )
+    if (!$row.length) return
+
+    $row.removeClass('downloading completed paused').addClass(statusClass)
+
+    $row.find('.downloads-tab__title').text(fmt.fileName)
+    $row.find('.downloads-tab__speed').text(fmt.speed)
+
+    $row.find('.downloads-tab__meta-size').text(
+        `${fmt.downloadedSize} / ${fmt.totalSize}`
+    )
+    $row.find('.downloads-tab__meta-eta').text(fmt.eta)
+
+    $row.find('.downloads-tab__progress-fill').css('width', fmt.percent)
 }
 
 export default function () {

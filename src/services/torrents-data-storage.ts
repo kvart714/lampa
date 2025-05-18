@@ -17,6 +17,14 @@ export class TorrentsDataStorage {
             : null;
     }
 
+    public static ensureMovie(movie: TorrentInfo) {
+        const filtered = this.torrents.filter((item) => item.externalId === movie.externalId);
+        return filtered.length > 0
+            ? filtered.reduce((prev, current) => prev.percentDone < current.percentDone ? prev : current
+            )
+            : movie;
+    }
+
     public static async setMovies(torrents: TorrentInfo[]): Promise<void> {
         this.torrents = torrents;
 
