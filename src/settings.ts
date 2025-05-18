@@ -1,12 +1,13 @@
 import manifest from './manifest.json'
 import icon from './icon.svg'
-import { TransmissionService } from './services/transmission'
+import { TorrentClientFactory } from './services/torrent-client/torrent-client-factory'
 import { BackgroundWorker } from './services/background-worker'
 
 export const INTERVAL_KEY = `${manifest.component}.interval`
-export const URL_KEY = `${manifest.component}.transmission.url`
-export const LOGIN_KEY = `${manifest.component}.transmission.login`
-export const PASSWORD_KEY = `${manifest.component}.transmission.password`
+export const URL_KEY = `${manifest.component}.server.url`
+export const LOGIN_KEY = `${manifest.component}.server.login`
+export const PASSWORD_KEY = `${manifest.component}.server.password`
+export const CLIENT_TYPE_KEY = `${manifest.component}.server.type`
 
 export const INTERVALS = [2, 5, 10, 30, 60, 5 * 60, 15 * 60]
 
@@ -43,7 +44,24 @@ export function settings() {
             default: '',
         },
         field: {
-            name: 'Transmission settings:',
+            name: 'Server settings:',
+        },
+    })
+    Lampa.SettingsApi.addParam({
+        component: manifest.component,
+        param: {
+            name: CLIENT_TYPE_KEY,
+            type: 'select',
+            placeholder: '',
+            values: ['Transmission', 'qBitTorrent'],
+            default: '0',
+        },
+        field: {
+            name: 'Torrent Client',
+        },
+        onChange(item) {
+            Lampa.Settings.update()
+            TorrentClientFactory.reset()
         },
     })
     Lampa.SettingsApi.addParam({
@@ -60,7 +78,7 @@ export function settings() {
         },
         onChange(item) {
             Lampa.Settings.update()
-            TransmissionService.resetClient()
+            TorrentClientFactory.reset()
         },
     })
     Lampa.SettingsApi.addParam({
@@ -77,7 +95,7 @@ export function settings() {
         },
         onChange(item) {
             Lampa.Settings.update()
-            TransmissionService.resetClient()
+            TorrentClientFactory.reset()
         },
     })
     Lampa.SettingsApi.addParam({
@@ -94,7 +112,7 @@ export function settings() {
         },
         onChange(item) {
             Lampa.Settings.update()
-            TransmissionService.resetClient()
+            TorrentClientFactory.reset()
         },
     })
 }

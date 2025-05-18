@@ -1,8 +1,10 @@
 import { log } from '../log'
-import { TransmissionService } from './transmission'
+import { TransmissionService } from './torrent-client/transmission/transmission'
+import { TorrentClientFactory } from './torrent-client/torrent-client-factory'
 import { TorrentsDataStorage } from './torrents-data-storage'
 import { updateDownloadCard } from '../components/download-card/download-card'
 import { updateDownloadCircle } from '../components/download-circle/download-circle'
+import { QBittorrentWebApiClient } from './torrent-client/qbit/qbittorrent-webapi-client'
 
 export class BackgroundWorker {
     private static subscription: number
@@ -23,8 +25,10 @@ export class BackgroundWorker {
     }
 
     private static async tick(): Promise<void> {
+
+
         try {
-            const torrents = await TransmissionService.getTorrents()
+            const torrents = await TorrentClientFactory.getClient().getTorrents()
 
             TorrentsDataStorage.setMovies(torrents)
 

@@ -1,10 +1,9 @@
+import { STATUS_CODES } from '../../services/torrent-client/statuses'
 import { TorrentsDataStorage } from '../../services/torrents-data-storage'
-import { TransmissionService } from '../../services/transmission'
+import { TorrentClientFactory } from '../../services/torrent-client/torrent-client-factory'
 import { URL_KEY } from '../../settings'
 import html from './download-card.html'
 import scss from './download-card.scss'
-
-const DOWNLOADING_STATUS = 4
 
 function formatBytes(bytes: number, decimals = 2): string {
     if (bytes === 0) return '0'
@@ -41,13 +40,16 @@ function formatTime(seconds: number): string {
 function formatTorrent(torrent: TorrentInfo) {
     return {
         id: torrent.id,
-        fileName: torrent.name,
+        fileName:
+            torrent.status === STATUS_CODES.INITIALIZATION
+                ? 'Initialization'
+                : torrent.name,
         percent: (100 * torrent.percentDone).toFixed(2) + '%',
         speed: torrent.speed > 0 ? formatSpeed(torrent.speed) : '',
         downloadedSize: formatBytes(torrent.percentDone * torrent.totalSize),
         totalSize: formatBytes(torrent.totalSize),
         eta:
-            torrent.eta > 0
+            torrent.status === STATUS_CODES.DOWNLOADING
                 ? formatTime(torrent.eta)
                 : Lampa.Lang.translate(
                       `download-card.status.${torrent.status}`
@@ -55,41 +57,49 @@ function formatTorrent(torrent: TorrentInfo) {
     }
 }
 
-function openActions(torrent: TorrentInfo, name?: string) {
+function openActions(torrent: TorrentInfo, movie?: MovieInfo) {
+    torrent = TorrentsDataStorage.getMovie(torrent.id)!
     Lampa.Select.show({
         title: Lampa.Lang.translate('actions.title'),
         items: [
             {
                 title: Lampa.Lang.translate('actions.open'),
-                onSelect() {
-                    // TODO: add open action
+                async onSelect() {
+                    const file =
+                        await TorrentClientFactory.getClient().getFiles(torrent)
                     Lampa.Player.play({
-                        title: name || torrent.name,
+                        title:
+                            movie?.title ||
+                            movie?.original_title ||
+                            torrent.name,
                         url:
                             Lampa.Storage.field(URL_KEY) +
                             '/downloads/' +
-                            torrent.files[0].name,
+                            file[0].name,
                     })
                 },
             },
-            torrent.status === DOWNLOADING_STATUS
+            torrent.status === STATUS_CODES.DOWNLOADING
                 ? {
                       title: Lampa.Lang.translate('actions.pause'),
                       onSelect() {
-                          TransmissionService.stopTorrent(torrent)
+                          TorrentClientFactory.getClient().stopTorrent(torrent)
                       },
                   }
                 : {
                       title: Lampa.Lang.translate('actions.resume'),
                       onSelect() {
-                          TransmissionService.startTorrent(torrent)
+                          TorrentClientFactory.getClient().startTorrent(torrent)
                       },
                   },
             {
                 title: Lampa.Lang.translate('actions.delete'),
                 subtitle: Lampa.Lang.translate('actions.delete-with-file'),
                 onSelect() {
-                    TransmissionService.fullRemoveTorrent(torrent)
+                    TorrentClientFactory.getClient().removeTorrent(
+                        torrent,
+                        true
+                    )
                 },
             },
             {
@@ -98,7 +108,10 @@ function openActions(torrent: TorrentInfo, name?: string) {
                     'actions.delete-torrent-keep-file'
                 ),
                 onSelect() {
-                    TransmissionService.removeTorrent(torrent)
+                    TorrentClientFactory.getClient().removeTorrent(
+                        torrent,
+                        false
+                    )
                 },
             },
         ],
@@ -108,14 +121,12 @@ function openActions(torrent: TorrentInfo, name?: string) {
     })
 }
 
-export function addDownloadCard(torrent: TorrentInfo, name?: string) {
-    const card = $(
-        Lampa.Template.get('download-card', formatTorrent(torrent))
-    )
+export function addDownloadCard(torrent: TorrentInfo, movie?: MovieInfo) {
+    const card = $(Lampa.Template.get('download-card', formatTorrent(torrent)))
     $('.full-start-new__right').append(card)
 
     card.on('hover:enter', () => {
-        openActions(torrent, name)
+        openActions(torrent, movie)
     })
 }
 
@@ -147,7 +158,7 @@ export default function () {
         if (e.type === 'complite') {
             const torrent = TorrentsDataStorage.getMovie(e.data.movie.id)!
             if (torrent) {
-                addDownloadCard(torrent, e.data.movie.title || e.data.movie.original_title)
+                addDownloadCard(torrent, e.data.movie)
             }
         }
     })

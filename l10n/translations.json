@@ -35,7 +35,7 @@
     },
     "download-card.status.2": {
         "en": "verifying local data",
-        "ru": "проверка"
+        "ru": "проверка данных"
     },
     "download-card.status.3": {
         "en": "queued to download",
@@ -52,6 +52,34 @@
     "download-card.status.6": {
         "en": "seeding",
         "ru": "раздача"
+    },
+    "download-card.status.7": {
+        "en": "isolated",
+        "ru": "нет пиров"
+    },
+    "download-card.status.8": {
+        "en": "stalled",
+        "ru": "простаивает"
+    },
+    "download-card.status.9": {
+        "en": "error",
+        "ru": "ошибка"
+    },
+    "download-card.status.10": {
+        "en": "allocating",
+        "ru": "выделение места"
+    },
+    "download-card.status.11": {
+        "en": "moving",
+        "ru": "перемещение"
+    },
+    "download-card.status.12": {
+        "en": "unknown",
+        "ru": "неизвестно"
+    },
+    "download-card.status.13": {
+        "en": "initializing",
+        "ru": "инициализация"
     },
 
     "download-card.size.0": {
@@ -107,8 +135,8 @@
         "en": "Delete torrent but keep file"
     },
     "background-worker.connection-success": {
-        "ru": "Подключение к Transmission успешно установлено",
-        "en": "Connection to Transmission successfully established"
+        "ru": "Подключение к серверу успешно установлено",
+        "en": "Connection to server successfully established"
     },
     "background-worker.error-detected": {
         "ru": "Обнаружена ошибка. Подробнее в консоли",

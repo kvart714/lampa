@@ -33,6 +33,14 @@ type MovieInfo = {
     totalSize: number;
 }
 
+type FileInfo = {
+    bytesCompleted: number;
+    length: number;
+    name: string;
+    begin_piece?: number;
+    end_piece?: number;
+}
+
 type TorrentInfo = {
     id: number;
     externalId: number;
@@ -42,11 +50,5 @@ type TorrentInfo = {
     totalSize: number;
     eta: number;
     speed: number;
-    files: {
-        bytesCompleted: number;
-        length: number;
-        name: string;
-        begin_piece?: number;
-        end_piece?: number;
-    }[]
+    files: FileInfo[]
 }
