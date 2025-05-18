@@ -19,21 +19,12 @@ class DownloadsTabComponent {
         const torrents: TorrentInfo[] = TorrentsDataStorage.getMovies()
         torrents.forEach((torrent) => {
             const fmt = formatTorrent(torrent)
-            const statusClass =
-                torrent.status === STATUS_CODES.DOWNLOADING
-                    ? 'downloading'
-                    : torrent.percentDone === 1
-                    ? 'completed'
-                    : 'paused'
-
             const $row = $(
                 Lampa.Template.get('downloads-row', {
                     ...fmt,
                     icon,
-                    statusClass,
                 })
             )
-                .attr('tabindex', '0')
                 .on('hover:focus', (e) =>
                     this.scroll.update(e.currentTarget as HTMLElement, true)
                 )
@@ -97,19 +88,13 @@ class DownloadsTabComponent {
 
 export function updateDownloadsTab(torrent: TorrentInfo): void {
     const fmt = formatTorrent(torrent)
-    const statusClass =
-        torrent.status === STATUS_CODES.DOWNLOADING
-            ? 'downloading'
-            : torrent.percentDone === 1
-            ? 'completed'
-            : 'paused'
 
     const $row = $(document).find(
-        `.downloads-tab__item[data-id="${torrent.id}"]`
+        `.downloads-tab__item[data-id="${fmt.id}"]`
     )
     if (!$row.length) return
 
-    $row.removeClass('downloading completed paused').addClass(statusClass)
+    $row.removeClass('downloading completed paused').addClass(fmt.status)
 
     $row.find('.downloads-tab__title').text(fmt.fileName)
     $row.find('.downloads-tab__speed').text(fmt.speed)

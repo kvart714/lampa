@@ -34,7 +34,7 @@ export function formatTime(seconds: number): string {
 
 export function formatTorrent(torrent: TorrentInfo) {
     return {
-        id: torrent.id,
+        id: torrent.id + '_' + torrent.externalId,
         fileName:
             torrent.status === STATUS_CODES.INITIALIZATION
                 ? 'Initialization'
@@ -48,6 +48,11 @@ export function formatTorrent(torrent: TorrentInfo) {
                 ? formatTime(torrent.eta)
                 : Lampa.Lang.translate(
                       `download-card.status.${torrent.status}`
-                  ),
+                ),
+        status: torrent.status === STATUS_CODES.DOWNLOADING
+            ? 'downloading'
+            : torrent.percentDone === 1
+            ? 'completed'
+            : 'paused'
     }
 }

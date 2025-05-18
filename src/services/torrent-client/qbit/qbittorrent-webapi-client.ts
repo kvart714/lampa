@@ -76,6 +76,7 @@ export class QBittorrentWebApiClient implements ITorrentClient {
         url.searchParams.delete('dn') // Удаляем параметр dn, если он есть для корректного отображения имени
         form.append('urls', url.toString())
         form.append('tags', buildId(movie.id))
+        form.append('sequentialDownload', 'true')
         const response = await this.fetchWithAuth('/api/v2/torrents/add', {
             method: 'POST',
             body: form,

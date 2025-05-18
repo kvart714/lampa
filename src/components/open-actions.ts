@@ -46,12 +46,14 @@ export function openActions(
                       title: Lampa.Lang.translate('actions.pause'),
                       onSelect() {
                           TorrentClientFactory.getClient().stopTorrent(torrent)
+                          Lampa.Controller.toggle(source)
                       },
                   }
                 : {
                       title: Lampa.Lang.translate('actions.resume'),
                       onSelect() {
                           TorrentClientFactory.getClient().startTorrent(torrent)
+                          Lampa.Controller.toggle(source)
                       },
                   },
             {
@@ -62,6 +64,7 @@ export function openActions(
                         torrent,
                         true
                     )
+                    Lampa.Controller.toggle(source)
                 },
             },
             {
@@ -74,6 +77,7 @@ export function openActions(
                         torrent,
                         false
                     )
+                    Lampa.Controller.toggle(source)
                 },
             },
         ],
