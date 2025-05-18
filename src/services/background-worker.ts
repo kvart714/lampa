@@ -30,7 +30,7 @@ export class BackgroundWorker {
         try {
             const torrents = await TorrentClientFactory.getClient().getTorrents()
 
-            TorrentsDataStorage.setMovies(torrents)
+            // TorrentsDataStorage.setMovies(torrents)
 
             if ($('.d-updatable').length) {
                 for (const torrent of torrents) {

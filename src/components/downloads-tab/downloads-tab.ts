@@ -5,6 +5,7 @@ import scss from './downloads-tab.scss'
 import icon from '../../icon.svg'
 import { formatTorrent } from '../formatters'
 import { STATUS_CODES } from '../../services/torrent-client/statuses'
+import { openActions } from '../open-actions'
 
 class DownloadsTabComponent {
     private scroll!: Lampa.Scroll
@@ -51,9 +52,7 @@ class DownloadsTabComponent {
     }
 
     public start(): void {
-        const container = this.scroll.render()
-
-        Lampa.Controller.add('content', {
+        Lampa.Controller.add('downloads-tab', {
             toggle: () => {
                 Lampa.Controller.collectionSet(this.scroll.render())
                 Lampa.Controller.collectionFocus(false, this.scroll.render())
@@ -73,7 +72,7 @@ class DownloadsTabComponent {
             back: () => Lampa.Activity.backward(),
         })
 
-        Lampa.Controller.toggle('content')
+        Lampa.Controller.toggle('downloads-tab')
     }
 
     public build(data?: any): void {}
@@ -88,7 +87,8 @@ class DownloadsTabComponent {
     public destroy(): void {}
 
     private openTorrent(torrent: TorrentInfo): void {
-        console.log('openTorrentDetails', torrent)
+        
+        openActions('downloads-tab', torrent)
     }
 }
 

@@ -110,6 +110,10 @@
         "ru": "Открыть",
         "en": "Open"
     },
+    "actions.open-card": {
+        "ru": "Открыть карточку фильма",
+        "en": "Open movie card"
+    },
     "actions.pause": {
         "ru": "Пауза",
         "en": "Pause"

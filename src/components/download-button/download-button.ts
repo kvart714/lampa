@@ -1,6 +1,5 @@
 import html from './download-button.html'
 import icon from './../../icon.svg'
-import { DownloadsDataStorage } from '../../services/downloads-data-storage'
 import { TorrentClientFactory } from '../../services/torrent-client/torrent-client-factory'
 import { addDownloadCard } from '../download-card/download-card'
 
@@ -47,9 +46,6 @@ export default function () {
         ) {
             $(e.item).off('hover:enter')
             $(e.item).on('hover:enter', async () => {
-
-                DownloadsDataStorage.addMovie(component.movie)
-
                 await TorrentClientFactory.getClient().addTorrent(component.movie, e.element)
 
                 Lampa.Activity.back()
