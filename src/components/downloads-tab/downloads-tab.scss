@@ -1,0 +1,114 @@
+@use "sass:math";
+
+$spacing-vertical:   16px;
+$spacing-horizontal: 24px;
+$icon-size:          24px;
+$icon-container:     32px;
+$text-color:         #aaa;
+$progress-height:    6px;
+$hover-bg:           rgba(255, 255, 255, 0.15);
+$hover-shadow:       0 2px 8px rgba(0,0,0,0.1);
+
+.downloads-tab__list {
+  display: flex;
+  flex-direction: column;
+  row-gap: $spacing-vertical;
+  padding: $spacing-vertical $spacing-horizontal;
+}
+
+.downloads-tab__item {
+  display: flex;
+  align-items: center;
+  column-gap: $spacing-horizontal;
+  padding: $spacing-vertical $spacing-horizontal;
+  background: rgba(47, 47, 47, 0.6);
+  box-shadow: 3px 3px 10px rgb(0 0 0 / 20%);
+  border-radius: 8px;
+  transition: background 0.2s ease, box-shadow 0.2s ease;
+
+  &:hover,
+  &.focus {
+    background: $hover-bg;
+    box-shadow: $hover-shadow;
+  }
+
+  &.downloading .downloads-tab__icon {
+    visibility: visible;
+    background: none;
+    color: #fff;
+  }
+
+  &.paused .downloads-tab__icon {
+    visibility: hidden;
+  }
+
+  &.completed .downloads-tab__icon {
+    visibility: visible;
+    background: #fff;
+    color: #000;
+    border-radius: 50%;
+  }
+}
+
+.downloads-tab__icon {
+  width: $icon-container;
+  height: $icon-container;
+  flex-shrink: 0;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+
+  svg {
+    width: $icon-size;
+    height: $icon-size;
+    display: block;
+    fill: currentColor;
+  }
+}
+
+.downloads-tab__main {
+  flex: 1;
+  display: flex;
+  flex-direction: column;
+}
+
+.downloads-tab__header {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.downloads-tab__title {
+  font-weight: 500;
+}
+
+.downloads-tab__speed {
+  font-size: 0.9em;
+  color: $text-color;
+}
+
+.downloads-tab__meta {
+  display: flex;
+  justify-content: space-between;
+  margin-bottom: 12px;
+
+  &-size,
+  &-eta {
+    font-size: 0.9em;
+    color: $text-color;
+  }
+}
+
+.downloads-tab__progress-wrapper {
+  width: 100%;
+  height: $progress-height;
+  background: rgba(255,255,255,0.1);
+  border-radius: math.div($progress-height,2);
+  overflow: hidden;
+}
+
+.downloads-tab__progress-fill {
+  height: 100%;
+  background: linear-gradient(90deg, #4a90e2, #357ab8);
+}

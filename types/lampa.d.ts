@@ -15,7 +15,7 @@ declare namespace Lampa {
             templateName: string,
             data?: Record<string, any>,
             raw?: boolean
-        ): string
+        ): JQuery
         add(templateName: string, template: string): void
         js(templateName: string, data?: Record<string, any>): JQuery
         render(templateName: string, data?: Record<string, any>): HTMLElement
@@ -116,6 +116,7 @@ declare namespace Lampa {
     }
 
     type Activity = {
+        backward(): unknown
         push(activity: {
             url: string
             title: string
@@ -164,6 +165,10 @@ declare namespace Lampa {
     }
 
     type Controller = {
+        collectionFocus(): unknown
+        collectionFocus(arg0: HTMLElement | boolean, arg1: any): unknown
+        collectionSet(arg0: any): unknown
+        add(arg0: string, arg1: { toggle: () => void; up: () => any; down: () => any; left: () => any; right: () => any; enter?: () => void; back: () => unknown }): unknown
         toggle(name: string): void
         toContent(): void
     }
