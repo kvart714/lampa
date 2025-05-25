@@ -74,10 +74,19 @@ export function openActions(source: string, torrent: TorrentInfo, name?: string)
                 },
             },
             {
+                title: Lampa.Lang.translate('actions.hide'),
+                onSelect() {
+                    TorrentClientFactory.getClient().hideTorrent(torrent)
+                    $(`.downloads-tab__item[data-id="${torrent.id}_${torrent.externalId}"]`).remove();
+                    Lampa.Controller.toggle(source)
+                },
+            },
+            {
                 title: Lampa.Lang.translate('actions.delete'),
                 subtitle: Lampa.Lang.translate('actions.delete-with-file'),
                 onSelect() {
                     TorrentClientFactory.getClient().removeTorrent(torrent, true)
+                    $(`.downloads-tab__item[data-id="${torrent.id}_${torrent.externalId}"]`).remove();
                     Lampa.Controller.toggle(source)
                 },
             },
@@ -86,6 +95,7 @@ export function openActions(source: string, torrent: TorrentInfo, name?: string)
                 subtitle: Lampa.Lang.translate('actions.delete-torrent-keep-file'),
                 onSelect() {
                     TorrentClientFactory.getClient().removeTorrent(torrent, false)
+                    $(`.downloads-tab__item[data-id="${torrent.id}_${torrent.externalId}"]`).remove();
                     Lampa.Controller.toggle(source)
                 },
             },

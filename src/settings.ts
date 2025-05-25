@@ -46,7 +46,7 @@ export function settings() {
             values: [
                 'Open actions menu',
                 'Play',
-                'Resume/Pause download'
+                'Resume / Pause download'
             ],
             default: 0,
         },

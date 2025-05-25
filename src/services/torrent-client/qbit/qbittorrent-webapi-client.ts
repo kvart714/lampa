@@ -103,6 +103,17 @@ export class QBittorrentWebApiClient implements ITorrentClient {
         })
         if (!response.ok) throw new Error('Failed to stop torrents')
     }
+    
+    public async hideTorrent(torrent: TorrentInfo): Promise<void> {
+        const params = new URLSearchParams();
+        params.append('hashes', String(torrent.externalId));
+        params.append('tags', 'hide');
+        const response = await this.fetchWithAuth('/api/v2/torrents/addTags', {
+            method: 'POST',
+            body: params,
+        });
+        if (!response.ok) throw new Error('Failed to hide torrent');
+    }
 
     public async removeTorrent(
         torrent: TorrentInfo,

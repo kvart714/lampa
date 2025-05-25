@@ -126,6 +126,10 @@
         "ru": "Продолжить",
         "en": "Resume"
     },
+    "actions.hide": {
+        "ru": "Скрыть",
+        "en": "Hide"
+    },
     "actions.delete": {
         "ru": "Удалить",
         "en": "Delete"
