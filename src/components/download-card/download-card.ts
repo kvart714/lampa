@@ -2,13 +2,16 @@ import { TorrentsDataStorage } from '../../services/torrents-data-storage'
 import html from './download-card.html'
 import scss from './download-card.scss'
 import { formatTorrent } from '../formatters'
-import { openActions } from '../open-actions'
+import { openActions, openTorrent } from '../open-actions'
 
 export function addDownloadCard(torrent: TorrentInfo, movie?: MovieInfo) {
     const card = $(Lampa.Template.get('download-card', formatTorrent(torrent)))
     $('.full-start-new__right').append(card)
 
     card.on('hover:enter', () => {
+        openTorrent('full_start', torrent, movie?.title || movie?.original_title)
+    })
+    card.on('hover:long', () => {
         openActions('full_start', torrent, movie?.title || movie?.original_title)
     })
 }

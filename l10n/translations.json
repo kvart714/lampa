@@ -107,8 +107,8 @@
         "en": "Actions"
     },
     "actions.open": {
-        "ru": "Открыть",
-        "en": "Open"
+        "ru": "Воспроизвести",
+        "en": "Play"
     },
     "actions.open-card": {
         "ru": "Открыть карточку фильма",

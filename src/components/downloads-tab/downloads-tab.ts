@@ -4,8 +4,7 @@ import btnHtml from './menu-button.html'
 import scss from './downloads-tab.scss'
 import icon from '../../icon.svg'
 import { formatTorrent } from '../formatters'
-import { STATUS_CODES } from '../../services/torrent-client/statuses'
-import { openActions } from '../open-actions'
+import { openActions, openTorrent } from '../open-actions'
 
 class DownloadsTabComponent {
     private scroll!: Lampa.Scroll
@@ -28,7 +27,8 @@ class DownloadsTabComponent {
                 .on('hover:focus', (e) =>
                     this.scroll.update(e.currentTarget as HTMLElement, true)
                 )
-                .on('hover:enter', () => this.openTorrent(torrent))
+                .on('hover:enter', () => openTorrent('downloads-tab', torrent))
+                .on('hover:long', () => openActions('downloads-tab', torrent))
 
             $list.append($row)
         })
@@ -79,10 +79,6 @@ class DownloadsTabComponent {
     public destroy(): void {
         this.scroll.destroy()
         this.html.remove()
-    }
-
-    private openTorrent(torrent: TorrentInfo): void {
-        openActions('downloads-tab', torrent)
     }
 }
 

@@ -4,6 +4,7 @@ import { TorrentClientFactory } from './services/torrent-client/torrent-client-f
 import { BackgroundWorker } from './services/background-worker'
 
 export const INTERVAL_KEY = `${manifest.component}.interval`
+export const DEFAULT_ACTION_KEY = `${manifest.component}.default-action`
 export const URL_KEY = `${manifest.component}.server.url`
 export const LOGIN_KEY = `${manifest.component}.server.login`
 export const PASSWORD_KEY = `${manifest.component}.server.password`
@@ -35,6 +36,28 @@ export function settings() {
             BackgroundWorker.start(INTERVALS[item])
         },
     })
+
+    Lampa.SettingsApi.addParam({
+        component: manifest.component,
+        param: {
+            name: DEFAULT_ACTION_KEY,
+            type: 'select',
+            placeholder: '',
+            values: [
+                'Open actions menu',
+                'Play',
+                'Resume/Pause download'
+            ],
+            default: 0,
+        },
+        field: {
+            name: 'Default press action',
+            description: 'Long press always opens the actions menu.'
+        },
+        onChange(item) {
+            Lampa.Settings.update();
+        },
+    });
 
     Lampa.SettingsApi.addParam({
         component: manifest.component,
