@@ -17,15 +17,10 @@ export class BackgroundWorker {
 
         BackgroundWorker.errorCount = 0
         BackgroundWorker.notified = false
-        BackgroundWorker.subscription = setInterval(
-            BackgroundWorker.tick,
-            intervalInSeconds * 1000
-        )
+        BackgroundWorker.subscription = setInterval(BackgroundWorker.tick, intervalInSeconds * 1000)
     }
 
     private static async tick(): Promise<void> {
-
-
         try {
             const torrents = await TorrentClientFactory.getClient().getTorrents()
 
@@ -39,21 +34,17 @@ export class BackgroundWorker {
                 }
             }
 
-            BackgroundWorker.notifyFirstTime(
-                Lampa.Lang.translate('background-worker.connection-success')
-            )
+            BackgroundWorker.notifyFirstTime(Lampa.Lang.translate('background-worker.connection-success'))
         } catch (error: any) {
             log('Error:', error)
-            
+
             BackgroundWorker.errorCount++
             if (BackgroundWorker.errorCount > 10) {
                 clearInterval(BackgroundWorker.subscription)
                 log('Stopping background worker due to too many errors')
+                
+                BackgroundWorker.notifyFirstTime(Lampa.Lang.translate('background-worker.error-detected'))
             }
-
-            BackgroundWorker.notifyFirstTime(
-                Lampa.Lang.translate('background-worker.error-detected')
-            )
         }
     }
 
