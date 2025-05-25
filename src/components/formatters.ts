@@ -1,15 +1,15 @@
-import { STATUS_CODES } from '../services/torrent-client/statuses';
+import { STATUS_CODES } from '../services/torrent-client/statuses'
 
 export function formatBytes(bytes: number, decimals = 2): string {
-    if (bytes === 0) return '0';
+    if (bytes === 0) return '0'
 
-    const k = 1000;
-    const dm = decimals < 0 ? 0 : decimals;
+    const k = 1000
+    const dm = decimals < 0 ? 0 : decimals
 
-    const i = Math.floor(Math.log(bytes) / Math.log(k));
-    const size = parseFloat((bytes / Math.pow(k, i)).toFixed(dm));
+    const i = Math.floor(Math.log(bytes) / Math.log(k))
+    const size = parseFloat((bytes / Math.pow(k, i)).toFixed(dm))
 
-    return size + ' ' + Lampa.Lang.translate(`download-card.size.${i}`);
+    return size + ' ' + Lampa.Lang.translate(`download-card.size.${i}`)
 }
 
 export function formatSpeed(bytesPerSecond: number): string {
@@ -23,11 +23,7 @@ export function formatTime(seconds: number): string {
     const m = Math.floor((seconds % 3600) / 60)
     const s = Math.floor(seconds % 60)
 
-    const parts = [d, h, m, s]
-        .map((p, i) =>
-            p ? p + Lampa.Lang.translate(`download-card.time.${i}`) : null
-        )
-        .filter(Boolean)
+    const parts = [d, h, m, s].map((p, i) => (p ? p + Lampa.Lang.translate(`download-card.time.${i}`) : null)).filter(Boolean)
 
     return parts.slice(0, 2).join(' ')
 }
@@ -35,10 +31,7 @@ export function formatTime(seconds: number): string {
 export function formatTorrent(torrent: TorrentInfo) {
     return {
         id: torrent.id + '_' + torrent.externalId,
-        fileName:
-            torrent.status === STATUS_CODES.INITIALIZATION
-                ? 'Initialization'
-                : torrent.name,
+        fileName: torrent.status === STATUS_CODES.INITIALIZATION ? 'Initialization' : torrent.name,
         percent: (100 * torrent.percentDone).toFixed(2) + '%',
         speed: torrent.speed > 0 ? formatSpeed(torrent.speed) : '',
         downloadedSize: formatBytes(torrent.percentDone * torrent.totalSize),
@@ -46,13 +39,9 @@ export function formatTorrent(torrent: TorrentInfo) {
         eta:
             torrent.status === STATUS_CODES.DOWNLOADING
                 ? formatTime(torrent.eta)
-                : Lampa.Lang.translate(
-                      `download-card.status.${torrent.status}`
-                ),
-        status: torrent.status === STATUS_CODES.DOWNLOADING
-            ? 'downloading'
-            : torrent.percentDone === 1
-            ? 'completed'
-            : 'paused'
+                : torrent.status === STATUS_CODES.STALLED && torrent.percentDone === 1
+                ? Lampa.Lang.translate(`download-card.status.14`)
+                : Lampa.Lang.translate(`download-card.status.${torrent.status}`),
+        status: torrent.status === STATUS_CODES.DOWNLOADING ? 'downloading' : torrent.percentDone === 1 ? 'completed' : 'paused',
     }
 }

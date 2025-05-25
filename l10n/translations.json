@@ -81,6 +81,10 @@
         "en": "initializing",
         "ru": "инициализация"
     },
+    "download-card.status.14": {
+        "en": "completed",
+        "ru": "завершено"
+    },
 
     "download-card.size.0": {
         "en": "B",

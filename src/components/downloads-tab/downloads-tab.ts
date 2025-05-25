@@ -91,16 +91,13 @@ export function updateDownloadsTab(torrent: TorrentInfo): void {
     if (!$row.length) return
 
     $row.removeClass('downloading completed paused').addClass(fmt.status)
-
-    $row.find('.downloads-tab__title').text(fmt.fileName)
-    $row.find('.downloads-tab__speed').text(fmt.speed)
-
-    $row.find('.downloads-tab__meta-size').text(
-        `${fmt.downloadedSize} / ${fmt.totalSize}`
-    )
-    $row.find('.downloads-tab__meta-eta').text(fmt.eta)
-
+    $row.find('.downloads-tab__title span').text(fmt.fileName)
+    $row.find('.downloads-tab__speed span').text(fmt.speed)
+    $row.find('.downloads-tab__meta-eta span').text(fmt.eta)
     $row.find('.downloads-tab__progress-fill').css('width', fmt.percent)
+    $row.find('.downloads-tab__meta-percent').text(fmt.percent)
+    $row.find('.downloads-tab__meta-downloaded').text(fmt.downloadedSize)
+    $row.find('.downloads-tab__meta-total').text(fmt.totalSize)
 }
 
 export default function () {

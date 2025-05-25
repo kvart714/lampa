@@ -68,15 +68,42 @@ $hover-shadow:       0 2px 8px rgba(0,0,0,0.1);
     }
   }
 
-  &.completed .downloads-tab__icon {
-    visibility: visible;
-    background: #fff;
-    color: rgb(66, 66, 66);
-    border-radius: 50%;
+  &.completed {
+    .downloads-tab__icon {
+      visibility: visible;
+      background: #fff;
+      color: rgb(66, 66, 66);
+      border-radius: 50%;
 
-    svg {
-      mix-blend-mode: destination-out;
-      isolation: isolate;
+      svg {
+        mix-blend-mode: destination-out;
+        isolation: isolate;
+      }
+    }
+
+    .downloads-tab__meta-percent {
+      display: none !important;
+    }
+
+    .downloads-tab__meta-sep {
+      display: none !important;
+    }
+
+    .downloads-tab__meta-downloaded {
+      display: none !important;
+    }
+
+    .downloads-tab__meta-total {
+      display: inline !important;
+      font-weight: 500;
+    }
+
+    .downloads-tab__meta-size > .slash {
+      display: none !important;
+    }
+
+    .downloads-tab__meta-slash {
+      display: none !important;
     }
   }
 }
@@ -144,6 +171,10 @@ $hover-shadow:       0 2px 8px rgba(0,0,0,0.1);
   height: 100%;
   background: linear-gradient(90deg, #4a90e2, #357ab8);
   transition: width 0.3s ease;
+}
+
+.downloads-tab__meta-percent {
+  display: inline;
 }
 
 
