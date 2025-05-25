@@ -211,6 +211,9 @@ declare namespace Lampa {
         stop(): void
         pause(): void
         resume(): void
+        callback(f: any): void
+        stat(e: any): void
+        playlist(playlist: { title: string; url: string }[]): void
     }
 
     const Lang: Lang
@@ -244,6 +247,7 @@ declare namespace Lampa {
     const Component: Component
     const Listener: {
         follow: Follow
+        send(s: string, e: any) 
     }
     const Player: Player;
 }

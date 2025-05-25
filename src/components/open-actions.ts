@@ -1,13 +1,10 @@
+import { log } from '../log'
 import { STATUS_CODES } from '../services/torrent-client/statuses'
 import { TorrentClientFactory } from '../services/torrent-client/torrent-client-factory'
 import { TorrentsDataStorage } from '../services/torrents-data-storage'
 import { URL_KEY } from '../settings'
 
-export function openActions(
-    source: string,
-    torrent: TorrentInfo,
-    name?: string
-) {
+export function openActions(source: string, torrent: TorrentInfo, name?: string) {
     torrent = TorrentsDataStorage.ensureMovie(torrent)!
     Lampa.Select.show({
         title: Lampa.Lang.translate('actions.title'),
@@ -15,15 +12,19 @@ export function openActions(
             {
                 title: Lampa.Lang.translate('actions.open'),
                 async onSelect() {
-                    const file =
-                        await TorrentClientFactory.getClient().getFiles(torrent)
+                    const files = await TorrentClientFactory.getClient().getFiles(torrent)
+                    const baseUrl = Lampa.Storage.field(URL_KEY) + '/downloads/'
+
+                    let playlist = files.map((f, i) => ({
+                        title: f.name,
+                        url: baseUrl + f.name,
+                    }))
                     Lampa.Player.play({
+                        playlist: playlist,
                         title: name || torrent.name,
-                        url:
-                            Lampa.Storage.field(URL_KEY) +
-                            '/downloads/' +
-                            file[0].name,
-                    })
+                        url: baseUrl + files[0].name,
+                    } as any)
+                    Lampa.Player.playlist(playlist)
                 },
             },
             ...(source === 'downloads-tab' && torrent.id
@@ -60,23 +61,15 @@ export function openActions(
                 title: Lampa.Lang.translate('actions.delete'),
                 subtitle: Lampa.Lang.translate('actions.delete-with-file'),
                 onSelect() {
-                    TorrentClientFactory.getClient().removeTorrent(
-                        torrent,
-                        true
-                    )
+                    TorrentClientFactory.getClient().removeTorrent(torrent, true)
                     Lampa.Controller.toggle(source)
                 },
             },
             {
                 title: Lampa.Lang.translate('actions.delete-torrent'),
-                subtitle: Lampa.Lang.translate(
-                    'actions.delete-torrent-keep-file'
-                ),
+                subtitle: Lampa.Lang.translate('actions.delete-torrent-keep-file'),
                 onSelect() {
-                    TorrentClientFactory.getClient().removeTorrent(
-                        torrent,
-                        false
-                    )
+                    TorrentClientFactory.getClient().removeTorrent(torrent, false)
                     Lampa.Controller.toggle(source)
                 },
             },
