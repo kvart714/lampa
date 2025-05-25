@@ -4,7 +4,7 @@ import { TorrentClientFactory } from '../services/torrent-client/torrent-client-
 import { TorrentsDataStorage } from '../services/torrents-data-storage'
 import { DEFAULT_ACTION_KEY, URL_KEY } from '../settings'
 
-async function play(torrent: TorrentInfo, name?: string) {
+async function play(source: string, torrent: TorrentInfo, name?: string) {
     const files = await TorrentClientFactory.getClient().getFiles(torrent)
     const baseUrl = Lampa.Storage.field(URL_KEY) + '/downloads/'
 
@@ -17,20 +17,32 @@ async function play(torrent: TorrentInfo, name?: string) {
             title: name || torrent.name,
             url: baseUrl + files[0].name,
         })
-        return
     }
 
     if (files.length > 1) {
-        let playlist = files.map((f, i) => ({
-            title: f.name,
-            url: baseUrl + f.name,
-        }))
-        Lampa.Player.play({
-            playlist: playlist,
-            title: name || torrent.name,
-            url: baseUrl + files[0].name,
-        } as any)
-        Lampa.Player.playlist(playlist)
+        Lampa.Select.show({
+            title: Lampa.Lang.translate('actions.select-file'),
+            items: files.map((f, i) => ({
+                title: f.name,
+                url: baseUrl + f.name,
+            })),
+            async onSelect(item) {
+                const playlist = files.map((f) => ({
+                    title: f.name,
+                    url: baseUrl + f.name,
+                }))
+                Lampa.Player.play({
+                    playlist,
+                    title: name || torrent.name,
+                    url: item.url,
+                })
+                Lampa.Player.playlist(playlist)
+                Lampa.Controller.toggle(source)
+            },
+            onBack: function onBack() {
+                Lampa.Controller.toggle(source)
+            },
+        })
     }
 }
 
@@ -50,7 +62,7 @@ export function openActions(source: string, torrent: TorrentInfo, name?: string)
             {
                 title: Lampa.Lang.translate('actions.open'),
                 async onSelect() {
-                    play(torrent, name)
+                    play(source, torrent, name)
                 },
             },
             ...(source === 'downloads-tab' && torrent.id
@@ -79,7 +91,7 @@ export function openActions(source: string, torrent: TorrentInfo, name?: string)
                 title: Lampa.Lang.translate('actions.hide'),
                 onSelect() {
                     TorrentClientFactory.getClient().hideTorrent(torrent)
-                    $(`.downloads-tab__item[data-id="${torrent.id}_${torrent.externalId}"]`).remove();
+                    $(`.downloads-tab__item[data-id="${torrent.id}_${torrent.externalId}"]`).remove()
                     Lampa.Controller.toggle(source)
                 },
             },
@@ -88,7 +100,7 @@ export function openActions(source: string, torrent: TorrentInfo, name?: string)
                 subtitle: Lampa.Lang.translate('actions.delete-with-file'),
                 onSelect() {
                     TorrentClientFactory.getClient().removeTorrent(torrent, true)
-                    $(`.downloads-tab__item[data-id="${torrent.id}_${torrent.externalId}"]`).remove();
+                    $(`.downloads-tab__item[data-id="${torrent.id}_${torrent.externalId}"]`).remove()
                     Lampa.Controller.toggle(source)
                 },
             },
@@ -97,7 +109,7 @@ export function openActions(source: string, torrent: TorrentInfo, name?: string)
                 subtitle: Lampa.Lang.translate('actions.delete-torrent-keep-file'),
                 onSelect() {
                     TorrentClientFactory.getClient().removeTorrent(torrent, false)
-                    $(`.downloads-tab__item[data-id="${torrent.id}_${torrent.externalId}"]`).remove();
+                    $(`.downloads-tab__item[data-id="${torrent.id}_${torrent.externalId}"]`).remove()
                     Lampa.Controller.toggle(source)
                 },
             },
@@ -111,7 +123,7 @@ export function openActions(source: string, torrent: TorrentInfo, name?: string)
 export function openTorrent(source: string, torrent: TorrentInfo, name?: string) {
     const action = Lampa.Storage.field(DEFAULT_ACTION_KEY)
     if (action == 1) {
-        play(torrent, name)
+        play(source, torrent, name)
     } else if (action == 2) {
         resumeOrPause(torrent)
     } else {

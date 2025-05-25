@@ -24,9 +24,7 @@ class DownloadsTabComponent {
                     icon,
                 })
             )
-                .on('hover:focus', (e) =>
-                    this.scroll.update(e.currentTarget as HTMLElement, true)
-                )
+                .on('hover:focus', (e) => this.scroll.update(e.currentTarget as HTMLElement, true))
                 .on('hover:enter', () => openTorrent('downloads-tab', torrent))
                 .on('hover:long', () => openActions('downloads-tab', torrent))
 
@@ -43,24 +41,23 @@ class DownloadsTabComponent {
         return this.html
     }
 
+    private lastFocusedElement: HTMLElement | null = null
     public start(): void {
         Lampa.Controller.add('downloads-tab', {
             toggle: () => {
                 Lampa.Controller.collectionSet(this.scroll.render())
-                Lampa.Controller.collectionFocus(false, this.scroll.render())
+                Lampa.Controller.collectionFocus(this.lastFocusedElement ?? false, this.scroll.render())
             },
-            left: () =>
-                (Navigator as any).canmove('left')
-                    ? (Navigator as any).move('left')
-                    : Lampa.Controller.toggle('menu'),
+            left: () => ((Navigator as any).canmove('left') ? (Navigator as any).move('left') : Lampa.Controller.toggle('menu')),
             right: () => (Navigator as any).move('right'),
-            up: () =>
-                (Navigator as any).canmove('up')
-                    ? (Navigator as any).move('up')
-                    : Lampa.Controller.toggle('head'),
-            down: () =>
-                (Navigator as any).canmove('down') &&
-                (Navigator as any).move('down'),
+            up: () => {
+                ;(Navigator as any).canmove('up') ? (Navigator as any).move('up') : Lampa.Controller.toggle('head')
+                this.lastFocusedElement = (Navigator as any).getFocusedElement()
+            },
+            down: () => {
+                ;(Navigator as any).canmove('down') && (Navigator as any).move('down')
+                this.lastFocusedElement = (Navigator as any).getFocusedElement()
+            },
             back: () => Lampa.Activity.backward(),
         })
 
@@ -85,9 +82,7 @@ class DownloadsTabComponent {
 export function updateDownloadsTab(torrent: TorrentInfo): void {
     const fmt = formatTorrent(torrent)
 
-    const $row = $(document).find(
-        `.downloads-tab__item[data-id="${fmt.id}"]`
-    )
+    const $row = $(document).find(`.downloads-tab__item[data-id="${fmt.id}"]`)
     if (!$row.length) return
 
     $row.removeClass('downloading completed paused').addClass(fmt.status)

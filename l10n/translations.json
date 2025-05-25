@@ -118,6 +118,10 @@
         "ru": "Открыть карточку фильма",
         "en": "Open movie card"
     },
+    "actions.select-file": {
+        "ru": "Файлы:",
+        "en": "Files:"
+    },
     "actions.pause": {
         "ru": "Пауза",
         "en": "Pause"
