@@ -8,16 +8,30 @@ async function play(torrent: TorrentInfo, name?: string) {
     const files = await TorrentClientFactory.getClient().getFiles(torrent)
     const baseUrl = Lampa.Storage.field(URL_KEY) + '/downloads/'
 
-    let playlist = files.map((f, i) => ({
-        title: f.name,
-        url: baseUrl + f.name,
-    }))
-    Lampa.Player.play({
-        playlist: playlist,
-        title: name || torrent.name,
-        url: baseUrl + files[0].name,
-    } as any)
-    Lampa.Player.playlist(playlist)
+    if (files.length < 1) {
+        throw new Error('No files found in torrent')
+    }
+
+    if (files.length === 1) {
+        Lampa.Player.play({
+            title: name || torrent.name,
+            url: baseUrl + files[0].name,
+        })
+        return
+    }
+
+    if (files.length > 1) {
+        let playlist = files.map((f, i) => ({
+            title: f.name,
+            url: baseUrl + f.name,
+        }))
+        Lampa.Player.play({
+            playlist: playlist,
+            title: name || torrent.name,
+            url: baseUrl + files[0].name,
+        } as any)
+        Lampa.Player.playlist(playlist)
+    }
 }
 
 function resumeOrPause(torrent: TorrentInfo) {
@@ -36,19 +50,7 @@ export function openActions(source: string, torrent: TorrentInfo, name?: string)
             {
                 title: Lampa.Lang.translate('actions.open'),
                 async onSelect() {
-                    const files = await TorrentClientFactory.getClient().getFiles(torrent)
-                    const baseUrl = Lampa.Storage.field(URL_KEY) + '/downloads/'
-
-                    let playlist = files.map((f, i) => ({
-                        title: f.name,
-                        url: baseUrl + f.name,
-                    }))
-                    Lampa.Player.play({
-                        playlist: playlist,
-                        title: name || torrent.name,
-                        url: baseUrl + files[0].name,
-                    } as any)
-                    Lampa.Player.playlist(playlist)
+                    play(torrent, name)
                 },
             },
             ...(source === 'downloads-tab' && torrent.id

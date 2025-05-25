@@ -194,10 +194,15 @@ declare namespace Lampa {
         ): void
       };
 
+    type PlayerPlaylist = {
+        title: string
+        url: string
+    }
     type Player = {
         play(options: {
             title: string
             url: string
+            playlist?: PlayerPlaylist[]
             subtitles?: Array<{
                 label: string
                 url: string
@@ -213,7 +218,7 @@ declare namespace Lampa {
         resume(): void
         callback(f: any): void
         stat(e: any): void
-        playlist(playlist: { title: string; url: string }[]): void
+        playlist(playlist: PlayerPlaylist[]): void
     }
 
     const Lang: Lang
