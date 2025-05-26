@@ -3,17 +3,9 @@ import { buildId, extractId } from '../lampa-id'
 import { mapQBState } from '../statuses'
 
 export class QBittorrentWebApiClient implements ITorrentClient {
-    constructor(
-        private url: string,
-        private username: string,
-        private password: string,
-        private cookie?: string | null
-    ) {}
+    constructor(public url: string, public login: string, public password: string, private cookie?: string | null) {}
 
-    private async fetchWithAuth(
-        path: string,
-        options: RequestInit = {}
-    ): Promise<Response> {
+    private async fetchWithAuth(path: string, options: RequestInit = {}): Promise<Response> {
         let response = await fetch(this.url + path, {
             ...options,
             credentials: 'include',
@@ -32,7 +24,7 @@ export class QBittorrentWebApiClient implements ITorrentClient {
 
     public async authorize(): Promise<void> {
         const params = new URLSearchParams()
-        params.append('username', this.username)
+        params.append('username', this.login)
         params.append('password', this.password)
         const response = await fetch(this.url + '/api/v2/auth/login', {
             method: 'POST',
@@ -67,10 +59,7 @@ export class QBittorrentWebApiClient implements ITorrentClient {
             }))
     }
 
-    public async addTorrent(
-        movie: MovieInfo,
-        selectedTorrent: LampaTorrent
-    ): Promise<void> {
+    public async addTorrent(movie: MovieInfo, selectedTorrent: LampaTorrent): Promise<void> {
         const form = new FormData()
         const url = new URL(selectedTorrent.MagnetUri || selectedTorrent.Link)
         url.searchParams.delete('dn') // Удаляем параметр dn, если он есть для корректного отображения имени
@@ -103,22 +92,19 @@ export class QBittorrentWebApiClient implements ITorrentClient {
         })
         if (!response.ok) throw new Error('Failed to stop torrents')
     }
-    
+
     public async hideTorrent(torrent: TorrentInfo): Promise<void> {
-        const params = new URLSearchParams();
-        params.append('hashes', String(torrent.externalId));
-        params.append('tags', 'hide');
+        const params = new URLSearchParams()
+        params.append('hashes', String(torrent.externalId))
+        params.append('tags', 'hide')
         const response = await this.fetchWithAuth('/api/v2/torrents/addTags', {
             method: 'POST',
             body: params,
-        });
-        if (!response.ok) throw new Error('Failed to hide torrent');
+        })
+        if (!response.ok) throw new Error('Failed to hide torrent')
     }
 
-    public async removeTorrent(
-        torrent: TorrentInfo,
-        deleteFiles = false
-    ): Promise<void> {
+    public async removeTorrent(torrent: TorrentInfo, deleteFiles = false): Promise<void> {
         const params = new URLSearchParams()
         params.append('hashes', String(torrent.externalId))
         params.append('deleteFiles', deleteFiles ? 'true' : 'false')
@@ -133,13 +119,9 @@ export class QBittorrentWebApiClient implements ITorrentClient {
         const params = new URLSearchParams()
         params.append('hash', String(torrent.externalId))
 
-        const response = await this.fetchWithAuth(
-            `/api/v2/torrents/files?${params.toString()}`
-        )
+        const response = await this.fetchWithAuth(`/api/v2/torrents/files?${params.toString()}`)
         if (!response.ok) {
-            throw new Error(
-                `Failed to get files for torrent ${torrent.externalId}`
-            )
+            throw new Error(`Failed to get files for torrent ${torrent.externalId}`)
         }
 
         const filesData: Array<{

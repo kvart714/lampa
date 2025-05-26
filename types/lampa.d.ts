@@ -158,7 +158,14 @@ declare namespace Lampa {
     type Select = {
         show(options: {
             title: string
-            items: { title: string; subtitle?: string; [key: string]: any }[]
+            items: {
+                title: string;
+                subtitle?: string;
+                picked?: boolean;
+                selected?: boolean;
+                checkbox?: boolean;
+                [key: string]: any
+            }[]
             onSelect?: (item: any) => void
             onBack?: () => void
         }): void

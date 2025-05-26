@@ -6,7 +6,7 @@ import { buildId, extractId } from '../lampa-id'
 export class TransmissionService implements ITorrentClient {
     private client: TransmissionRpcClient
 
-    constructor(url: string, login: string, password: string) {
+    constructor(public url: string, public login: string, public password: string) {
         this.client = new TransmissionRpcClient(url + '/transmission/rpc', login, password)
     }
 

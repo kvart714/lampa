@@ -1,12 +1,13 @@
-import { log } from '../log'
 import { STATUS_CODES } from '../services/torrent-client/statuses'
 import { TorrentClientFactory } from '../services/torrent-client/torrent-client-factory'
 import { TorrentsDataStorage } from '../services/torrents-data-storage'
-import { DEFAULT_ACTION_KEY, URL_KEY } from '../settings'
+import { TorrentViewsStorage } from '../services/TorrentsDataStorage2'
+import { DEFAULT_ACTION_KEY } from '../settings'
 
 async function play(source: string, torrent: TorrentInfo, name?: string) {
-    const files = await TorrentClientFactory.getClient().getFiles(torrent)
-    const baseUrl = Lampa.Storage.field(URL_KEY) + '/downloads/'
+    const client = TorrentClientFactory.getClient()
+    const files = await client.getFiles(torrent)
+    const baseUrl = client.url + '/downloads/'
 
     if (files.length < 1) {
         throw new Error('No files found in torrent')
@@ -20,17 +21,19 @@ async function play(source: string, torrent: TorrentInfo, name?: string) {
     }
 
     if (files.length > 1) {
+        const views = TorrentViewsStorage.getViews(torrent)
+        const playlist = files.map((f, i) => ({
+            title: f.name.split(/[\\/]/).pop() || f.name,
+            name: f.name,
+            url: baseUrl + f.name,
+            picked: views[f.name],
+            selected: views.last === f.name,
+        }))
         Lampa.Select.show({
             title: Lampa.Lang.translate('actions.select-file'),
-            items: files.map((f, i) => ({
-                title: f.name,
-                url: baseUrl + f.name,
-            })),
+            items: playlist,
             async onSelect(item) {
-                const playlist = files.map((f) => ({
-                    title: f.name,
-                    url: baseUrl + f.name,
-                }))
+                TorrentViewsStorage.rememberView(torrent, item.name)
                 Lampa.Player.play({
                     playlist,
                     title: name || torrent.name,
