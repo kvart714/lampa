@@ -17,10 +17,10 @@ export function addDownloadCard(torrent: TorrentInfo, movie?: MovieInfo) {
 }
 
 export function updateDownloadCard(torrent: TorrentInfo) {
-    const card = document.getElementById(`download-card-${torrent.id}`)
-    if (!card) return
-
     const updatedData = formatTorrent(torrent)
+
+    const card = document.getElementById(`download-card-${updatedData.id}`)
+    if (!card) return
 
     for (const key in updatedData) {
         const el = card.querySelector(`[data-key="${key}"]`)

@@ -27,6 +27,7 @@ export class TransmissionService implements ITorrentClient {
         })
         return (
             response.arguments?.torrents
+                .filter((torrent) => !Array.isArray(torrent.labels) || torrent.labels.indexOf('hide') === -1)
                 .map((torrent) => ({
                     id: extractId(torrent.labels),
                     externalId: torrent.id,
