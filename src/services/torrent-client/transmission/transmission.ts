@@ -17,28 +17,42 @@ export class TransmissionService implements ITorrentClient {
                 'name',
                 'status',
                 'percentDone',
-                // 'totalSize',
                 'sizeWhenDone',
                 'rateDownload',
                 'eta',
                 'labels',
                 'files',
+                'peersConnected', // всего сидов/пиров
+                'peersSendingToUs', // активные сиды (отдают нам)
+                'trackerStats', // для получения точного количества сидов с трекеров
             ],
         })
         return (
             response.arguments?.torrents
                 .filter((torrent) => !Array.isArray(torrent.labels) || torrent.labels.indexOf('hide') === -1)
-                .map((torrent) => ({
-                    id: extractId(torrent.labels),
-                    externalId: torrent.id,
-                    name: torrent.name,
-                    status: mapTransmissionStatus(torrent.status),
-                    percentDone: torrent.percentDone,
-                    totalSize: torrent.sizeWhenDone,
-                    eta: torrent.eta,
-                    speed: torrent.rateDownload,
-                    files: torrent.files,
-                }))
+                .map((torrent) => {
+                    // Получаем максимальное количество сидов с трекеров
+                    let seederCount = 0
+                    let activeSeederCount = 0
+                    if (Array.isArray(torrent.trackerStats)) {
+                        seederCount = Math.max(...torrent.trackerStats.map((tr: any) => tr.seederCount || 0), 0)
+                    }
+                    // peersConnected — это все подключённые пиры (не только сиды), peersSendingToUs — активные сиды
+                    activeSeederCount = torrent.peersSendingToUs || 0
+                    return {
+                        id: extractId(torrent.labels),
+                        externalId: torrent.id,
+                        name: torrent.name,
+                        status: mapTransmissionStatus(torrent.status),
+                        percentDone: torrent.percentDone,
+                        totalSize: torrent.sizeWhenDone,
+                        eta: torrent.eta,
+                        speed: torrent.rateDownload,
+                        files: torrent.files,
+                        seeders: seederCount,
+                        activeSeeders: activeSeederCount,
+                    }
+                })
                 .filter((torrent) => torrent.id) || []
         )
     }

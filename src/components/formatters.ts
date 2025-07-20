@@ -43,5 +43,6 @@ export function formatTorrent(torrent: TorrentInfo) {
                 ? Lampa.Lang.translate(`download-card.status.14`)
                 : Lampa.Lang.translate(`download-card.status.${torrent.status}`),
         status: torrent.status === STATUS_CODES.DOWNLOADING ? 'downloading' : torrent.percentDone === 1 ? 'completed' : 'paused',
+        seeders: `${torrent.seeders || 0} (${torrent.activeSeeders || 0})`,
     }
 }

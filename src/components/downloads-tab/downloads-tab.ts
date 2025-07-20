@@ -114,6 +114,7 @@ export function updateDownloadsTab(torrent: TorrentInfo): void {
     $row.find('.downloads-tab__meta-percent').text(fmt.percent)
     $row.find('.downloads-tab__meta-downloaded').text(fmt.downloadedSize)
     $row.find('.downloads-tab__meta-total').text(fmt.totalSize)
+    $row.find('.downloads-tab__meta-seeders').text(fmt.seeders)
 }
 
 export default function () {

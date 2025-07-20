@@ -54,7 +54,7 @@ export class QBittorrentWebApiClient implements ITorrentClient {
         const data = await response.json()
 
         return {
-            torrents: this.formatTorrents(Array.isArray(data.torrents) ? data.torrents : Object.keys(data.torrents).map(k => data.torrents[k])),
+            torrents: this.formatTorrents(Array.isArray(data.torrents) ? data.torrents : Object.keys(data.torrents).map(k => ({ ...data.torrents[k], hash: k}))),
             info: {
                 freeSpace: data.server_state.free_space_on_disk,
             },
@@ -156,6 +156,8 @@ export class QBittorrentWebApiClient implements ITorrentClient {
                 eta: t.eta,
                 speed: t.dlspeed,
                 files: [],
+                seeders: t.num_seeds, // всего сидов
+                activeSeeders: t.num_complete, // активных сидов (если есть)
             }))
     }
 }

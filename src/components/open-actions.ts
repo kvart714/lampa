@@ -50,10 +50,10 @@ async function play(source: string, torrent: TorrentInfo, name?: string) {
 }
 
 function resumeOrPause(torrent: TorrentInfo) {
-    if (torrent.status === STATUS_CODES.DOWNLOADING) {
-        TorrentClientFactory.getClient().stopTorrent(torrent)
-    } else {
+    if (torrent.status === STATUS_CODES.STOPPED) {
         TorrentClientFactory.getClient().startTorrent(torrent)
+    } else {
+        TorrentClientFactory.getClient().stopTorrent(torrent)
     }
 }
 
@@ -84,7 +84,7 @@ export function openActions(source: string, torrent: TorrentInfo, name?: string)
                   ]
                 : []),
             {
-                title: torrent.status === STATUS_CODES.DOWNLOADING ? Lampa.Lang.translate('actions.pause') : Lampa.Lang.translate('actions.resume'),
+                title: torrent.status === STATUS_CODES.STOPPED ? Lampa.Lang.translate('actions.resume') : Lampa.Lang.translate('actions.pause'),
                 onSelect() {
                     resumeOrPause(torrent)
                     Lampa.Controller.toggle(source)

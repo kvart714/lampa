@@ -50,7 +50,9 @@ type TorrentInfo = {
     totalSize: number;
     eta: number;
     speed: number;
-    files: FileInfo[]
+    seeders?: number;
+    activeSeeders?: number;
+    files: FileInfo[];
 }
 
 type TorrentsData = {

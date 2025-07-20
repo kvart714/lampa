@@ -81,29 +81,17 @@ $hover-shadow:       0 2px 8px rgba(0,0,0,0.1);
       }
     }
 
-    .downloads-tab__meta-percent {
-      display: none !important;
-    }
-
-    .downloads-tab__meta-sep {
-      display: none !important;
-    }
-
-    .downloads-tab__meta-downloaded {
+    .downloads-tab__meta-percent,
+    .downloads-tab__meta-sep,
+    .downloads-tab__meta-downloaded,sh,
+    .downloads-tab__meta-slash,
+    .downloads-tab__meta-seeders {
       display: none !important;
     }
 
     .downloads-tab__meta-total {
       display: inline !important;
       font-weight: 500;
-    }
-
-    .downloads-tab__meta-size > .slash {
-      display: none !important;
-    }
-
-    .downloads-tab__meta-slash {
-      display: none !important;
     }
   }
 }
