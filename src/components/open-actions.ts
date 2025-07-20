@@ -1,7 +1,7 @@
 import { STATUS_CODES } from '../services/torrent-client/statuses'
 import { TorrentClientFactory } from '../services/torrent-client/torrent-client-factory'
 import { TorrentsDataStorage } from '../services/torrents-data-storage'
-import { TorrentViewsStorage } from '../services/TorrentsDataStorage2'
+import { TorrentViewsStorage } from '../services/TorrentViewsStorage'
 import { DEFAULT_ACTION_KEY } from '../settings'
 
 async function play(source: string, torrent: TorrentInfo, name?: string) {
