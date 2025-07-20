@@ -7,6 +7,8 @@ import { TransmissionService } from './transmission/transmission'
 export class TorrentClientFactory {
     private static client?: ITorrentClient
 
+    public static isConnected: boolean = false
+
     public static getClient(): ITorrentClient {
         if (!this.client) {
             const url = Lampa.Storage.field(URL_KEY)

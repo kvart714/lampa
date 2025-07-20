@@ -4,13 +4,15 @@ import { updateDownloadCard } from '../components/download-card/download-card'
 import { updateDownloadCircle } from '../components/download-circle/download-circle'
 import { updateDownloadsTab } from '../components/downloads-tab/downloads-tab'
 import { TorrentsDataStorage } from './torrents-data-storage'
+import { INTERVAL_KEY, INTERVALS } from '../settings'
 
 export class BackgroundWorker {
     private static subscription: number
     private static errorCount = 0
     private static notified = false
 
-    static start(intervalInSeconds: number) {
+    static start() {
+        const intervalInSeconds = INTERVALS[Lampa.Storage.field(INTERVAL_KEY)]
         if (BackgroundWorker.subscription) {
             clearInterval(BackgroundWorker.subscription)
         }
@@ -34,9 +36,13 @@ export class BackgroundWorker {
                 }
             }
 
+            TorrentClientFactory.isConnected = true
+
             BackgroundWorker.notifyFirstTime(Lampa.Lang.translate('background-worker.connection-success'))
         } catch (error: any) {
             log('Error:', error)
+
+            TorrentClientFactory.isConnected = false
 
             BackgroundWorker.errorCount++
             if (BackgroundWorker.errorCount > 10) {

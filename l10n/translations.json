@@ -11,6 +11,10 @@
         "ru": "Подключено",
         "en": "Connected"
     },
+    "downloads-tab.disconnected": {
+        "ru": "Нет подключения",
+        "en": "Disconnected"
+    },
     "downloads-tab.freespace": {
         "ru": "Свободное место: ",
         "en": "Free space: "

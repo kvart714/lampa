@@ -1,5 +1,5 @@
 import useDownloadsTab from './components/downloads-tab/downloads-tab'
-import { INTERVAL_KEY, INTERVALS, settings, URL_KEY } from './settings'
+import { settings, URL_KEY } from './settings'
 import translations from '../l10n/translations.json'
 import manifest from './manifest.json'
 import useDownloadCircles from './components/download-circle/download-circle'
@@ -28,7 +28,7 @@ function startPlugin() {
 
     const isConfigured = Lampa.Storage.field(URL_KEY)
     if (isConfigured) {
-        BackgroundWorker.start(INTERVALS[Lampa.Storage.field(INTERVAL_KEY)])
+        BackgroundWorker.start()
     }
 }
 

@@ -7,6 +7,7 @@ import icon from '../../icon.svg'
 import { formatBytes, formatTorrent } from '../formatters'
 import { openActions, openTorrent } from '../open-actions'
 import { TorrentClientFactory } from '../../services/torrent-client/torrent-client-factory'
+import { BackgroundWorker } from '../../services/background-worker'
 
 class DownloadsTabComponent {
     private scroll!: Lampa.Scroll
@@ -17,12 +18,24 @@ class DownloadsTabComponent {
 
         const data: TorrentsData = TorrentsDataStorage.getData()
 
-        const $list = $(
+        const server = TorrentClientFactory.isConnected
+            ? Lampa.Lang.translate('downloads-tab.connected') + ' (' + TorrentClientFactory.getClient().url + ')'
+            : Lampa.Lang.translate('downloads-tab.disconnected')
+
+        const page = $(
             Lampa.Template.get('downloads-tab', {
-                server: Lampa.Lang.translate('downloads-tab.connected') + ' (' + TorrentClientFactory.getClient().url + ')',
+                server,
                 freeSpace: Lampa.Lang.translate('downloads-tab.freespace') + formatBytes(data.info.freeSpace),
             })
         )
+
+        if (!TorrentClientFactory.isConnected) {
+            const refreshBtn = $(`<div class="downloads-tab__item selector" style="width: auto">Обновить</div>`)
+            refreshBtn
+                .on('hover:focus', (e) => this.scroll.update(e.currentTarget as HTMLElement, true))
+                .on('hover:enter', () => BackgroundWorker.start())
+            page.append(refreshBtn)
+        }
 
         data.torrents.forEach((torrent) => {
             const fmt = formatTorrent(torrent)
@@ -36,11 +49,11 @@ class DownloadsTabComponent {
                 .on('hover:enter', () => openTorrent('downloads-tab', torrent))
                 .on('hover:long', () => openActions('downloads-tab', torrent))
 
-            $list.append($row)
+            page.append($row)
         })
 
         this.scroll.minus()
-        this.scroll.append($list.get(0)!)
+        this.scroll.append(page.get(0)!)
 
         this.html.append(this.scroll.render())
     }
