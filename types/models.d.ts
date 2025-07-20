@@ -52,3 +52,10 @@ type TorrentInfo = {
     speed: number;
     files: FileInfo[]
 }
+
+type TorrentsData = {
+    torrents: TorrentInfo[];
+    info: {
+        freeSpace: number;
+    }
+}

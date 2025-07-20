@@ -7,6 +7,14 @@
         "ru": "Скачать",
         "en": "Download"
     },
+    "downloads-tab.connected": {
+        "ru": "Подключено",
+        "en": "Connected"
+    },
+    "downloads-tab.freespace": {
+        "ru": "Свободное место: ",
+        "en": "Free space: "
+    },
 
     "download-card.time.0": {
         "en": "d",

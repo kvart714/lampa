@@ -22,12 +22,12 @@ export class BackgroundWorker {
 
     private static async tick(): Promise<void> {
         try {
-            const torrents = await TorrentClientFactory.getClient().getTorrents()
+            const data = await TorrentClientFactory.getClient().getData()
 
-            TorrentsDataStorage.setMovies(torrents)
+            TorrentsDataStorage.setData(data)
 
             if ($('.d-updatable').length) {
-                for (const torrent of torrents) {
+                for (const torrent of data.torrents) {
                     updateDownloadCard(torrent)
                     updateDownloadCircle(torrent)
                     updateDownloadsTab(torrent)

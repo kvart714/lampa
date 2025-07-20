@@ -85,4 +85,13 @@ export class TransmissionService implements ITorrentClient {
     public async getFiles(torrent: TorrentInfo): Promise<FileInfo[]> {
         return torrent.files
     }
+
+    public async getData(): Promise<TorrentsData> {
+        return {
+            torrents: await this.getTorrents(),
+            info: {
+                freeSpace: 0, // TODO: Implement free space retrieval
+            }
+        }
+    }
 }

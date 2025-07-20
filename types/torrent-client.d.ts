@@ -5,6 +5,7 @@ export interface ITorrentClient {
     public login: string
     public password: string
     getTorrents(): Promise<TorrentInfo[]>
+    getData(): Promise<TorrentsData>
     addTorrent(movie: MovieInfo, selectedTorrent: LampaTorrent): Promise<void>
     startTorrent(torrent: TorrentInfo): Promise<void>
     stopTorrent(torrent: TorrentInfo): Promise<void>

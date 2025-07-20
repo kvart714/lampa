@@ -1,16 +1,16 @@
 import manifest from '../manifest.json';
 
-export const STORAGE_KEY = manifest.component + '.torrents.data'
+export const STORAGE_KEY = manifest.component + '.torrents.data.v2'
 
 export class TorrentsDataStorage {
-    private static torrents = Lampa.Storage.get<TorrentInfo[]>(STORAGE_KEY, []);
+    private static data = Lampa.Storage.get<TorrentsData>(STORAGE_KEY, { torrents: [], info: { freeSpace: 0 } });
 
-    public static getMovies() {
-        return this.torrents;
+    public static getData(): TorrentsData {
+        return this.data;
     }
 
     public static getMovie(id: number) {
-        const filtered = this.torrents.filter((item) => item.id === id);
+        const filtered = this.data.torrents.filter((item) => item.id === id);
         return filtered.length > 0
             ? filtered.reduce((prev, current) => prev.percentDone < current.percentDone ? prev : current
             )
@@ -18,16 +18,16 @@ export class TorrentsDataStorage {
     }
 
     public static ensureMovie(movie: TorrentInfo) {
-        const filtered = this.torrents.filter((item) => item.externalId === movie.externalId);
+        const filtered = this.data.torrents.filter((item) => item.externalId === movie.externalId);
         return filtered.length > 0
             ? filtered.reduce((prev, current) => prev.percentDone < current.percentDone ? prev : current
             )
             : movie;
     }
 
-    public static async setMovies(torrents: TorrentInfo[]): Promise<void> {
-        this.torrents = torrents;
+    public static async setData(torrents: TorrentsData): Promise<void> {
+        this.data = torrents;
 
-        Lampa.Storage.set(STORAGE_KEY, this.torrents);
+        Lampa.Storage.set(STORAGE_KEY, this.data);
     }
 }

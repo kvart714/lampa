@@ -1,10 +1,12 @@
 import { TorrentsDataStorage } from '../../services/torrents-data-storage'
 import tabHtml from './downloads-tab.html'
+import rowHtml from './downloads-row.html'
 import btnHtml from './menu-button.html'
 import scss from './downloads-tab.scss'
 import icon from '../../icon.svg'
-import { formatTorrent } from '../formatters'
+import { formatBytes, formatTorrent } from '../formatters'
 import { openActions, openTorrent } from '../open-actions'
+import { TorrentClientFactory } from '../../services/torrent-client/torrent-client-factory'
 
 class DownloadsTabComponent {
     private scroll!: Lampa.Scroll
@@ -13,10 +15,16 @@ class DownloadsTabComponent {
     public create(): void {
         this.scroll = new Lampa.Scroll({ mask: true, over: true, step: 200 })
 
-        const $list = $('<div class="downloads-tab__list d-updatable"></div>')
+        const data: TorrentsData = TorrentsDataStorage.getData()
 
-        const torrents: TorrentInfo[] = TorrentsDataStorage.getMovies()
-        torrents.forEach((torrent) => {
+        const $list = $(
+            Lampa.Template.get('downloads-tab', {
+                server: Lampa.Lang.translate('downloads-tab.connected') + ' (' + TorrentClientFactory.getClient().url + ')',
+                freeSpace: Lampa.Lang.translate('downloads-tab.freespace') + formatBytes(data.info.freeSpace),
+            })
+        )
+
+        data.torrents.forEach((torrent) => {
             const fmt = formatTorrent(torrent)
             const $row = $(
                 Lampa.Template.get('downloads-row', {
@@ -97,7 +105,8 @@ export function updateDownloadsTab(torrent: TorrentInfo): void {
 
 export default function () {
     Lampa.Template.add('menu-button', btnHtml)
-    Lampa.Template.add('downloads-row', tabHtml)
+    Lampa.Template.add('downloads-row', rowHtml)
+    Lampa.Template.add('downloads-tab', tabHtml)
 
     $('body').append(`<style>${scss}</style>`)
 

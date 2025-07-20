@@ -43,20 +43,22 @@ export class QBittorrentWebApiClient implements ITorrentClient {
         if (!response.ok) throw new Error('Failed to get torrents')
 
         const data: [] = await response.json()
-        return data
-            .sort((a: any, b: any) => b.added_on - a.added_on)
-            .filter((t: any) => !t.tags.includes('hide'))
-            .map((t: any) => ({
-                id: extractId(t.tags.split(',')),
-                externalId: t.hash,
-                name: t.name,
-                status: mapQBState(t.state),
-                percentDone: t.progress,
-                totalSize: t.size,
-                eta: t.eta,
-                speed: t.dlspeed,
-                files: [],
-            }))
+        return this.formatTorrents(data)
+    }
+
+    public async getData(): Promise<TorrentsData> {
+        const response = await this.fetchWithAuth('/api/v2/sync/maindata')
+        
+        if (!response.ok) throw new Error('Failed to get qBittorrent info')
+        
+        const data = await response.json()
+
+        return {
+            torrents: this.formatTorrents(Array.isArray(data.torrents) ? data.torrents : Object.keys(data.torrents).map(k => data.torrents[k])),
+            info: {
+                freeSpace: data.server_state.free_space_on_disk,
+            },
+        }
     }
 
     public async addTorrent(movie: MovieInfo, selectedTorrent: LampaTorrent): Promise<void> {
@@ -138,5 +140,22 @@ export class QBittorrentWebApiClient implements ITorrentClient {
             begin_piece: f.piece_range?.[0],
             end_piece: f.piece_range?.[1],
         }))
+    }
+
+    private formatTorrents(data: any[]): TorrentInfo[] {
+        return data
+            .sort((a: any, b: any) => b.added_on - a.added_on)
+            .filter((t: any) => !t.tags.includes('hide'))
+            .map((t: any) => ({
+                id: extractId(t.tags.split(',')),
+                externalId: t.hash,
+                name: t.name,
+                status: mapQBState(t.state),
+                percentDone: t.progress,
+                totalSize: t.size,
+                eta: t.eta,
+                speed: t.dlspeed,
+                files: [],
+            }))
     }
 }

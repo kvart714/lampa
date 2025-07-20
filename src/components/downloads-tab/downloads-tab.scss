@@ -137,8 +137,21 @@ $hover-shadow:       0 2px 8px rgba(0,0,0,0.1);
   margin-bottom: 8px;
 }
 
-.downloads-tab__title {
+.downloads-tab__header-title-wrapper {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  margin-bottom: 8px;
+}
+
+.downloads-tab__header-title {
+  font-size: 1.15em;
+  font-weight: 600;
+}
+
+.downloads-tab__header-size {
   font-size: 1.2em;
+  color: $text-color;
   font-weight: 500;
 }
 
