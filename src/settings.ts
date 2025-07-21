@@ -33,7 +33,7 @@ export function settings() {
         },
         onChange(item) {
             Lampa.Settings.update()
-            BackgroundWorker.start(INTERVALS[item])
+            BackgroundWorker.start()
         },
     })
 

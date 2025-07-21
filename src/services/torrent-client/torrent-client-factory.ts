@@ -1,5 +1,4 @@
 import type { ITorrentClient } from '../../../types/torrent-client'
-import { log } from '../../log'
 import { CLIENT_TYPE_KEY, URL_KEY, LOGIN_KEY, PASSWORD_KEY } from '../../settings'
 import { QBittorrentWebApiClient } from './qbit/qbittorrent-webapi-client'
 import { TransmissionService } from './transmission/transmission'
@@ -49,8 +48,6 @@ export class TorrentClientFactory {
                         if (!done) {
                             done = true
                             this.buildClient(url)
-                            log('Connected to ' + url)
-                            Lampa.Noty.show(Lampa.Lang.translate('background-worker.connection-success') + ': ' + url)
                             resolve()
                         }
                     })

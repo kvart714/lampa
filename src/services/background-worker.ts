@@ -38,7 +38,10 @@ export class BackgroundWorker {
 
             TorrentClientFactory.isConnected = true
 
-            BackgroundWorker.notifyFirstTime(Lampa.Lang.translate('background-worker.connection-success'))
+            const url = TorrentClientFactory.getClient().url
+            log('Connected to ' + url)
+
+            BackgroundWorker.notifyFirstTime(Lampa.Lang.translate('background-worker.connection-success') + ': ' + url)
         } catch (error: any) {
             log('Error:', error)
 
