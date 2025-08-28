@@ -22,7 +22,13 @@ async function play(source: string, torrent: TorrentInfo, name?: string) {
 
     if (files.length > 1) {
         const views = TorrentViewsStorage.getViews(torrent)
-        const playlist = files.map((f, i) => ({
+
+        const sortedFiles = files.sort((a, b) => a.name.localeCompare(b.name, undefined, {
+            numeric: true,
+            sensitivity: 'base'
+        }))
+        
+        const playlist = sortedFiles.map((f, i) => ({
             title: f.name.split(/[\\/]/).pop() || f.name,
             name: f.name,
             url: baseUrl + f.name,
