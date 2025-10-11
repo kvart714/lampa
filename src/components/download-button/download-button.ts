@@ -1,7 +1,6 @@
-import html from './download-button.html'
-import icon from './../../icon.svg'
 import { TorrentClientFactory } from '../../services/torrent-client/torrent-client-factory'
-import { addDownloadCard } from '../download-card/download-card'
+import icon from './../../icon.svg'
+import html from './download-button.html'
 
 function addDownloadButton(data: MovieData) {
     const button = $(
@@ -45,15 +44,17 @@ export default function () {
             component.component === 'torrents-download'
         ) {
             $(e.item).off('hover:enter')
-            $(e.item).on('hover:enter', async () => {
+            $(e.item).on('hover:enter', async (a) => {
                 await TorrentClientFactory.getClient().addTorrent(component.movie, e.element)
 
-                Lampa.Activity.back()
+                component.activity.component().mark(e.element, e.item, true)
+                
+                // Lampa.Activity.back()
 
-                const torrents = await TorrentClientFactory.getClient().getTorrents()
-                const torrent: TorrentInfo = torrents.find((t) => t.id === component.movie.id)
+                // const torrents = await TorrentClientFactory.getClient().getTorrents()
+                // const torrent: TorrentInfo = torrents.find((t) => t.id === component.movie.id)
 
-                addDownloadCard(torrent, component.movie)
+                // addDownloadCard(torrent, component.movie)
             })
         }
     })
