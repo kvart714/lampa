@@ -263,6 +263,30 @@ declare namespace Lampa {
         send(s: string, e: any) 
     }
     const Player: Player;
+    const TMDB: {
+        /**
+         * Формирует URL для TMDB API
+         * @param url относительный путь
+         * @returns полный URL
+         */
+        api(url: string): string;
+        /**
+         * Возвращает TMDB API ключ
+         * @returns ключ
+         */
+        key(): string;
+        /**
+         * Формирует URL для изображения TMDB
+         * @param url относительный путь к изображению
+         * @returns полный URL
+         */
+        image(url: string): string;
+        /**
+         * Проверяет, сломан ли TMDB API
+         * @returns true если сломан, иначе false
+         */
+        broken(): boolean;
+    }
 }
 
 type AppEvent = {

@@ -24,11 +24,18 @@ $progress-height:    6px;
 $hover-bg:           rgba(255, 255, 255, 0.15);
 $hover-shadow:       0 2px 8px rgba(0,0,0,0.1);
 
+
 .downloads-tab__list {
   display: flex;
   flex-direction: column;
-  row-gap: $spacing-vertical;
   padding: $spacing-vertical $spacing-horizontal;
+}
+
+// Add spacing between rows in the dedicated container
+.downloads-tab__rows {
+  display: flex;
+  flex-direction: column;
+  row-gap: $spacing-vertical;
 }
 
 .downloads-tab__item {

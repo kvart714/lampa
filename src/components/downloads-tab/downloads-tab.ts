@@ -1,13 +1,12 @@
-import { TorrentsDataStorage } from '../../services/torrents-data-storage'
-import tabHtml from './downloads-tab.html'
-import rowHtml from './downloads-row.html'
-import btnHtml from './menu-button.html'
-import scss from './downloads-tab.scss'
 import icon from '../../icon.svg'
+import { TorrentClientFactory } from '../../services/torrent-client/torrent-client-factory'
+import { TorrentsDataStorage } from '../../services/torrents-data-storage'
 import { formatBytes, formatTorrent } from '../formatters'
 import { openActions, openTorrent } from '../open-actions'
-import { TorrentClientFactory } from '../../services/torrent-client/torrent-client-factory'
-import { BackgroundWorker } from '../../services/background-worker'
+import rowHtml from './downloads-row.html'
+import tabHtml from './downloads-tab.html'
+import scss from './downloads-tab.scss'
+import btnHtml from './menu-button.html'
 
 class DownloadsTabComponent {
     private scroll!: Lampa.Scroll
@@ -22,6 +21,7 @@ class DownloadsTabComponent {
             ? Lampa.Lang.translate('downloads-tab.connected') + ' (' + TorrentClientFactory.getClient().url + ')'
             : Lampa.Lang.translate('downloads-tab.disconnected')
 
+
         const page = $(
             Lampa.Template.get('downloads-tab', {
                 server,
@@ -29,13 +29,7 @@ class DownloadsTabComponent {
             })
         )
 
-        if (!TorrentClientFactory.isConnected) {
-            const refreshBtn = $(`<div class="downloads-tab__item selector" style="width: auto">Обновить</div>`)
-            refreshBtn
-                .on('hover:focus', (e) => this.scroll.update(e.currentTarget as HTMLElement, true))
-                .on('hover:enter', () => BackgroundWorker.start())
-            page.append(refreshBtn)
-        }
+        const rowsContainer = page.find('.downloads-tab__rows')
 
         data.torrents.forEach((torrent) => {
             const fmt = formatTorrent(torrent)
@@ -49,7 +43,7 @@ class DownloadsTabComponent {
                 .on('hover:enter', () => openTorrent('downloads-tab', torrent))
                 .on('hover:long', () => openActions('downloads-tab', torrent))
 
-            page.append($row)
+            rowsContainer.append($row)
         })
 
         this.scroll.minus()
@@ -107,14 +101,13 @@ export function updateDownloadsTab(torrent: TorrentInfo): void {
     if (!$row.length) return
 
     $row.removeClass('downloading completed paused').addClass(fmt.status)
-    $row.find('.downloads-tab__title span').text(fmt.fileName)
-    $row.find('.downloads-tab__speed span').text(fmt.speed)
-    $row.find('.downloads-tab__meta-eta span').text(fmt.eta)
     $row.find('.downloads-tab__progress-fill').css('width', fmt.percent)
-    $row.find('.downloads-tab__meta-percent').text(fmt.percent)
-    $row.find('.downloads-tab__meta-downloaded').text(fmt.downloadedSize)
-    $row.find('.downloads-tab__meta-total').text(fmt.totalSize)
-    $row.find('.downloads-tab__meta-seeders').text(fmt.seeders)
+
+    Object.keys(fmt).forEach((key) => {
+        $row.find(`[data-field="${key}"]`).each(function () {
+            $(this).text((fmt as any)[key])
+        })
+    })
 }
 
 export default function () {

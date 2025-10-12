@@ -1,3 +1,4 @@
+import { MovieInfoDataStorage } from '../services/movieinfo-data-storage'
 import { STATUS_CODES } from '../services/torrent-client/statuses'
 
 export function formatBytes(bytes: number, decimals = 2): string {
@@ -29,8 +30,11 @@ export function formatTime(seconds: number): string {
 }
 
 export function formatTorrent(torrent: TorrentInfo) {
+    const info = MovieInfoDataStorage.getMovieInfo(torrent.id)
     return {
         id: torrent.id + '_' + torrent.externalId,
+        title: info?.title || (torrent.status === STATUS_CODES.INITIALIZATION ? 'Initialization' : torrent.name),
+        poster: info?.poster_path ? `https://image.tmdb.org/t/p/w200${info.poster_path}` : '',
         fileName: torrent.status === STATUS_CODES.INITIALIZATION ? 'Initialization' : torrent.name,
         percent: (100 * torrent.percentDone).toFixed(2) + '%',
         speed: torrent.speed > 0 ? formatSpeed(torrent.speed) : '',

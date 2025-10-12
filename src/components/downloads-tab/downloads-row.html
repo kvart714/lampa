@@ -1,21 +1,22 @@
+
 <div class="downloads-tab__item selector {status}" data-id="{id}">
-  <div class="downloads-tab__icon">{icon}</div>
+  <div class="downloads-tab__icon" data-field="icon">{icon}</div>
   <div class="downloads-tab__main">
     <div class="downloads-tab__header">
-      <div class="downloads-tab__title"><span>{fileName}</span></div>
-      <div class="downloads-tab__speed"><span>{speed}</span></div>
+      <div class="downloads-tab__title"><span data-field="fileName">{fileName}</span></div>
+      <div class="downloads-tab__speed"><span data-field="speed">{speed}</span></div>
     </div>
     <div class="downloads-tab__meta">
       <span class="downloads-tab__meta-size">
-        <span class="downloads-tab__meta-percent">{percent}</span>
+        <span class="downloads-tab__meta-percent" data-field="percent">{percent}</span>
         <span class="downloads-tab__meta-sep"> • </span>
-        <span class="downloads-tab__meta-downloaded">{downloadedSize}</span>
+        <span class="downloads-tab__meta-downloaded" data-field="downloadedSize">{downloadedSize}</span>
         <span class="downloads-tab__meta-slash"> / </span>
-        <span class="downloads-tab__meta-total">{totalSize}</span>
+        <span class="downloads-tab__meta-total" data-field="totalSize">{totalSize}</span>
         <span class="downloads-tab__meta-sep"> • </span>
-        <span class="downloads-tab__meta-seeders">{seeders}</span>
+        <span class="downloads-tab__meta-seeders" data-field="seeders">{seeders}</span>
       </span>
-      <span class="downloads-tab__meta-eta"><span>{eta}</span></span>
+      <span class="downloads-tab__meta-eta"><span data-field="eta">{eta}</span></span>
     </div>
     <div class="downloads-tab__progress-wrapper">
       <div class="downloads-tab__progress-fill" style="width: {percent};"></div>
