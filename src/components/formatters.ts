@@ -29,13 +29,19 @@ export function formatTime(seconds: number): string {
     return parts.slice(0, 2).join(' ')
 }
 
+function formatYear(dateStr?: string): number | '' {
+  const d = new Date(dateStr || '');
+  return isNaN(d.getTime()) ? '' : d.getFullYear();
+}
+
 export function formatTorrent(torrent: TorrentInfo) {
     const info = MovieInfoDataStorage.getMovieInfo(torrent.id)
     return {
         id: torrent.id + '_' + torrent.externalId,
-        title: info?.title || (torrent.status === STATUS_CODES.INITIALIZATION ? 'Initialization' : torrent.name),
+        title: info?.title || info?.name || (torrent.status === STATUS_CODES.INITIALIZATION ? 'Initialization' : torrent.name),
         poster: info?.poster_path ? `https://image.tmdb.org/t/p/w200${info.poster_path}` : '',
-        fileName: torrent.status === STATUS_CODES.INITIALIZATION ? 'Initialization' : torrent.name,
+        year: formatYear((info?.release_date || info?.first_air_date)),
+        fileName: (info?.title || info?.name) ? torrent.name : '',
         percent: (100 * torrent.percentDone).toFixed(2) + '%',
         speed: torrent.speed > 0 ? formatSpeed(torrent.speed) : '',
         downloadedSize: formatBytes(torrent.percentDone * torrent.totalSize),

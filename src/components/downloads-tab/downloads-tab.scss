@@ -1,188 +1,188 @@
-@use "sass:math";
+.downloads-tab {
 
-@keyframes pulseColor {
-  0% {
-    clip-path: inset(0 0 100% 0);
-  }
-  30% {
-    clip-path: inset(0 0 0 0);
-  }
-  70% {
-    clip-path: inset(0 0 0 0);
-  }
-  100% {
-    clip-path: inset(100% 0 0 0);
-  }
-}
+  &__list {
+    --color-text-primary: #dbdbdb;
+    --color-text-muted: #b1b1b1;
+    --fs-header: 1.4em;
+    --fs-title: 1.6em;
+    --fs-file: 1em;
+    --fs-body: 1.2em;
+    --sp-after-title: 0.3em;
+    --sp-between-text-and-progress: 0.5em;
 
-$spacing-vertical:   16px;
-$spacing-horizontal: 24px;
-$icon-size:          24px;
-$icon-container:     32px;
-$text-color:         #aaa;
-$progress-height:    6px;
-$hover-bg:           rgba(255, 255, 255, 0.15);
-$hover-shadow:       0 2px 8px rgba(0,0,0,0.1);
+    --accent-violet: #b67dff;
+    --accent-violet-light: #c698ff;
 
+    --card-bg-color: 24, 24, 24;
+    --card-bg-alpha: 0.8;
+    --card-bg-alpha-hover: 0.6;
 
-.downloads-tab__list {
-  display: flex;
-  flex-direction: column;
-  padding: $spacing-vertical $spacing-horizontal;
-}
+    --poster-scale-hover: 1.04;
 
-// Add spacing between rows in the dedicated container
-.downloads-tab__rows {
-  display: flex;
-  flex-direction: column;
-  row-gap: $spacing-vertical;
-}
+    color: var(--color-text-muted);
+    padding: 1em;
 
-.downloads-tab__item {
-  display: flex;
-  align-items: center;
-  column-gap: $spacing-horizontal;
-  padding: $spacing-vertical $spacing-horizontal;
-  background: rgba(47, 47, 47, 0.6);
-  box-shadow: 3px 3px 10px rgb(0 0 0 / 20%);
-  border-radius: 8px;
-  transition: background 0.2s ease, box-shadow 0.2s ease;
+    .downloads-tab__header-title-wrapper {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      margin-bottom: 1em;
+      font-size: var(--fs-header);
+      font-weight: 700;
+      color: var(--color-text-primary);
+    }
 
-  &:hover,
-  &.focus {
-    background: $hover-bg;
-    box-shadow: $hover-shadow;
-  }
-
-  &.downloading {
-    .downloads-tab__icon {
-      visibility: visible;
-      background: none;
-      color: #fff;
-
-      svg {
-        clip-path: inset(0 0 100% 0);
-        animation: pulseColor 2s infinite ease-in-out;
-      }
+    .downloads-tab__rows {
+      display: grid;
+      grid-template-columns: 1fr 1fr;
+      gap: 1em;
     }
   }
 
-  &.paused {
-    .downloads-tab__icon {
-      visibility: visible;
-      background: none;
-      color: #ffffff71;
+  &__item {
+    display: grid;
+    grid-template-columns: 9em 1fr;
+    gap: 1em;
+    padding: 0.8em;
+    border-radius: 0.6em;
+
+    background: rgba(var(--card-bg-color), var(--card-bg-alpha));
+    box-shadow: 0 0.5em 1.2em rgba(0, 0, 0, 0.5);
+    transition: background .15s ease, box-shadow .15s ease;
+
+    &:hover,
+    &.focus,
+    &:focus-visible {
+      outline: 3px solid var(--accent-violet);
+      background: rgba(var(--card-bg-color), var(--card-bg-alpha-hover));
+    }
+
+    /* состояния */
+    &.downloading {
+      .downloads-tab__meta-left { display: inline; }
+    }
+
+    &.completed {
+      .downloads-tab__meta-downloaded,
+      .downloads-tab__meta-slash { display: none; }
+    }
+
+    /* масштаб постера при hover/focus на item */
+    &:hover .downloads-tab__poster,
+    &.focus .downloads-tab__poster,
+    &:focus-visible .downloads-tab__poster {
+      transform: scale(var(--poster-scale-hover));
     }
   }
 
-  &.completed {
-    .downloads-tab__icon {
-      visibility: visible;
-      background: #fff;
-      color: rgb(66, 66, 66);
-      border-radius: 50%;
+  &__poster {
+    position: relative;
+    width: 9em;
+    height: 13.5em;
+    border-radius: 0.6em;
+    overflow: hidden;
 
-      svg {
-        mix-blend-mode: destination-out;
-        isolation: isolate;
-      }
-    }
+    background-color: rgb(35 35 35);
+    background-position: center;
+    background-repeat: no-repeat;
+    background-size: cover;
 
-    .downloads-tab__meta-percent,
-    .downloads-tab__meta-sep,
-    .downloads-tab__meta-downloaded,sh,
-    .downloads-tab__meta-slash,
-    .downloads-tab__meta-seeders {
-      display: none !important;
-    }
+    transition: transform .2s ease;
 
-    .downloads-tab__meta-total {
-      display: inline !important;
-      font-weight: 500;
+    &::after {
+      content: "POSTER";
+      position: absolute;
+      top: 50%;
+      left: 50%;
+      transform: translate(-50%, -50%);
+      font-size: 1em;
+      font-weight: 600;
+      letter-spacing: 0.05em;
+      color: rgba(255, 255, 255, 0.08);
+      pointer-events: none;
+      user-select: none;
     }
   }
-}
 
-.downloads-tab__icon {
-  width: $icon-container;
-  height: $icon-container;
-  flex-shrink: 0;
-  display: flex;
-  align-items: center;
-  justify-content: center;
+  &__main {
+    display: grid;
+    grid-template-columns: 1fr;
+    grid-template-rows: auto auto 1fr auto;
+    min-height: 13.5em;
+  }
 
-  svg {
-    width: $icon-size;
-    height: $icon-size;
-    display: block;
-    fill: currentColor;
+  &__movie {
+    font-size: var(--fs-title);
+    font-weight: 700;
+    color: var(--color-text-primary);
+    line-height: 1.2;
+    margin-bottom: var(--sp-after-title);
+  }
+
+  &__year {
+    color: var(--color-text-muted);
+    margin-bottom: 0.8em;
+    font-weight: bold;
+  }
+
+  &__file {
+    font-size: var(--fs-file);
+    font-weight: 500;
+    color: #727272;
+    margin-bottom: var(--sp-between-text-and-progress);
+    overflow-wrap: anywhere;
+  }
+
+  &__footer {
+    align-self: end;
+    display: grid;
+    row-gap: var(--sp-between-text-and-progress);
+    font-size: var(--fs-body);
+    font-weight: 500;
+    color: var(--color-text-muted);
+  }
+
+  &__meta-top {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    gap: 0.8em;
+  }
+
+  &__meta-left { display: none; white-space: nowrap; }
+
+  &__speed {
+    font-weight: 600;
+    color: var(--color-text-primary);
+  }
+
+  &__progress-wrapper {
+    height: 0.5em;
+    border-radius: 4px;
+    overflow: hidden;
+    background: #2a2a2a;
+  }
+
+  &__progress-fill {
+    height: 100%;
+    background: linear-gradient(90deg, var(--accent-violet), var(--accent-violet-light));
+    will-change: width;
+    transition: width .25s ease;
+  }
+
+  &__meta-bottom {
+    display: grid;
+    grid-template-columns: 1fr auto;
+    align-items: center;
+    column-gap: 0.8em;
+  }
+
+  &__sizes { white-space: nowrap; }
+  &__eta { font-weight: 600; color: var(--color-text-primary); white-space: nowrap; }
+
+  @media (prefers-reduced-motion: reduce) {
+    &__item,
+    &__poster,
+    &__progress-fill { transition: none; }
   }
 }
-
-.downloads-tab__main {
-  flex: 1;
-  display: flex;
-  flex-direction: column;
-}
-
-.downloads-tab__header {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.downloads-tab__header-title-wrapper {
-  display: flex;
-  justify-content: space-between;
-  align-items: center;
-  margin-bottom: 8px;
-}
-
-.downloads-tab__header-title {
-  font-size: 1.15em;
-  font-weight: 600;
-}
-
-.downloads-tab__header-size {
-  font-size: 1.2em;
-  color: $text-color;
-  font-weight: 500;
-}
-
-.downloads-tab__speed {
-  font-size: 0.9em;
-  color: $text-color;
-}
-
-.downloads-tab__meta {
-  display: flex;
-  justify-content: space-between;
-  margin-bottom: 12px;
-
-  &-size,
-  &-eta {
-    font-size: 0.9em;
-    color: $text-color;
-  }
-}
-
-.downloads-tab__progress-wrapper {
-  width: 100%;
-  height: $progress-height;
-  background: rgba(255,255,255,0.1);
-  border-radius: math.div($progress-height, 2);
-  overflow: hidden;
-}
-
-.downloads-tab__progress-fill {
-  height: 100%;
-  background: linear-gradient(90deg, #4a90e2, #357ab8);
-  transition: width 0.3s ease;
-}
-
-.downloads-tab__meta-percent {
-  display: inline;
-}
-
-

@@ -1,4 +1,5 @@
 import icon from '../../icon.svg'
+import { BackgroundWorker } from '../../services/background-worker'
 import { TorrentClientFactory } from '../../services/torrent-client/torrent-client-factory'
 import { TorrentsDataStorage } from '../../services/torrents-data-storage'
 import { formatBytes, formatTorrent } from '../formatters'
@@ -13,6 +14,10 @@ class DownloadsTabComponent {
     private html = $('<div></div>')
 
     public create(): void {
+        if (!TorrentClientFactory.isConnected) {
+            BackgroundWorker.start()
+        }
+
         this.scroll = new Lampa.Scroll({ mask: true, over: true, step: 200 })
 
         const data: TorrentsData = TorrentsDataStorage.getData()
@@ -34,10 +39,7 @@ class DownloadsTabComponent {
         data.torrents.forEach((torrent) => {
             const fmt = formatTorrent(torrent)
             const $row = $(
-                Lampa.Template.get('downloads-row', {
-                    ...fmt,
-                    icon,
-                })
+                Lampa.Template.get('downloads-row', fmt)
             )
                 .on('hover:focus', (e) => this.scroll.update(e.currentTarget as HTMLElement, true))
                 .on('hover:enter', () => openTorrent('downloads-tab', torrent))
@@ -102,6 +104,7 @@ export function updateDownloadsTab(torrent: TorrentInfo): void {
 
     $row.removeClass('downloading completed paused').addClass(fmt.status)
     $row.find('.downloads-tab__progress-fill').css('width', fmt.percent)
+    $row.find('.downloads-tab__poster').css('background-image', `url(${fmt.poster})`)
 
     Object.keys(fmt).forEach((key) => {
         $row.find(`[data-field="${key}"]`).each(function () {

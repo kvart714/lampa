@@ -1,10 +1,10 @@
-import { log } from '../log'
-import { TorrentClientFactory } from './torrent-client/torrent-client-factory'
 import { updateDownloadCard } from '../components/download-card/download-card'
 import { updateDownloadCircle } from '../components/download-circle/download-circle'
 import { updateDownloadsTab } from '../components/downloads-tab/downloads-tab'
-import { TorrentsDataStorage } from './torrents-data-storage'
+import { log } from '../log'
 import { INTERVAL_KEY, INTERVALS } from '../settings'
+import { TorrentClientFactory } from './torrent-client/torrent-client-factory'
+import { TorrentsDataStorage } from './torrents-data-storage'
 
 export class BackgroundWorker {
     private static subscription: number
@@ -36,10 +36,13 @@ export class BackgroundWorker {
                 }
             }
 
-            TorrentClientFactory.isConnected = true
-
             const url = TorrentClientFactory.getClient().url
-            log('Connected to ' + url)
+
+            if (!TorrentClientFactory.isConnected) {
+                log('Connected to ' + url)
+            }
+
+            TorrentClientFactory.isConnected = true
 
             BackgroundWorker.notifyFirstTime(Lampa.Lang.translate('background-worker.connection-success') + ': ' + url)
         } catch (error: any) {

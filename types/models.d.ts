@@ -22,6 +22,7 @@ type MovieInfo = {
     seeder?: number;
     peers?: number;
     season?: number;
+    seasons?: [];
     episode_number?: number;
     episode_name?: string;
     air_date?: string;

@@ -1,3 +1,4 @@
+import { MovieInfoDataStorage } from '../services/movieinfo-data-storage'
 import { STATUS_CODES } from '../services/torrent-client/statuses'
 import { TorrentClientFactory } from '../services/torrent-client/torrent-client-factory'
 import { TorrentsDataStorage } from '../services/torrents-data-storage'
@@ -65,6 +66,7 @@ function resumeOrPause(torrent: TorrentInfo) {
 
 export function openActions(source: string, torrent: TorrentInfo, name?: string) {
     torrent = TorrentsDataStorage.ensureMovie(torrent)!
+    const info = MovieInfoDataStorage.getMovieInfo(torrent.id)
     Lampa.Select.show({
         title: Lampa.Lang.translate('actions.title'),
         items: [
@@ -82,7 +84,7 @@ export function openActions(source: string, torrent: TorrentInfo, name?: string)
                               Lampa.Activity.push({
                                   component: 'full',
                                   id: torrent.id,
-                                  method: 'movie',
+                                  method: info?.seasons ? 'tv' : 'movie',
                                   card: torrent,
                               })
                           },
