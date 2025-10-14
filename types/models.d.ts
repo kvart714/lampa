@@ -42,8 +42,11 @@ type FileInfo = {
     end_piece?: number;
 }
 
+type MovieType = 'movie' | 'tv';
+
 type TorrentInfo = {
     id: number;
+    type: MovieType;
     externalId: number;
     name: string;
     status: number;

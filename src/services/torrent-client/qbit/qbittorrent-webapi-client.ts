@@ -1,5 +1,5 @@
 import type { ITorrentClient } from '../../../../types/torrent-client'
-import { buildId, extractId } from '../lampa-id'
+import { buildTags, extractId, extractType } from '../lampa-id'
 import { mapQBState } from '../statuses'
 
 export class QBittorrentWebApiClient implements ITorrentClient {
@@ -64,9 +64,9 @@ export class QBittorrentWebApiClient implements ITorrentClient {
     public async addTorrent(movie: MovieInfo, selectedTorrent: LampaTorrent): Promise<void> {
         const form = new FormData()
         const url = new URL(selectedTorrent.MagnetUri || selectedTorrent.Link)
-        url.searchParams.delete('dn') // Удаляем параметр dn, если он есть для корректного отображения имени
+        url.searchParams.delete('dn')
         form.append('urls', url.toString())
-        form.append('tags', buildId(movie.id))
+        form.append('tags', buildTags(movie).join(','))
         form.append('sequentialDownload', 'true')
         const response = await this.fetchWithAuth('/api/v2/torrents/add', {
             method: 'POST',
@@ -147,7 +147,8 @@ export class QBittorrentWebApiClient implements ITorrentClient {
             .sort((a: any, b: any) => b.added_on - a.added_on)
             .filter((t: any) => !t.tags.includes('hide'))
             .map((t: any) => ({
-                id: extractId(t.tags.split(',')),
+                id: extractId(t.tags),
+                type: extractType(t.tags),
                 externalId: t.hash,
                 name: t.name,
                 status: mapQBState(t.state),

@@ -35,7 +35,7 @@ function formatYear(dateStr?: string): number | '' {
 }
 
 export function formatTorrent(torrent: TorrentInfo) {
-    const info = MovieInfoDataStorage.getMovieInfo(torrent.id)
+    const info = MovieInfoDataStorage.getMovieInfo(torrent)
     return {
         id: torrent.id + '_' + torrent.externalId,
         title: info?.title || info?.name || (torrent.status === STATUS_CODES.INITIALIZATION ? 'Initialization' : torrent.name),

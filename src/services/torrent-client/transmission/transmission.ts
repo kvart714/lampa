@@ -1,7 +1,7 @@
-import { TransmissionRpcClient } from './transmission-rpc-client'
 import type { ITorrentClient } from '../../../../types/torrent-client'
+import { buildTags, extractId, extractType } from '../lampa-id'
 import { mapTransmissionStatus } from '../statuses'
-import { buildId, extractId } from '../lampa-id'
+import { TransmissionRpcClient } from './transmission-rpc-client'
 
 export class TransmissionService implements ITorrentClient {
     private client: TransmissionRpcClient
@@ -41,6 +41,7 @@ export class TransmissionService implements ITorrentClient {
                     activeSeederCount = torrent.peersSendingToUs || 0
                     return {
                         id: extractId(torrent.labels),
+                        type: extractType(torrent.labels),
                         externalId: torrent.id,
                         name: torrent.name,
                         status: mapTransmissionStatus(torrent.status),
@@ -62,14 +63,14 @@ export class TransmissionService implements ITorrentClient {
             paused: false,
             sequential_download: true,
             filename: selectedTorrent.MagnetUri || selectedTorrent.Link,
-            labels: [buildId(movie.id)],
+            labels: buildTags(movie),
         })
         if (response.arguments?.['torrent-added']) {
             // the labels field in the torrent-add command is only available starting with version 4.0.0.
             // for version 3.0.0 and below we have to set the labels manually with an additional request
             await this.client.setTorrent({
                 ids: [response.arguments['torrent-added'].id],
-                labels: [buildId(movie.id)],
+                labels: buildTags(movie),
             })
         }
     }
@@ -83,9 +84,16 @@ export class TransmissionService implements ITorrentClient {
     }
 
     public async hideTorrent(torrent: TorrentInfo): Promise<void> {
+        const response = await this.client.getTorrents({
+            ids: [torrent.externalId],
+            fields: ['labels'],
+        })
+        
+        const currentLabels = response.arguments?.torrents[0]?.labels || []
+        
         await this.client.setTorrent({
             ids: [torrent.externalId],
-            labels: [buildId(torrent.id), 'hide'],
+            labels: [...currentLabels, 'hide'],
         })
     }
 

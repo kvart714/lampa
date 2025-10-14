@@ -66,7 +66,7 @@ function resumeOrPause(torrent: TorrentInfo) {
 
 export function openActions(source: string, torrent: TorrentInfo, name?: string) {
     torrent = TorrentsDataStorage.ensureMovie(torrent)!
-    const info = MovieInfoDataStorage.getMovieInfo(torrent.id)
+    const info = MovieInfoDataStorage.getMovieInfo(torrent)
     Lampa.Select.show({
         title: Lampa.Lang.translate('actions.title'),
         items: [
