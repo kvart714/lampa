@@ -1,11 +1,12 @@
 import { warn } from '../log'
 import manifest from '../manifest.json'
 
-export const MOVIE_INFO_STORAGE_KEY = manifest.component + '.movieinfo.data.v2'
+export const MOVIE_INFO_STORAGE_KEY = manifest.component + '.movieinfo.data.v3'
 
 export class MovieInfoDataStorage {
     private static requestedIds: Set<number> = new Set()
-    private static data: Record<number, MovieInfo> = Lampa.Storage.get<Record<number, MovieInfo>>(MOVIE_INFO_STORAGE_KEY, {})
+    private static diskCache: Record<number, MovieInfo> = Lampa.Storage.get<Record<number, MovieInfo>>(MOVIE_INFO_STORAGE_KEY, {})
+    private static memoryCache: Record<number, MovieInfo> = {}
 
     public static getMovieInfo(torrent?: TorrentInfo): MovieInfo | null {
         const id = torrent?.id
@@ -13,19 +14,17 @@ export class MovieInfoDataStorage {
         if (!id) return null
 
         // Check cache first
-        if (this.data[id]) {
-            return this.data[id]
+        if (this.memoryCache[id]) {
+            return this.memoryCache[id]
         }
 
         // Prevent multiple requests for the same ID
-        if (this.requestedIds.has(id)) {
-            return null
+        if (!this.requestedIds.has(id)) {
+            this.requestedIds.add(id)
+            this.loadByTypeWithFallback(id, type)
         }
-        this.requestedIds.add(id)
 
-        // Universal async loader: try by type, then fallback
-        this.loadByTypeWithFallback(id, type)
-        return null
+        return this.diskCache[id] || null
     }
 
     private static async loadByTypeWithFallback(id: number, type?: MovieType): Promise<void> {
@@ -34,8 +33,9 @@ export class MovieInfoDataStorage {
         for (const contentType of typesToTry.sort((a) => a === type ? -1 : 0)) {
             const info = await this.loadContentInfo(id, contentType)
             if (info) {
-                this.data[id] = info
-                Lampa.Storage.set(MOVIE_INFO_STORAGE_KEY, this.data)
+                this.memoryCache[id] = info
+                this.diskCache[id] = info
+                Lampa.Storage.set(MOVIE_INFO_STORAGE_KEY, this.diskCache)
                 return
             }
         }
@@ -57,10 +57,5 @@ export class MovieInfoDataStorage {
         }
 
         return null
-    }
-
-    public static setMovieInfo(id: number, info: MovieInfo): void {
-        this.data[id] = info
-        Lampa.Storage.set(MOVIE_INFO_STORAGE_KEY, this.data)
     }
 }
