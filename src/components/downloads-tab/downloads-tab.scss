@@ -117,6 +117,8 @@
     color: var(--color-text-primary);
     line-height: 1.2;
     margin-bottom: var(--sp-after-title);
+    word-break: break-word;
+    overflow-wrap: break-word;
   }
 
   &__year {

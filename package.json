@@ -8,6 +8,7 @@
         "start": "http-server dist --cors"
     },
     "devDependencies": {
+        "@swc/core": "^1.15.7",
         "@types/jquery": "^3.5.32",
         "esbuild": "^0.25.1",
         "esbuild-sass-plugin": "^3.3.1",
