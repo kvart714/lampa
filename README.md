@@ -38,6 +38,9 @@
     Добавьте плагин в Lampa:
     > https://kvart714.github.io/lampa/tdownloader/main.js
 
+    Версия ES5 для старых браузеров и TV:
+    > https://kvart714.github.io/lampa/tdownloader/main.es5.js
+
 
 3. **Укажите настройки сервера**
 
