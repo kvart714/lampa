@@ -1,5 +1,6 @@
 import { MovieInfoDataStorage } from '../services/movieinfo-data-storage'
 import { STATUS_CODES } from '../services/torrent-client/statuses'
+import { POSTER_QUALITIES, POSTER_QUALITY_KEY } from '../settings'
 
 export function formatBytes(bytes: number, decimals = 2): string {
     if (bytes === 0) return '0'
@@ -36,10 +37,11 @@ function formatYear(dateStr?: string): number | '' {
 
 export function formatTorrent(torrent: TorrentInfo) {
     const info = MovieInfoDataStorage.getMovieInfo(torrent)
+    const posterQuality = POSTER_QUALITIES[Lampa.Storage.get<number>(POSTER_QUALITY_KEY)] || POSTER_QUALITIES[1]
     return {
         id: torrent.id + '_' + torrent.externalId,
         title: info?.title || info?.name || (torrent.status === STATUS_CODES.INITIALIZATION ? 'Initialization' : torrent.name),
-        poster: info?.poster_path ? Lampa.TMDB.image(`t/p/w500${info.poster_path}`) : '',
+        poster: info?.poster_path ? Lampa.TMDB.image(`t/p/${posterQuality}${info.poster_path}`) : '',
         year: formatYear((info?.release_date || info?.first_air_date)),
         fileName: (info?.title || info?.name) ? torrent.name : '',
         percent: (100 * torrent.percentDone).toFixed(2) + '%',

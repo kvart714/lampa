@@ -6,12 +6,14 @@ import { TorrentClientFactory } from './services/torrent-client/torrent-client-f
 export const INTERVAL_KEY = `${manifest.component}.interval`
 export const DEFAULT_ACTION_KEY = `${manifest.component}.default-action`
 export const ALLOW_MULTIPLE_DOWNLOADS_KEY = `${manifest.component}.allow-multiple-marks`
+export const POSTER_QUALITY_KEY = `${manifest.component}.poster-quality`
 export const URL_KEY = `${manifest.component}.server.url`
 export const LOGIN_KEY = `${manifest.component}.server.login`
 export const PASSWORD_KEY = `${manifest.component}.server.password`
 export const CLIENT_TYPE_KEY = `${manifest.component}.server.type`
 
 export const INTERVALS = [2, 5, 10, 30, 60, 5 * 60, 15 * 60]
+export const POSTER_QUALITIES = ['w200', 'w342', 'w500', 'w780', 'w1280']
 
 export function settings() {
     Lampa.SettingsApi.addComponent({
@@ -70,6 +72,29 @@ export function settings() {
         field: {
             name: 'Keep torrents screen open after download',
             description: 'After selecting a torrent, the app does not return back and keeps the add screen open, allowing you to add multiple torrents in a row.'
+        },
+        onChange(item) {
+            Lampa.Settings.update();
+        },
+    });
+
+    Lampa.SettingsApi.addParam({
+        component: manifest.component,
+        param: {
+            name: POSTER_QUALITY_KEY,
+            type: 'select',
+            placeholder: '',
+            values: [
+                'Low',
+                'Medium',
+                'High',
+                'Very High',
+                'Ultra'
+            ],
+            default: 1,
+        },
+        field: {
+            name: 'Poster quality'
         },
         onChange(item) {
             Lampa.Settings.update();
