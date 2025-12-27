@@ -1,4 +1,6 @@
 import { TorrentClientFactory } from '../../services/torrent-client/torrent-client-factory'
+import { ALLOW_MULTIPLE_DOWNLOADS_KEY } from '../../settings'
+import { addDownloadCard } from '../download-card/download-card'
 import icon from './../../icon.svg'
 import html from './download-button.html'
 
@@ -39,22 +41,23 @@ export default function () {
 
     Lampa.Listener.follow('torrent', (e) => {
         const component = Lampa.Activity.active()
-        if (
-            e.type === 'render' &&
-            component.component === 'torrents-download'
-        ) {
+        if (e.type === 'render' && component.component === 'torrents-download') {
             $(e.item).off('hover:enter')
             $(e.item).on('hover:enter', async (a) => {
+                // download torrent
                 await TorrentClientFactory.getClient().addTorrent(component.movie, e.element)
 
-                component.activity.component().mark(e.element, e.item, true)
-                
-                // Lampa.Activity.back()
+                component.activity.component.mark(e.element, e.item, true)
 
-                // const torrents = await TorrentClientFactory.getClient().getTorrents()
-                // const torrent: TorrentInfo = torrents.find((t) => t.id === component.movie.id)
+                const allowMultiple = Lampa.Storage.get(ALLOW_MULTIPLE_DOWNLOADS_KEY, false)
 
-                // addDownloadCard(torrent, component.movie)
+                if (!allowMultiple) {
+                    Lampa.Activity.back()
+                    const torrents = await TorrentClientFactory.getClient().getTorrents()
+                    const torrent: TorrentInfo = torrents.find((t) => t.id === component.movie.id)
+
+                    addDownloadCard(torrent, component.movie)
+                }
             })
         }
     })

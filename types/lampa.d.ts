@@ -134,7 +134,7 @@ declare namespace Lampa {
             movie: MovieInfo
             page: number
             activity: {
-                component(): { mark(torrent: LampaTorrent, item: HTMLElement, view: boolean): void }
+                component: { mark(torrent: LampaTorrent, item: HTMLElement, view: boolean): void }
                 stoped: boolean
                 started: boolean
             }

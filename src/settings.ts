@@ -1,10 +1,11 @@
-import manifest from './manifest.json'
 import icon from './icon.svg'
-import { TorrentClientFactory } from './services/torrent-client/torrent-client-factory'
+import manifest from './manifest.json'
 import { BackgroundWorker } from './services/background-worker'
+import { TorrentClientFactory } from './services/torrent-client/torrent-client-factory'
 
 export const INTERVAL_KEY = `${manifest.component}.interval`
 export const DEFAULT_ACTION_KEY = `${manifest.component}.default-action`
+export const ALLOW_MULTIPLE_DOWNLOADS_KEY = `${manifest.component}.allow-multiple-marks`
 export const URL_KEY = `${manifest.component}.server.url`
 export const LOGIN_KEY = `${manifest.component}.server.login`
 export const PASSWORD_KEY = `${manifest.component}.server.password`
@@ -53,6 +54,22 @@ export function settings() {
         field: {
             name: 'Default press action',
             description: 'Long press always opens the actions menu.'
+        },
+        onChange(item) {
+            Lampa.Settings.update();
+        },
+    });
+
+    Lampa.SettingsApi.addParam({
+        component: manifest.component,
+        param: {
+            name: ALLOW_MULTIPLE_DOWNLOADS_KEY,
+            type: 'trigger',
+            default: false,
+        },
+        field: {
+            name: 'Keep torrents screen open after download',
+            description: 'After selecting a torrent, the app does not return back and keeps the add screen open, allowing you to add multiple torrents in a row.'
         },
         onChange(item) {
             Lampa.Settings.update();
