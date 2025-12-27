@@ -39,7 +39,7 @@ export function formatTorrent(torrent: TorrentInfo) {
     return {
         id: torrent.id + '_' + torrent.externalId,
         title: info?.title || info?.name || (torrent.status === STATUS_CODES.INITIALIZATION ? 'Initialization' : torrent.name),
-        poster: info?.poster_path ? `https://image.tmdb.org/t/p/w200${info.poster_path}` : '',
+        poster: info?.poster_path ? Lampa.TMDB.image(`t/p/w500${info.poster_path}`) : '',
         year: formatYear((info?.release_date || info?.first_air_date)),
         fileName: (info?.title || info?.name) ? torrent.name : '',
         percent: (100 * torrent.percentDone).toFixed(2) + '%',

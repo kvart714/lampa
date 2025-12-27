@@ -42,7 +42,12 @@ export class MovieInfoDataStorage {
     }
 
     private static async loadContentInfo(id: number, contentType: MovieType): Promise<MovieInfo | null> {
-        const url = Lampa.TMDB.api(`${contentType}/${id}`) + `?api_key=${Lampa.TMDB.key()}&language=ru&certification_country=RU&certification.lte=18`
+        const lang = Lampa.Storage.field('tmdb_lang') || Lampa.Storage.field('language') || 'ru'
+
+        const url = Lampa.Utils.addUrlComponent(
+            Lampa.TMDB.api(`${contentType}/${id}`),
+            `api_key=${Lampa.TMDB.key()}&language=${lang}&certification_country=ru&certification.lte=18`
+        )
 
         try {
             const response = await fetch(url)

@@ -76,7 +76,8 @@ declare namespace Lampa {
     }
 
     type Utils = {
-        bytesToSize(bytes: number, decimals?: number): string
+        addUrlComponent(): unknown
+        addUrlComponent(url: string, params: string): string
     }
 
     type Noty = {
