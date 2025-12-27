@@ -1,6 +1,6 @@
 {
     "type": "other",
-    "version": "2.1.0",
+    "version": "2.2.0",
     "author": "https://github.com/kvart714",
     "name": "Torrent Downloader",
     "description": "Transmission RPC client",
