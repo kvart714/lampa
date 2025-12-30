@@ -159,6 +159,7 @@ export class QBittorrentWebApiClient implements ITorrentClient {
                 files: [],
                 seeders: t.num_seeds, // всего сидов
                 activeSeeders: t.num_complete, // активных сидов (если есть)
+                hash: t.hash, //хеш торрента
             }))
     }
 }
