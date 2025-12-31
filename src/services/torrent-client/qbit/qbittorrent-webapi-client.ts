@@ -1,6 +1,7 @@
 import type { ITorrentClient } from '../../../../types/torrent-client'
 import { buildTags, extractId, extractType } from '../lampa-id'
 import { mapQBState } from '../statuses'
+import { log } from '../../../log'
 
 export class QBittorrentWebApiClient implements ITorrentClient {
     constructor(public url: string, public login: string, public password: string, private cookie?: string | null) {}
@@ -52,7 +53,8 @@ export class QBittorrentWebApiClient implements ITorrentClient {
         if (!response.ok) throw new Error('Failed to get qBittorrent info')
         
         const data = await response.json()
-
+        data.torrents = typeof data.torrents === "undefined" ? [] : data.torrents
+		
         return {
             torrents: this.formatTorrents(Array.isArray(data.torrents) ? data.torrents : Object.keys(data.torrents).map(k => ({ ...data.torrents[k], hash: k}))),
             info: {
