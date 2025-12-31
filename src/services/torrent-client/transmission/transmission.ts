@@ -2,6 +2,7 @@ import type { ITorrentClient } from '../../../../types/torrent-client'
 import { buildTags, extractId, extractType } from '../lampa-id'
 import { mapTransmissionStatus } from '../statuses'
 import { TransmissionRpcClient } from './transmission-rpc-client'
+import { log } from '../../../log'
 
 export class TransmissionService implements ITorrentClient {
     private client: TransmissionRpcClient
@@ -25,6 +26,7 @@ export class TransmissionService implements ITorrentClient {
                 'peersConnected', // всего сидов/пиров
                 'peersSendingToUs', // активные сиды (отдают нам)
                 'trackerStats', // для получения точного количества сидов с трекеров
+                'hashString', // хеш торрента
             ],
         })
         return (
@@ -52,6 +54,7 @@ export class TransmissionService implements ITorrentClient {
                         files: torrent.files,
                         seeders: seederCount,
                         activeSeeders: activeSeederCount,
+                        hash: torrent.hashString, //хеш торрента
                     }
                 })
                 .filter((torrent) => torrent.id) || []

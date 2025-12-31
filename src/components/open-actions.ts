@@ -18,6 +18,7 @@ async function play(source: string, torrent: TorrentInfo, name?: string) {
         Lampa.Player.play({
             title: name || torrent.name,
             url: baseUrl + files[0].name,
+            torrent_hash: torrent.hash, //Отправляем в плеер хеш торрента, для совместимости с плагином tracks
         })
     }
 
@@ -45,6 +46,7 @@ async function play(source: string, torrent: TorrentInfo, name?: string) {
                     playlist,
                     title: name || torrent.name,
                     url: item.url,
+                    torrent_hash: torrent.hash, //Отправляем в плеер хеш торрента, для совместимости с плагином tracks
                 })
                 Lampa.Player.playlist(playlist)
                 Lampa.Controller.toggle(source)
