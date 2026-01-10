@@ -4,6 +4,7 @@ import { TorrentClientFactory } from '../services/torrent-client/torrent-client-
 import { TorrentsDataStorage } from '../services/torrents-data-storage'
 import { TorrentViewsStorage } from '../services/TorrentViewsStorage'
 import { DEFAULT_ACTION_KEY } from '../settings'
+import { log } from '../log'
 
 async function play(source: string, torrent: TorrentInfo, name?: string) {
     const client = TorrentClientFactory.getClient()
@@ -20,6 +21,7 @@ async function play(source: string, torrent: TorrentInfo, name?: string) {
             url: baseUrl + files[0].name,
             torrent_hash: torrent.hash, //Отправляем в плеер хеш торрента, для совместимости с плагином tracks
         })
+        Lampa.Player.playlist ([]) //Fix by lexandr0s. Clearing the playlist after TV series
     }
 
     if (files.length > 1) {
@@ -29,13 +31,13 @@ async function play(source: string, torrent: TorrentInfo, name?: string) {
             numeric: true,
             sensitivity: 'base'
         }))
-        
         const playlist = sortedFiles.map((f, i) => ({
             title: f.name.split(/[\\/]/).pop() || f.name,
             name: f.name,
             url: baseUrl + f.name,
             picked: views[f.name],
             selected: views.last === f.name,
+            torrent_hash: torrent.hash,
         }))
         Lampa.Select.show({
             title: Lampa.Lang.translate('actions.select-file'),
@@ -49,7 +51,7 @@ async function play(source: string, torrent: TorrentInfo, name?: string) {
                     torrent_hash: torrent.hash, //Отправляем в плеер хеш торрента, для совместимости с плагином tracks
                 })
                 Lampa.Player.playlist(playlist)
-                Lampa.Controller.toggle(source)
+                //Lampa.Controller.toggle(source) //Fix by lexandr0s. 
             },
             onBack: function onBack() {
                 Lampa.Controller.toggle(source)
