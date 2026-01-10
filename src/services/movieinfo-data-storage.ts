@@ -1,51 +1,41 @@
-import { warn } from '../log'
+import { log, warn } from '../log'
 import manifest from '../manifest.json'
-import { log } from '../log'
 
-export const MOVIE_INFO_STORAGE_KEY = manifest.component + '.movieinfo.data.v3'
+export const MOVIE_INFO_STORAGE_KEY = manifest.component + '.movieinfo.data.v4'
 
 export class MovieInfoDataStorage {
-    private static requestedIds: Set<number> = new Set()
-    private static diskCache: Record<number, MovieInfo> = Lampa.Storage.get<Record<number, MovieInfo>>(MOVIE_INFO_STORAGE_KEY, {})
-    private static memoryCache: Record<number, MovieInfo> = {}
+    private static requestedIds: Set<string> = new Set()
+    private static diskCache: Record<string, MovieInfo> = Lampa.Storage.get<Record<string, MovieInfo>>(MOVIE_INFO_STORAGE_KEY, {})
+    private static memoryCache: Record<string, MovieInfo> = {}
 
-    public static getMovieInfo(torrent?: TorrentInfo): MovieInfo | null {
-        const id = torrent?.id
-        const type = torrent?.type
-        if (!id) return null
+    public static getMovieInfo(torrent: TorrentInfo): MovieInfo | null {
+        if (!torrent.id) return null
+        
+        const key = `${torrent.type}_${torrent.id}`
 
         // Check cache first
-        if (this.memoryCache[id]) {
-            return this.memoryCache[id]
+        if (this.memoryCache[key]) {
+            return this.memoryCache[key]
         }
 
         // Prevent multiple requests for the same ID
-        if (!this.requestedIds.has(id)) {
-            this.requestedIds.add(id)
-            this.loadByTypeWithFallback(id, type)
+        if (!this.requestedIds.has(key)) {
+            this.requestedIds.add(key)
+            
+            this.loadContentInfo(torrent.id, torrent.type).then((info) => {
+                if (info) {
+                    this.memoryCache[key] = info
+                    this.diskCache[key] = info
+                    Lampa.Storage.set(MOVIE_INFO_STORAGE_KEY, this.diskCache)
+                    return
+                }
+            })
         }
 
-        return this.diskCache[id] || null
+        return this.diskCache[key] || null
     }
 
-    private static async loadByTypeWithFallback(id: number, type?: MovieType): Promise<void> {
-/*fix by lexandr0s.* Searching by array returns incorrect results if the database contains both TV and Movie with the same ID.
-        let typesToTry: MovieType[] = ['movie', 'tv']
-
-        for (const contentType of typesToTry.sort((a) => a === type ? -1 : 0)) {
-*/
-            let contentType = type //*fix by lexandr0s.*
-            const info = await this.loadContentInfo(id, contentType)
-            if (info) {
-                this.memoryCache[id] = info
-                this.diskCache[id] = info
-                Lampa.Storage.set(MOVIE_INFO_STORAGE_KEY, this.diskCache)
-                return
-            }
-      //} //*fix by lexandr0s.*
-    }
-
-    private static async loadContentInfo(id: number, contentType: MovieType): Promise<MovieInfo | null> {
+    private static async loadContentInfo(id: number, contentType: MovieType, fallback = true): Promise<MovieInfo | null> {
         const lang = Lampa.Storage.field('tmdb_lang') || Lampa.Storage.field('language') || 'ru'
         const url = Lampa.Utils.addUrlComponent(
             Lampa.TMDB.api(`${contentType}/${id}?email=`), //Fix by lexandr0s. Add an empty email to the URL to prevent TMDB API rejection.
@@ -58,6 +48,14 @@ export class MovieInfoDataStorage {
                 const data = await response.json()
                 if (data?.title || data?.name) {
                     return data
+                }
+            }
+            else {
+                if (fallback) {
+                    // fallback if type is wrong
+                    log(`Failed to load '${contentType}_${id}', status: ${response.status}. Trying fallback type.`)
+                    const fallbackType = contentType === 'movie' ? 'tv' : 'movie'
+                    return await this.loadContentInfo(id, fallbackType, false)
                 }
             }
         } catch (error) {

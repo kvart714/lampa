@@ -221,6 +221,7 @@ declare namespace Lampa {
             poster?: string
             headers?: Record<string, string>
             autoplay?: boolean
+            torrent_hash?: string
         }): void
         stop(): void
         pause(): void

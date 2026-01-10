@@ -47,6 +47,7 @@ type MovieType = 'movie' | 'tv';
 type TorrentInfo = {
     id: number;
     type: MovieType;
+    hash: string;
     externalId: number;
     name: string;
     status: number;
