@@ -1,8 +1,7 @@
 import type { ITorrentClient } from '../../../../types/torrent-client'
-import { buildTags, extractId, extractType } from '../lampa-id'
+import { buildPath, buildTags, extractId, extractType } from '../lampa-id'
 import { mapTransmissionStatus } from '../statuses'
 import { TransmissionRpcClient } from './transmission-rpc-client'
-import { log } from '../../../log'
 
 export class TransmissionService implements ITorrentClient {
     private client: TransmissionRpcClient
@@ -62,12 +61,24 @@ export class TransmissionService implements ITorrentClient {
     }
 
     public async addTorrent(movie: MovieInfo, selectedTorrent: LampaTorrent): Promise<void> {
-        const response = await this.client.addTorrent({
+        let req: TorrentAddArgs = {
             paused: false,
             sequential_download: true,
             filename: selectedTorrent.MagnetUri || selectedTorrent.Link,
             labels: buildTags(movie),
-        })
+        }
+
+        const subPath = buildPath(movie)
+        if (subPath) {
+            const session = await this.client.getSession()
+            const basePath = session?.arguments?.['download-dir']
+
+            if (basePath) {
+                req['download-dir'] = basePath.replace(/[\\/]+$/g, '') + subPath
+            }
+        }
+
+        const response = await this.client.addTorrent(req)
         if (response.arguments?.['torrent-added']) {
             // the labels field in the torrent-add command is only available starting with version 4.0.0.
             // for version 3.0.0 and below we have to set the labels manually with an additional request

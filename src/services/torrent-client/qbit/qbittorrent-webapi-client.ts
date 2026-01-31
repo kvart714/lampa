@@ -1,5 +1,5 @@
 import type { ITorrentClient } from '../../../../types/torrent-client'
-import { buildTags, extractId, extractType } from '../lampa-id'
+import { buildPath, buildTags, extractId, extractType } from '../lampa-id'
 import { mapQBState } from '../statuses'
 
 export class QBittorrentWebApiClient implements ITorrentClient {
@@ -69,6 +69,22 @@ export class QBittorrentWebApiClient implements ITorrentClient {
         form.append('urls', url.toString())
         form.append('tags', buildTags(movie).join(','))
         form.append('sequentialDownload', 'true')
+
+        const subPath = buildPath(movie)
+        if (subPath) {
+            const prefsRes = await this.fetchWithAuth('/api/v2/app/preferences')
+            const prefs = await prefsRes?.json()
+            const basePath = prefs?.save_path
+
+            if (basePath) {
+                const savePath =
+                    basePath.replace(/[\\/]+$/g, '') +
+                    subPath
+
+                form.append('savepath', savePath)
+            }
+        }
+
         const response = await this.fetchWithAuth('/api/v2/torrents/add', {
             method: 'POST',
             body: form,
