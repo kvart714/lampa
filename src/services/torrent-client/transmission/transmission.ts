@@ -11,6 +11,9 @@ export class TransmissionService implements ITorrentClient {
     }
 
     public async getTorrents(): Promise<TorrentInfo[]> {
+        const session = await this.client.getSession()
+        const basePath = session?.arguments?.['download-dir'] || ''
+        
         const response = await this.client.getTorrents({
             fields: [
                 'id',
@@ -26,6 +29,7 @@ export class TransmissionService implements ITorrentClient {
                 'peersSendingToUs', // активные сиды (отдают нам)
                 'trackerStats', // для получения точного количества сидов с трекеров
                 'hashString', // хеш торрента
+                'downloadDir', // путь загрузки торрента
             ],
         })
         return (
@@ -54,6 +58,7 @@ export class TransmissionService implements ITorrentClient {
                         seeders: seederCount,
                         activeSeeders: activeSeederCount,
                         hash: torrent.hashString, //хеш торрента
+                        path: torrent.downloadDir?.replace(basePath, '') || '', // путь торрента относительно общей папки загрузки
                     }
                 })
                 .filter((torrent) => torrent.id) || []

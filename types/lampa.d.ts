@@ -207,22 +207,24 @@ declare namespace Lampa {
         title: string
         url: string
     }
-    type Player = {
-        play(options: {
-            title: string
+    type PlayOptions = {
+        title: string
+        url: string
+        playlist?: PlayerPlaylist[]
+        subtitles?: Array<{
+            label: string
             url: string
-            playlist?: PlayerPlaylist[]
-            subtitles?: Array<{
-                label: string
-                url: string
-                language?: string
-                default?: boolean
-            }>
-            poster?: string
-            headers?: Record<string, string>
-            autoplay?: boolean
-            torrent_hash?: string
-        }): void
+            language?: string
+            default?: boolean
+        }>
+        poster?: string
+        headers?: Record<string, string>
+        autoplay?: boolean
+        torrent_hash?: string
+    }
+
+    type Player = {
+        play(options: PlayOptions): void
         stop(): void
         pause(): void
         resume(): void

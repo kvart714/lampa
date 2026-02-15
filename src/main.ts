@@ -1,12 +1,11 @@
-import useDownloadsTab from './components/downloads-tab/downloads-tab'
-import { settings, URL_KEY } from './settings'
 import translations from '../l10n/translations.json'
-import manifest from './manifest.json'
-import useDownloadCircles from './components/download-circle/download-circle'
-import { BackgroundWorker } from './services/background-worker'
 import useDownloadButton from './components/download-button/download-button'
 import useDownloadCard from './components/download-card/download-card'
-import { log } from './log'
+import useDownloadCircles from './components/download-circle/download-circle'
+import useDownloadsTab from './components/downloads-tab/downloads-tab'
+import manifest from './manifest.json'
+import { BackgroundWorker } from './services/background-worker'
+import { settings, URL_KEY } from './settings'
 
 function startPlugin() {
     ;(window as any).plugin_transmission_ready = true

@@ -1,3 +1,4 @@
+import { log } from '../log'
 import { STATUS_CODES } from '../services/torrent-client/statuses'
 import { TorrentClientFactory } from '../services/torrent-client/torrent-client-factory'
 import { TorrentsDataStorage } from '../services/torrents-data-storage'
@@ -7,19 +8,18 @@ import { DEFAULT_ACTION_KEY } from '../settings'
 async function play(source: string, torrent: TorrentInfo, name?: string) {
     const client = TorrentClientFactory.getClient()
     const files = await client.getFiles(torrent)
-    const baseUrl = client.url + '/downloads/'
+    const baseUrl = `${client.url}/downloads/${torrent.path}/`
 
     if (files.length < 1) {
         throw new Error('No files found in torrent')
     }
 
     if (files.length === 1) {
-        Lampa.Player.play({
+        playFile({
             title: name || torrent.name,
             url: baseUrl + files[0].name,
             torrent_hash: torrent.hash, //Отправляем в плеер хеш торрента, для совместимости с плагином tracks
         })
-        Lampa.Player.playlist ([]) //Fix by lexandr0s. Clearing the playlist after TV series
     }
 
     if (files.length > 1) {
@@ -42,13 +42,12 @@ async function play(source: string, torrent: TorrentInfo, name?: string) {
             items: playlist,
             async onSelect(item) {
                 TorrentViewsStorage.rememberView(torrent, item.name)
-                Lampa.Player.play({
+                playFile({
                     playlist,
                     title: name || torrent.name,
                     url: item.url,
                     torrent_hash: torrent.hash, //Отправляем в плеер хеш торрента, для совместимости с плагином tracks
                 })
-                Lampa.Player.playlist(playlist)
                 //Lampa.Controller.toggle(source) //Fix by lexandr0s. 
             },
             onBack: function onBack() {
@@ -56,6 +55,12 @@ async function play(source: string, torrent: TorrentInfo, name?: string) {
             },
         })
     }
+}
+
+function playFile(options: Lampa.PlayOptions) {
+    log(`Player request ${options.url}`, options)
+    Lampa.Player.play(options)
+    Lampa.Player.playlist(options.playlist ?? []) //Fix by lexandr0s. Clearing the playlist after TV series
 }
 
 function resumeOrPause(torrent: TorrentInfo) {

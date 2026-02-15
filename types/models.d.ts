@@ -57,6 +57,7 @@ type TorrentInfo = {
     speed: number;
     seeders?: number;
     activeSeeders?: number;
+    path: string;
     files: FileInfo[];
 }
 
