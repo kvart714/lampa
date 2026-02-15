@@ -39,3 +39,7 @@ if (!(window as any).plugin_transmission_ready) {
         })
     }
 }
+
+// (Lampa as any).Keypad.listener.follow('keyup', function (e) {
+//     Lampa.Noty.show('[key: ' + e.event.key + '] [keyCode: ' + e.event.keyCode + '] [code: ' + e.event.code + ']')
+// })
