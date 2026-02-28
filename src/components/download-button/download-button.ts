@@ -46,6 +46,7 @@ export default function () {
             $(e.item).on('hover:enter', async (a) => {
                 // download torrent
                 await TorrentClientFactory.getClient().addTorrent(component.movie, e.element)
+                Lampa.Noty.show(Lampa.Lang.translate('download-button.added'))
 
                 component.activity.component.mark(e.element, e.item, true)
 

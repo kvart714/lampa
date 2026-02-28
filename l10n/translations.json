@@ -7,6 +7,10 @@
         "ru": "Скачать",
         "en": "Download"
     },
+    "download-button.added": {
+        "ru": "Торрент добавлен",
+        "en": "Torrent added"
+    },
     "downloads-tab.connected": {
         "ru": "Подключено",
         "en": "Connected"

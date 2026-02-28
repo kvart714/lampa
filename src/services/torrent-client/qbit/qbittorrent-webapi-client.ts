@@ -21,7 +21,10 @@ export class QBittorrentWebApiClient implements ITorrentClient {
 
         if (!response.ok) throw new Error('Failed to get ' + path)
 
-        return await response.json()
+        if (response.headers.get('content-type')?.includes('application/json')) {
+            return await response.json() as T
+        }
+        return await response.text() as unknown as T
     }
 
     public async authorize(): Promise<void> {
