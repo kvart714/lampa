@@ -182,6 +182,18 @@
   &__sizes { white-space: nowrap; }
   &__eta { font-weight: 600; color: var(--color-text-primary); white-space: nowrap; }
 
+  @media (orientation: portrait) {
+    &__list .downloads-tab__rows {
+      grid-template-columns: 1fr;
+    }
+
+    &__list .downloads-tab__header-title-wrapper {
+      flex-direction: column;
+      align-items: flex-start;
+      gap: 0.3em;
+    }
+  }
+
   @media (prefers-reduced-motion: reduce) {
     &__item,
     &__poster,
