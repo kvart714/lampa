@@ -80,7 +80,7 @@
     box-shadow: 0 0.5em 1.2em rgba(0, 0, 0, 0.5);
     transition: background .15s ease, box-shadow .15s ease;
 
-    outline: 2px solid #2e2e2e;
+    outline: 1px solid #ffffff10;
 
     &:hover,
     &.focus,
@@ -229,6 +229,7 @@
   @media (orientation: portrait) {
     &__list .downloads-tab__rows {
       flex-direction: column;
+      align-items: stretch;
     }
 
     &__list .downloads-tab__header-title-wrapper {

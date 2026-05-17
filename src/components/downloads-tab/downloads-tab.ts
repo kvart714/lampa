@@ -53,11 +53,10 @@ class DownloadsTabComponent {
             })
         )
 
-        const $cols = [$('<div class="downloads-tab__col"></div>'), $('<div class="downloads-tab__col"></div>')]
-        page.find('.downloads-tab__rows').append($cols[0]).append($cols[1])
+        const $rows = page.find('.downloads-tab__rows')
+        const isPortrait = window.innerWidth <= window.innerHeight
 
-        const weights = [0, 0]
-        groupTorrents(data.torrents).forEach((group) => {
+        const buildElement = (group: TorrentInfo[]) => {
             const $items = group.map((torrent, i) => {
                 const fmt = formatTorrent(torrent)
                 return $(Lampa.Template.get(i === 0 ? 'downloads-row' : 'downloads-mini-row', fmt))
@@ -65,19 +64,29 @@ class DownloadsTabComponent {
                     .on('hover:enter', () => openTorrent('downloads-tab', torrent))
                     .on('hover:long', () => openActions('downloads-tab', torrent))
             })
+            if (group.length > 1) {
+                const $group = $('<div class="downloads-tab__group"></div>')
+                $items.forEach(($item) => $group.append($item))
+                return $group
+            }
+            return $items[0]
+        }
 
-            const $element = group.length > 1
-                ? (() => {
-                    const $group = $('<div class="downloads-tab__group"></div>')
-                    $items.forEach(($item) => $group.append($item))
-                    return $group
-                })()
-                : $items[0]
+        const groups = groupTorrents(data.torrents)
 
-            const col = weights[0] <= weights[1] ? 0 : 1
-            weights[col] += group.length
-            $cols[col].append($element)
-        })
+        if (isPortrait) {
+            groups.forEach((group) => $rows.append(buildElement(group)))
+        } else {
+            const $cols = [$('<div class="downloads-tab__col"></div>'), $('<div class="downloads-tab__col"></div>')
+            ]
+            $rows.append($cols[0]).append($cols[1])
+            const weights = [0, 0]
+            groups.forEach((group) => {
+                const col = weights[0] <= weights[1] ? 0 : 1
+                weights[col] += group.length
+                $cols[col].append(buildElement(group))
+            })
+        }
 
         this.scroll.minus()
         this.scroll.append(page.get(0)!)
