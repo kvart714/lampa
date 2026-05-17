@@ -40,6 +40,7 @@ export function formatTorrent(torrent: TorrentInfo) {
     const posterQuality = POSTER_QUALITIES[Lampa.Storage.get<number>(POSTER_QUALITY_KEY)] || POSTER_QUALITIES[1]
     return {
         id: torrent.id + '_' + torrent.externalId,
+        torrentName: torrent.name,
         title: info?.title || info?.name || (torrent.status === STATUS_CODES.INITIALIZATION ? 'Initialization' : torrent.name),
         poster: info?.poster_path ? Lampa.TMDB.image(`t/p/${posterQuality}${info.poster_path}`) : '',
         year: formatYear((info?.release_date || info?.first_air_date)),

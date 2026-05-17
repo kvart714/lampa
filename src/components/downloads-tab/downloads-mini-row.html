@@ -1,0 +1,29 @@
+<div class="downloads-tab__item downloads-tab__item--mini selector {status}" data-id="{id}">
+  <div class="downloads-tab__main">
+    <div class="downloads-tab__file"><span data-field="torrentName">{torrentName}</span></div>
+
+    <div class="downloads-tab__footer">
+      <div class="downloads-tab__meta-top">
+        <div class="downloads-tab__meta-left">
+          <span class="downloads-tab__meta-text" data-field="percent">{percent}</span>
+          <span> • </span>
+          <span class="downloads-tab__meta-text" data-field="seeders">{seeders}</span>
+        </div>
+        <span class="downloads-tab__speed"><span data-field="speed">{speed}</span></span>
+      </div>
+
+      <div class="downloads-tab__progress-wrapper">
+        <div class="downloads-tab__progress-fill" style="width: {percent};"></div>
+      </div>
+
+      <div class="downloads-tab__meta-bottom">
+        <div class="downloads-tab__sizes">
+          <span class="downloads-tab__meta-downloaded" data-field="downloadedSize">{downloadedSize}</span>
+          <span class="downloads-tab__meta-slash"> / </span>
+          <span class="downloads-tab__meta-total" data-field="totalSize">{totalSize}</span>
+        </div>
+        <span class="downloads-tab__eta" data-field="eta">{eta}</span>
+      </div>
+    </div>
+  </div>
+</div>

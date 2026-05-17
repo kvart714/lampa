@@ -4,10 +4,29 @@ import { TorrentClientFactory } from '../../services/torrent-client/torrent-clie
 import { TorrentsDataStorage } from '../../services/torrents-data-storage'
 import { formatBytes, formatTorrent } from '../formatters'
 import { openActions, openTorrent } from '../open-actions'
+import miniRowHtml from './downloads-mini-row.html'
 import rowHtml from './downloads-row.html'
 import tabHtml from './downloads-tab.html'
 import scss from './downloads-tab.scss'
 import btnHtml from './menu-button.html'
+
+function groupTorrents(torrents: TorrentInfo[]): TorrentInfo[][] {
+    const groupMap = new Map<string, { torrents: TorrentInfo[]; lastIndex: number }>()
+
+    torrents.forEach((torrent, index) => {
+        const key = torrent.id > 0 ? String(torrent.id) : `solo_${torrent.externalId}`
+        if (!groupMap.has(key)) {
+            groupMap.set(key, { torrents: [], lastIndex: index })
+        }
+        const group = groupMap.get(key)!
+        group.torrents.push(torrent)
+        group.lastIndex = Math.max(group.lastIndex, index)
+    })
+
+    return [...groupMap.values()]
+        .sort((a, b) => a.lastIndex - b.lastIndex)
+        .map((g) => [...g.torrents].sort((a, b) => b.totalSize - a.totalSize))
+}
 
 class DownloadsTabComponent {
     private scroll!: Lampa.Scroll
@@ -34,18 +53,30 @@ class DownloadsTabComponent {
             })
         )
 
-        const rowsContainer = page.find('.downloads-tab__rows')
+        const $cols = [$('<div class="downloads-tab__col"></div>'), $('<div class="downloads-tab__col"></div>')]
+        page.find('.downloads-tab__rows').append($cols[0]).append($cols[1])
 
-        data.torrents.forEach((torrent) => {
-            const fmt = formatTorrent(torrent)
-            const $row = $(
-                Lampa.Template.get('downloads-row', fmt)
-            )
-                .on('hover:focus', (e) => this.scroll.update(e.currentTarget as HTMLElement, true))
-                .on('hover:enter', () => openTorrent('downloads-tab', torrent))
-                .on('hover:long', () => openActions('downloads-tab', torrent))
+        const weights = [0, 0]
+        groupTorrents(data.torrents).forEach((group) => {
+            const $items = group.map((torrent, i) => {
+                const fmt = formatTorrent(torrent)
+                return $(Lampa.Template.get(i === 0 ? 'downloads-row' : 'downloads-mini-row', fmt))
+                    .on('hover:focus', (e) => this.scroll.update(e.currentTarget as HTMLElement, true))
+                    .on('hover:enter', () => openTorrent('downloads-tab', torrent))
+                    .on('hover:long', () => openActions('downloads-tab', torrent))
+            })
 
-            rowsContainer.append($row)
+            const $element = group.length > 1
+                ? (() => {
+                    const $group = $('<div class="downloads-tab__group"></div>')
+                    $items.forEach(($item) => $group.append($item))
+                    return $group
+                })()
+                : $items[0]
+
+            const col = weights[0] <= weights[1] ? 0 : 1
+            weights[col] += group.length
+            $cols[col].append($element)
         })
 
         this.scroll.minus()
@@ -116,6 +147,7 @@ export function updateDownloadsTab(torrent: TorrentInfo): void {
 export default function () {
     Lampa.Template.add('menu-button', btnHtml)
     Lampa.Template.add('downloads-row', rowHtml)
+    Lampa.Template.add('downloads-mini-row', miniRowHtml)
     Lampa.Template.add('downloads-tab', tabHtml)
 
     $('body').append(`<style>${scss}</style>`)
