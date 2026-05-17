@@ -54,6 +54,7 @@ export function settings() {
             placeholder: '',
             values: [
                 'Open actions menu',
+                'Play if done, Resume if in progress',
                 'Play',
                 'Resume / Pause download'
             ],

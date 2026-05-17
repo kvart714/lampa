@@ -17,6 +17,10 @@ export class TorrentsDataStorage {
             : null;
     }
 
+    public static getByHash(hash: string): TorrentInfo | null {
+        return this.data.torrents.find(t => t.hash === hash) ?? null
+    }
+
     public static ensureMovie(movie: TorrentInfo) {
         const filtered = this.data.torrents.filter((item) => item.externalId === movie.externalId);
         return filtered.length > 0

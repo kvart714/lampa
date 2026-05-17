@@ -138,10 +138,17 @@ export function openActions(source: string, torrent: TorrentInfo, name?: string)
 }
 
 export function openTorrent(source: string, torrent: TorrentInfo, name?: string) {
+    torrent = TorrentsDataStorage.getByHash(torrent.hash) ?? torrent
     const action = Lampa.Storage.field(DEFAULT_ACTION_KEY)
     if (action == 1) {
-        play(source, torrent, name)
+        if (torrent.percentDone === 1) {
+            play(source, torrent, name)
+        } else {
+            resumeOrPause(torrent)
+        }
     } else if (action == 2) {
+        play(source, torrent, name)
+    } else if (action == 3) {
         resumeOrPause(torrent)
     } else {
         openActions(source, torrent, name)
