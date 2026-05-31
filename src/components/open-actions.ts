@@ -73,7 +73,7 @@ function resumeOrPause(torrent: TorrentInfo) {
     }
 }
 
-export function openActions(source: string, torrent: TorrentInfo, name?: string) {
+export function openActions(source: string, torrent: TorrentInfo, name?: string, onRemoved?: (torrent: TorrentInfo) => void) {
     torrent = TorrentsDataStorage.ensureMovie(torrent)!
     Lampa.Select.show({
         title: Lampa.Lang.translate('actions.title'),
@@ -110,7 +110,7 @@ export function openActions(source: string, torrent: TorrentInfo, name?: string)
                 title: Lampa.Lang.translate('actions.hide'),
                 onSelect() {
                     TorrentClientFactory.getClient().hideTorrent(torrent)
-                    $(`.downloads-tab__item[data-id="${torrent.id}_${torrent.externalId}"]`).remove()
+                    onRemoved?.(torrent)
                     Lampa.Controller.toggle(source)
                 },
             },
@@ -119,7 +119,7 @@ export function openActions(source: string, torrent: TorrentInfo, name?: string)
                 subtitle: Lampa.Lang.translate('actions.delete-with-file'),
                 onSelect() {
                     TorrentClientFactory.getClient().removeTorrent(torrent, true)
-                    $(`.downloads-tab__item[data-id="${torrent.id}_${torrent.externalId}"]`).remove()
+                    onRemoved?.(torrent)
                     Lampa.Controller.toggle(source)
                 },
             },
@@ -128,7 +128,7 @@ export function openActions(source: string, torrent: TorrentInfo, name?: string)
                 subtitle: Lampa.Lang.translate('actions.delete-torrent-keep-file'),
                 onSelect() {
                     TorrentClientFactory.getClient().removeTorrent(torrent, false)
-                    $(`.downloads-tab__item[data-id="${torrent.id}_${torrent.externalId}"]`).remove()
+                    onRemoved?.(torrent)
                     Lampa.Controller.toggle(source)
                 },
             },
@@ -139,7 +139,7 @@ export function openActions(source: string, torrent: TorrentInfo, name?: string)
     })
 }
 
-export function openTorrent(source: string, torrent: TorrentInfo, name?: string) {
+export function openTorrent(source: string, torrent: TorrentInfo, name?: string, onRemoved?: (torrent: TorrentInfo) => void) {
     torrent = TorrentsDataStorage.getByHash(torrent.hash) ?? torrent
     const action = Lampa.Storage.field(DEFAULT_ACTION_KEY)
     if (action == 1) {
@@ -153,6 +153,6 @@ export function openTorrent(source: string, torrent: TorrentInfo, name?: string)
     } else if (action == 3) {
         resumeOrPause(torrent)
     } else {
-        openActions(source, torrent, name)
+        openActions(source, torrent, name, onRemoved)
     }
 }
