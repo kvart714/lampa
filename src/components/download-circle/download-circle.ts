@@ -5,10 +5,11 @@ import scss from './download-circle.scss'
 function addDownloadCircleInternal(movie: TorrentInfo, card: HTMLElement) {
     const cardJQ = $(card)
     if (!cardJQ.find('.download-circle').length) {
+        const percent = movie.percentDone ?? 0
         const progressBar = Lampa.Template.get('download-circle', {
             id: movie.id!,
-            status: movie.percentDone === 1 ? 'complete' : 'in-progress',
-            progress: 100 * (1 - movie.percentDone),
+            status: percent === 1 ? 'complete' : 'in-progress',
+            progress: 100 * (1 - percent),
         })
         cardJQ.find('.card__vote').after(progressBar)
     }
@@ -26,14 +27,16 @@ export function updateDownloadCircle(torrent: TorrentInfo) {
 
     if (!elements.length) return;
 
+    const percent = torrent.percentDone ?? 0
+
     elements.forEach((element) => {
-        if (torrent.percentDone === 1) {
+        if (percent === 1) {
             const parent = element.parentElement;
             element.remove();
             addDownloadCircleInternal(torrent, parent as HTMLElement);
         } else {
             const progressCircle = element.querySelector('.download-circle__partial_in-progress');
-            progressCircle?.setAttribute('stroke-dashoffset', `${100 * (1 - torrent.percentDone)}`);
+            progressCircle?.setAttribute('stroke-dashoffset', `${100 * (1 - percent)}`);
         }
     });
 }

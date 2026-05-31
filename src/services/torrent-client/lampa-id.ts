@@ -2,15 +2,22 @@ import { JELLYFIN_INCLUDE_TMDB_ID_KEY, JELLYFIN_INCLUDE_YEAR_KEY, JELLYFIN_SEPAR
 
 const ID_KEY = 'lampa:';
 
-export function extractId(tags: string[] | string): number {
-    const tagsArray = typeof tags === 'string' ? tags.split(',').map(t => t.trim()) : tags;
-    const id =
-        tagsArray.find((tag) => tag.startsWith(ID_KEY))?.split(':')[1] || '';
-    return parseInt(id);
+function toTagsArray(tags: string[] | string | null | undefined): string[] {
+    if (Array.isArray(tags)) return tags;
+    if (typeof tags === 'string') return tags.split(',').map(t => t.trim()).filter(Boolean);
+    return [];
 }
 
-export function extractType(tags: string[] | string): MovieType {
-    const tagsArray = typeof tags === 'string' ? tags.split(',').map(t => t.trim()) : tags;
+export function extractId(tags: string[] | string | null | undefined): number {
+    const tagsArray = toTagsArray(tags);
+    const raw = tagsArray.find((tag) => tag.startsWith(ID_KEY))?.split(':')[1];
+    if (!raw) return 0;
+    const id = parseInt(raw, 10);
+    return Number.isFinite(id) && id > 0 ? id : 0;
+}
+
+export function extractType(tags: string[] | string | null | undefined): MovieType {
+    const tagsArray = toTagsArray(tags);
     return tagsArray.indexOf('tv') !== -1 ? 'tv' : 'movie';
 }
 

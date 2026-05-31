@@ -1,9 +1,9 @@
 import type { TorrentInfo } from './models'
 
 export interface ITorrentClient {
-    public url: string
-    public login: string
-    public password: string
+    url: string
+    login: string
+    password: string
     getTorrents(): Promise<TorrentInfo[]>
     getData(): Promise<TorrentsData>
     addTorrent(movie: MovieInfo, selectedTorrent: LampaTorrent): Promise<void>

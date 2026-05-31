@@ -10,7 +10,7 @@ export class MovieInfoDataStorage {
 
     public static getMovieInfo(torrent: TorrentInfo): MovieInfo | null {
         if (!torrent.id) return null
-        
+
         const key = `${torrent.type}_${torrent.id}`
 
         // Check cache first
@@ -18,17 +18,21 @@ export class MovieInfoDataStorage {
             return this.memoryCache[key]
         }
 
-        // Prevent multiple requests for the same ID
+        // Prevent multiple in-flight requests for the same ID
         if (!this.requestedIds.has(key)) {
             this.requestedIds.add(key)
-            
+
             this.loadContentInfo(torrent.id, torrent.type).then((info) => {
                 if (info) {
                     this.memoryCache[key] = info
                     this.diskCache[key] = info
                     Lampa.Storage.set(MOVIE_INFO_STORAGE_KEY, this.diskCache)
-                    return
+                } else {
+                    // Allow retries on subsequent calls when the request yielded no data
+                    this.requestedIds.delete(key)
                 }
+            }).catch(() => {
+                this.requestedIds.delete(key)
             })
         }
 

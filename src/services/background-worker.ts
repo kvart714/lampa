@@ -6,19 +6,23 @@ import { INTERVAL_KEY, INTERVALS } from '../settings'
 import { TorrentClientFactory } from './torrent-client/torrent-client-factory'
 import { TorrentsDataStorage } from './torrents-data-storage'
 
+const MAX_CONSECUTIVE_ERRORS = 10
+
 export class BackgroundWorker {
     private static subscription: number
-    private static errorCount = 0
-    private static notified = false
+    private static consecutiveErrors = 0
+    private static wasConnected: boolean | null = null
 
     static start() {
-        const intervalInSeconds = INTERVALS[Lampa.Storage.field(INTERVAL_KEY)]
+        const idx = Lampa.Storage.field(INTERVAL_KEY)
+        const intervalInSeconds = INTERVALS[idx as number] ?? INTERVALS[0]
+
         if (BackgroundWorker.subscription) {
             clearInterval(BackgroundWorker.subscription)
         }
 
-        BackgroundWorker.errorCount = 0
-        BackgroundWorker.notified = false
+        BackgroundWorker.consecutiveErrors = 0
+        BackgroundWorker.wasConnected = null
         BackgroundWorker.subscription = setInterval(BackgroundWorker.tick, intervalInSeconds * 1000)
     }
 
@@ -38,32 +42,29 @@ export class BackgroundWorker {
 
             const url = TorrentClientFactory.getClient().url
 
-            if (!TorrentClientFactory.isConnected) {
-                log('Connected to ' + url)
-            }
-
+            BackgroundWorker.consecutiveErrors = 0
             TorrentClientFactory.isConnected = true
 
-            BackgroundWorker.notifyFirstTime(Lampa.Lang.translate('background-worker.connection-success') + ': ' + url)
+            if (BackgroundWorker.wasConnected !== true) {
+                log('Connected to ' + url)
+                Lampa.Noty.show(Lampa.Lang.translate('background-worker.connection-success') + ': ' + url)
+                BackgroundWorker.wasConnected = true
+            }
         } catch (error: any) {
             log('Error:', error)
 
             TorrentClientFactory.isConnected = false
+            BackgroundWorker.consecutiveErrors++
 
-            BackgroundWorker.errorCount++
-            if (BackgroundWorker.errorCount > 10) {
-                clearInterval(BackgroundWorker.subscription)
-                log('Stopping background worker due to too many errors')
-                
-                BackgroundWorker.notifyFirstTime(Lampa.Lang.translate('background-worker.error-detected'))
+            if (BackgroundWorker.wasConnected !== false) {
+                Lampa.Noty.show(Lampa.Lang.translate('background-worker.error-detected'))
+                BackgroundWorker.wasConnected = false
             }
-        }
-    }
 
-    private static notifyFirstTime(msg: string) {
-        if (!BackgroundWorker.notified) {
-            Lampa.Noty.show(msg)
-            BackgroundWorker.notified = true
+            if (BackgroundWorker.consecutiveErrors > MAX_CONSECUTIVE_ERRORS) {
+                clearInterval(BackgroundWorker.subscription)
+                log('Stopping background worker due to too many consecutive errors')
+            }
         }
     }
 }

@@ -1,14 +1,16 @@
 import { log } from '../log'
 import { STATUS_CODES } from '../services/torrent-client/statuses'
 import { TorrentClientFactory } from '../services/torrent-client/torrent-client-factory'
+import { TorrentViewsStorage } from '../services/torrent-views-storage'
 import { TorrentsDataStorage } from '../services/torrents-data-storage'
-import { TorrentViewsStorage } from '../services/TorrentViewsStorage'
 import { DEFAULT_ACTION_KEY } from '../settings'
 
 async function play(source: string, torrent: TorrentInfo, name?: string) {
     const client = TorrentClientFactory.getClient()
     const files = await client.getFiles(torrent)
-    const baseUrl = `${client.url}/downloads/${torrent.path}/`
+    // Encode the dynamic path segments so spaces / Cyrillic / etc. do not
+    // break the URL passed to the player. encodeURI keeps `/` intact.
+    const baseUrl = `${client.url}/downloads/${encodeURI(torrent.path)}/`
 
     if (files.length < 1) {
         throw new Error('No files found in torrent')
@@ -17,7 +19,7 @@ async function play(source: string, torrent: TorrentInfo, name?: string) {
     if (files.length === 1) {
         playFile({
             title: name || torrent.name,
-            url: baseUrl + files[0].name,
+            url: baseUrl + encodeURI(files[0].name),
             torrent_hash: torrent.hash, //Отправляем в плеер хеш торрента, для совместимости с плагином tracks
         })
     }
@@ -32,8 +34,8 @@ async function play(source: string, torrent: TorrentInfo, name?: string) {
         const playlist = sortedFiles.map((f, i) => ({
             title: f.name.split(/[\\/]/).pop() || f.name,
             name: f.name,
-            url: baseUrl + f.name,
-            picked: views[f.name],
+            url: baseUrl + encodeURI(f.name),
+            picked: !!views[f.name],
             selected: views.last === f.name,
             torrent_hash: torrent.hash,
         }))

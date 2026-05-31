@@ -5,6 +5,11 @@ import icon from './../../icon.svg'
 import html from './download-button.html'
 
 function addDownloadButton(data: MovieData) {
+    const $buttons = $('.full-start-new__buttons')
+    // Lampa fires `full:complite` more than once for the same card (e.g. on
+    // back/forward navigation), so guard against adding duplicate buttons.
+    if ($buttons.find('.button--download').length) return
+
     const button = $(
         Lampa.Template.get('download-button', {
             icon,
@@ -25,7 +30,7 @@ function addDownloadButton(data: MovieData) {
         })
     })
 
-    $('.full-start-new__buttons').children().first().after(button)
+    $buttons.children().first().after(button)
 }
 
 export default function () {
@@ -55,9 +60,14 @@ export default function () {
                 if (!allowMultiple) {
                     Lampa.Activity.back()
                     const torrents = await TorrentClientFactory.getClient().getTorrents()
-                    const torrent: TorrentInfo = torrents.find((t) => t.id === component.movie.id)
+                    const torrent = torrents.find((t) => t.id === component.movie.id)
 
-                    addDownloadCard(torrent, component.movie)
+                    // qBittorrent may not yet have parsed the magnet metadata at
+                    // this point, so the freshly added torrent is not in the list
+                    // yet. Skip the card update in that case.
+                    if (torrent) {
+                        addDownloadCard(torrent, component.movie)
+                    }
                 }
             })
         }

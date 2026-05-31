@@ -10,10 +10,10 @@ export class TorrentsDataStorage {
     }
 
     public static getMovie(id: number) {
+        if (!id) return null;
         const filtered = this.data.torrents.filter((item) => item.id === id);
         return filtered.length > 0
-            ? filtered.reduce((prev, current) => prev.percentDone < current.percentDone ? prev : current
-            )
+            ? filtered.reduce((prev, current) => (prev.percentDone >= current.percentDone ? prev : current))
             : null;
     }
 
@@ -24,8 +24,7 @@ export class TorrentsDataStorage {
     public static ensureMovie(movie: TorrentInfo) {
         const filtered = this.data.torrents.filter((item) => item.externalId === movie.externalId);
         return filtered.length > 0
-            ? filtered.reduce((prev, current) => prev.percentDone < current.percentDone ? prev : current
-            )
+            ? filtered.reduce((prev, current) => (prev.percentDone >= current.percentDone ? prev : current))
             : movie;
     }
 
